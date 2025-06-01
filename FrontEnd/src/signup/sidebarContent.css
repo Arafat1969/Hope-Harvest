@@ -1,0 +1,10 @@
+.list-group-item.active {
+  background-color: #0a6847;
+  border-color: #0a6847;
+  color: white;
+  font-weight: 500;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
