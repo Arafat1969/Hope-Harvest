@@ -25,6 +25,9 @@ public class Campaign {
     @Column(name = "goal_amount", nullable = false, columnDefinition = "DECIMAL(12,2)")
     private BigDecimal goalAmount;
 
+    @Column(name = "collected_amount", nullable = false, columnDefinition = "DECIMAL(12,2)")
+    private BigDecimal collectedAmount = BigDecimal.ZERO;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
@@ -42,11 +45,12 @@ public class Campaign {
 
     }
 
-    public Campaign(String title, String description, String details, BigDecimal goalAmount, LocalDate startDate, LocalDate endDate, CampaignCategory category, String expectedImpact) {
+    public Campaign(String title, String description, String details, BigDecimal goalAmount,BigDecimal collectedAmount, LocalDate startDate, LocalDate endDate, CampaignCategory category, String expectedImpact) {
         this.title = title;
         this.description = description;
         this.details = details;
         this.goalAmount = goalAmount;
+        this.collectedAmount = collectedAmount;
         this.startDate = startDate;
         this.endDate = endDate;
         this.category = category;
@@ -91,6 +95,14 @@ public class Campaign {
 
     public void setGoalAmount(BigDecimal goalAmount) {
         this.goalAmount = goalAmount;
+    }
+
+    public BigDecimal getCollectedAmount() {
+        return collectedAmount;
+    }
+
+    public void setCollectedAmount(BigDecimal collectedAmount) {
+        this.collectedAmount = collectedAmount;
     }
 
     public LocalDate getStartDate() {
