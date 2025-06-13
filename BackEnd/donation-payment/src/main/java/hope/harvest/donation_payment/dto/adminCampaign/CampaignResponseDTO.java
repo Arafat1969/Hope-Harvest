@@ -1,26 +1,29 @@
-package hope.harvest.donation_payment.dto.campaign;
+package hope.harvest.donation_payment.dto.adminCampaign;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
-public class CampaignSummaryDTO {
+public class CampaignResponseDTO {
     private UUID campaignId;
     private String title;
-    private String shortDescription;
     private BigDecimal goalAmount;
     private BigDecimal collectedAmount;
-    private String image;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String status;
 
-    public CampaignSummaryDTO() {}
+    public CampaignResponseDTO() {}
 
-    public CampaignSummaryDTO(UUID campaignId, String title, String shortDescription,
-                              BigDecimal goalAmount, BigDecimal collectedAmount,String image) {
+    public CampaignResponseDTO(UUID campaignId, String title, BigDecimal goalAmount, BigDecimal collectedAmount,
+                               LocalDate startDate, LocalDate endDate, String status) {
         this.campaignId = campaignId;
         this.title = title;
-        this.shortDescription = shortDescription;
         this.goalAmount = goalAmount;
         this.collectedAmount = collectedAmount;
-        this.image = image;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
     }
 
     public UUID getCampaignId() {
@@ -39,14 +42,6 @@ public class CampaignSummaryDTO {
         this.title = title;
     }
 
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
-
     public BigDecimal getGoalAmount() {
         return goalAmount;
     }
@@ -63,11 +58,27 @@ public class CampaignSummaryDTO {
         this.collectedAmount = collectedAmount;
     }
 
-    public String getImage() {
-        return image;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

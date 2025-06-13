@@ -12,12 +12,13 @@ public class CampaignDetailsDTO {
     private BigDecimal collectedAmount;
     private String expectedImpact;
     private CampaignCategoryDTO category;
+    private String image;
 
     public CampaignDetailsDTO() {}
 
     public CampaignDetailsDTO(UUID campaignId, String title, String description, String details,
                               BigDecimal goalAmount, BigDecimal collectedAmount, String expectedImpact,
-                              CampaignCategoryDTO category) {
+                              CampaignCategoryDTO category,String image) {
         this.campaignId = campaignId;
         this.title = title;
         this.description = description;
@@ -26,6 +27,7 @@ public class CampaignDetailsDTO {
         this.collectedAmount = collectedAmount;
         this.expectedImpact = expectedImpact;
         this.category = category;
+        this.image = image;
     }
 
     public UUID getCampaignId() {
@@ -62,6 +64,14 @@ public class CampaignDetailsDTO {
 
     public BigDecimal getGoalAmount() {
         return goalAmount;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setGoalAmount(BigDecimal goalAmount) {

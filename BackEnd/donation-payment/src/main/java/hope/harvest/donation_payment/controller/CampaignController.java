@@ -2,6 +2,7 @@ package hope.harvest.donation_payment.controller;
 
 import hope.harvest.donation_payment.dto.ApiResponse;
 import hope.harvest.donation_payment.dto.campaign.*;
+import hope.harvest.donation_payment.dto.donation.DonationSummaryDTO;
 import hope.harvest.donation_payment.service.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -112,6 +113,21 @@ public class CampaignController {
         }
     }
 
+    @GetMapping("/campaigns/{campaignId}/donations")
+    public ResponseEntity<ApiResponse<List<DonationSummaryDTO>>> getUserDonationsToCampaign(@PathVariable UUID campaignId, @RequestParam UUID userId) {
+        try {
+            List<DonationSummaryDTO> donationSummaryDTOList = campaignService.getUserDonationsToCampaign(campaignId, userId);
+            if (donationSummaryDTOList == null || donationSummaryDTOList.isEmpty()) {
+                ApiResponse<List<DonationSummaryDTO>> error = new ApiResponse<>("error", "No donations found", null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+            ApiResponse<List<DonationSummaryDTO>> apiResponse = new ApiResponse<>("success", "Donations found", donationSummaryDTOList);
+            return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+        } catch (Exception e) {
+            ApiResponse<List<DonationSummaryDTO>> error = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 
 
 }
