@@ -3,53 +3,64 @@ package hope.harvest.user_service.model;
 import jakarta.persistence.*;
 import java.util.UUID;
 
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()", updatable = false, nullable = false)
-    private UUID user_id;
+    @Column(name = "user_id", columnDefinition = "UUID DEFAULT gen_random_uuid()", updatable = false, nullable = false)
+    private UUID userId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(nullable = false)
-    private String password_hash;
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
 
-    private boolean email_verified = false;
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = false;
 
-    @Column(nullable = false)
-    private String first_name;
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
 
-    @Column(nullable = false)
-    private String last_name;
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
 
-    private String phone_number;
-    private String address_city;
-    private String address_postal_code;
-    private String address_country;
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(name = "address_city", length = 100)
+    private String addressCity;
+
+    @Column(name = "address_postal_code", length = 20)
+    private String addressPostalCode;
+
+    @Column(name = "address_country", length = 100)
+    private String addressCountry;
+
+    @Column(name = "role", nullable = false, length = 20)
     private String role = "USER";
 
     public User() {}
 
-    public User(String email, String password_hash, boolean email_verified, String first_name, String last_name) {
+    public User(String email, String passwordHash, boolean emailVerified, String firstName, String lastName) {
         this.email = email;
-        this.password_hash = password_hash;
-        this.email_verified = email_verified;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.passwordHash = passwordHash;
+        this.emailVerified = emailVerified;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.role = "USER";
     }
 
-    public UUID getUser_id() {
-        return user_id;
+    // Getters & Setters
+
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser_id(UUID user_id) {
-        this.user_id = user_id;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -60,68 +71,68 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
-    public boolean isEmail_verified() {
-        return email_verified;
+    public boolean isEmailVerified() {
+        return emailVerified;
     }
 
-    public void setEmail_verified(boolean email_verified) {
-        this.email_verified = email_verified;
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getAddress_city() {
-        return address_city;
+    public String getAddressCity() {
+        return addressCity;
     }
 
-    public void setAddress_city(String address_city) {
-        this.address_city = address_city;
+    public void setAddressCity(String addressCity) {
+        this.addressCity = addressCity;
     }
 
-    public String getAddress_postal_code() {
-        return address_postal_code;
+    public String getAddressPostalCode() {
+        return addressPostalCode;
     }
 
-    public void setAddress_postal_code(String address_postal_code) {
-        this.address_postal_code = address_postal_code;
+    public void setAddressPostalCode(String addressPostalCode) {
+        this.addressPostalCode = addressPostalCode;
     }
 
-    public String getAddress_country() {
-        return address_country;
+    public String getAddressCountry() {
+        return addressCountry;
     }
 
-    public void setAddress_country(String address_country) {
-        this.address_country = address_country;
+    public void setAddressCountry(String addressCountry) {
+        this.addressCountry = addressCountry;
     }
 
     public String getRole() {

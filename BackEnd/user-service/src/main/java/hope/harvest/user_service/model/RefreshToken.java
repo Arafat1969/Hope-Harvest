@@ -4,35 +4,38 @@ import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@Entity(name = "refresh_tokens")
+@Entity
+@Table(name = "refresh_tokens")
 public class RefreshToken {
 
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()", updatable = false, nullable = false)
-    private UUID token_id;
+    @Column(name = "token_id", columnDefinition = "UUID DEFAULT gen_random_uuid()", updatable = false, nullable = false)
+    private UUID tokenId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, unique = true)
-    private String token_value;
+    @Column(name = "token_value", nullable = false, unique = true, length = 255)
+    private String tokenValue;
 
-    @Column(nullable = false)
-    private ZonedDateTime expires_at;
+    @Column(name = "expires_at", nullable = false)
+    private ZonedDateTime expiresAt;
 
-    @Column(nullable = false)
-    private boolean is_revoked = false;
+    @Column(name = "is_revoked", nullable = false)
+    private boolean isRevoked = false;
 
     public RefreshToken() {}
 
-    public UUID getToken_id() {
-        return token_id;
+    // Getters & Setters
+
+    public UUID getTokenId() {
+        return tokenId;
     }
 
-    public void setToken_id(UUID token_id) {
-        this.token_id = token_id;
+    public void setTokenId(UUID tokenId) {
+        this.tokenId = tokenId;
     }
 
     public User getUser() {
@@ -43,27 +46,27 @@ public class RefreshToken {
         this.user = user;
     }
 
-    public String getToken_value() {
-        return token_value;
+    public String getTokenValue() {
+        return tokenValue;
     }
 
-    public void setToken_value(String token_value) {
-        this.token_value = token_value;
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
     }
 
-    public ZonedDateTime getExpires_at() {
-        return expires_at;
+    public ZonedDateTime getExpiresAt() {
+        return expiresAt;
     }
 
-    public void setExpires_at(ZonedDateTime expires_at) {
-        this.expires_at = expires_at;
+    public void setExpiresAt(ZonedDateTime expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
-    public boolean isIs_revoked() {
-        return is_revoked;
+    public boolean isRevoked() {
+        return isRevoked;
     }
 
-    public void setIs_revoked(boolean is_revoked) {
-        this.is_revoked = is_revoked;
+    public void setRevoked(boolean revoked) {
+        isRevoked = revoked;
     }
 }
