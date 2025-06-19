@@ -1,0 +1,61 @@
+/* Container */
+.bank-transfer-container {
+    width: 360px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #f7f9fc;
+    border: 1px solid #e0e6ef;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Heading */
+  .page-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #034ea2; /* subtle banking blue */
+  }
+  
+  /* Form */
+  .transfer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  /* Inputs */
+  .transfer-form select,
+  .transfer-form input[type="text"] {
+    padding: 10px 12px;
+    border: 1px solid #cbd2d9;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  /* Button */
+  .submit-btn {
+    background: #034ea2;
+    color: #fff;
+    padding: 10px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.25s;
+  }
+  
+  .submit-btn:hover {
+    background: #003570;
+  }
+  .amount-box {
+    background-color: #dceefb;
+    border-left: 4px solid #3182ce;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    color: #2a4365;
+    font-size: 15px;
+  }
+  

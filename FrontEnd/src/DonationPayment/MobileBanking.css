@@ -1,0 +1,93 @@
+.bkash-container {
+    width: 320px;
+    background-color: #e2136e;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .bkash-header {
+    background: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px 6px 0 0;
+    margin-bottom: 20px;
+  }
+  
+  .bkash-logo {
+    height: 30px;
+    margin-right: 8px;
+  }
+  
+  .bkash-title {
+    font-size: 20px;
+    color: #e2136e;
+    font-weight: bold;
+  }
+  
+  .bkash-box {
+    background-color: #d0006f;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  .bkash-input-area label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+  }
+  
+  .bkash-input-area input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .terms {
+    text-align: left;
+    font-size: 12px;
+  }
+  
+  .terms input {
+    margin-right: 5px;
+  }
+  
+  .terms a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  
+  .bkash-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .bkash-buttons button {
+    background-color: #b0005b;
+    border: none;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .bkash-buttons .close {
+    background-color: #880045;
+  }
+  
+  .footer-code {
+    font-size: 10px;
+    margin-top: 15px;
+  }
+  
