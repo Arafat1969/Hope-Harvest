@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { authService } from "../services/authService";
 
 const styles = {
   pageBackground: {
@@ -91,28 +91,30 @@ const Login = ({ onLoginSuccess }) => {
     }
     
     setIsSubmitting(true);
-    
-    try {
-      // Make login API call
-      const response = await axios.post('http://localhost:8090/api/v1/auth/login', {
+      try {
+      // Make login API call using auth service
+      const response = await authService.login({
         email: formData.email,
         password: formData.password
-      });
+      });        console.log("Login successful:", response);
       
-      console.log("Login successful:", response.data);
+      // Store LoginResponseDto data in localStorage
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+      localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('email', response.data.email);
+      localStorage.setItem('role', response.data.role);
+      localStorage.setItem('expiresIn', response.data.expiresIn);
       
-      // Store tokens in localStorage
-      localStorage.setItem('accessToken', response.data.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.data.refreshToken);
-      localStorage.setItem('firstName', response.data.data.firstName);
-      localStorage.setItem('lastName', response.data.data.lastName || '');
-      localStorage.setItem('email', response.data.data.email || '');
-      localStorage.setItem('phoneNumber', response.data.data.phoneNumber || '');
-      
-      localStorage.setItem('city', response.data.data.addressCity || '');
-      localStorage.setItem('postalCode', response.data.data.addressPostalCode || '');
-      localStorage.setItem('country', response.data.data.addressCountry || '');
-      
+      // Store complete user data as JSON for easy access
+      localStorage.setItem('userData', JSON.stringify({
+        userId: response.data.userId,
+        email: response.data.email,
+        role: response.data.role,
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+        expiresIn: response.data.expiresIn
+      }));
       
       // Clear form and errors
       setFormData({ email: '', password: '' });
@@ -123,15 +125,25 @@ const Login = ({ onLoginSuccess }) => {
       
       // Extract user data for the parent component
       const userData = {
-        firstName: response.data.data.firstName,
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        email: response.data.email,
+        phoneNumber: response.data.phoneNumber,
+        addressCity: response.data.addressCity,
+        addressPostalCode: response.data.addressPostalCode,
+        addressCountry: response.data.addressCountry,
+        role: response.data.role || 'USER'
       };
+      
+      // Determine redirect path based on user role
+      const redirectPath = userData.role === 'ADMIN' ? '/admin-dashboard' : '/dashboard';
       
       // Notify parent component of successful login after a short delay
       setTimeout(() => {
         if (onLoginSuccess) {
           onLoginSuccess(userData);
         }
-        navigate('/'); // Redirect to home page
+        navigate(redirectPath); // Redirect based on role
       }, 1500); // Short delay to show success message
       
     } catch (error) {

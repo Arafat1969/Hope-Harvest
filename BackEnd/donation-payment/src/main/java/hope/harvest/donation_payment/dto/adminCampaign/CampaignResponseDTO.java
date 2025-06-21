@@ -12,6 +12,7 @@ public class CampaignResponseDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private String status;
+    private String imageUrl;
 
     public CampaignResponseDTO() {}
 
@@ -80,5 +81,13 @@ public class CampaignResponseDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

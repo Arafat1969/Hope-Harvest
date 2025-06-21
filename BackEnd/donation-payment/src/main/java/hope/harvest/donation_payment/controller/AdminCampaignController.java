@@ -21,13 +21,13 @@ public class AdminCampaignController {
     private AdminCampaignService service;
 
     @PostMapping("/admin/campaigns/categories")
-    public ResponseEntity<ApiResponse<CampaignCategoryCreateDTO>> createNewCampaignCategory(@RequestBody CampaignCategoryCreateDTO campaignCategoryCreateDTO) {
+    public ResponseEntity<ApiResponse<CampaignCategoryDTO>> createNewCampaignCategory(@RequestBody CampaignCategoryCreateDTO campaignCategoryCreateDTO) {
         try {
-            CampaignCategoryCreateDTO response = service.createNewCampaignCategory(campaignCategoryCreateDTO);
-            ApiResponse<CampaignCategoryCreateDTO> apiResponse = new ApiResponse<>("success", "Category created successfully", response);
+            CampaignCategoryDTO response = service.createNewCampaignCategory(campaignCategoryCreateDTO);
+            ApiResponse<CampaignCategoryDTO> apiResponse = new ApiResponse<>("success", "Category created successfully", response);
             return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
         } catch (Exception e) {
-            ApiResponse<CampaignCategoryCreateDTO> error = new ApiResponse<>("error", e.getMessage(), null);
+            ApiResponse<CampaignCategoryDTO> error = new ApiResponse<>("error", e.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }

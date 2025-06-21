@@ -54,6 +54,19 @@ public class CampaignController {
     }
 
 
+    @GetMapping("/campaigns/images")
+    public ResponseEntity<ApiResponse<List<ImageResponseDto>>> getAllImagesForGallery(){
+        try {
+            List<ImageResponseDto> imageResponseDtoList = campaignService.getAllImagesForGallery();
+            ApiResponse<List<ImageResponseDto>> response = new ApiResponse<>("success","All Images found",imageResponseDtoList);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }catch (Exception e){
+            ApiResponse<List<ImageResponseDto>> error = new ApiResponse<>("error",e.getMessage(),null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+
     @GetMapping("/campaigns/categories/{categoryId}")
     public ResponseEntity<ApiResponse<List<CampaignSummaryDTO>>> showCampaignsOfParticularCategory(@PathVariable UUID categoryId){
         try {
@@ -101,14 +114,26 @@ public class CampaignController {
 
 
 
-    @GetMapping("/campaigns/request")
-    public ResponseEntity<ApiResponse<List<CampaignRequestResponseDTO>>> getAllRequestsForAParticularUser(){
+    @GetMapping("/campaigns/request/{userId}")
+    public ResponseEntity<ApiResponse<List<CampaignRequestResponseDTO>>> getAllRequestsForAParticularUser( @PathVariable UUID userId ){
         try {
-            List<CampaignRequestResponseDTO> responseDTO = campaignService.getAllRequestsForAParticularUser();
+            List<CampaignRequestResponseDTO> responseDTO = campaignService.getAllRequestsForAParticularUser(userId);
             ApiResponse<List<CampaignRequestResponseDTO>> apiResponse = new ApiResponse<>("success","Found Requested Campaign",responseDTO);
             return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
         }catch (Exception e){
             ApiResponse<List<CampaignRequestResponseDTO>> error = new ApiResponse<>("error",e.getMessage(),null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+    @GetMapping("/campaigns/request/{userId}/{requestId}")
+    public ResponseEntity<ApiResponse<CampaignRequestResponseDTO>> getParticularRequestForAParticularUser( @PathVariable UUID userId,@PathVariable UUID requestId ){
+        try {
+            CampaignRequestResponseDTO responseDTO = campaignService.getParticularRequestForAParticularUser(userId,requestId);
+            ApiResponse<CampaignRequestResponseDTO>apiResponse = new ApiResponse<>("success","Found Requested Campaign",responseDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+        }catch (Exception e){
+            ApiResponse<CampaignRequestResponseDTO> error = new ApiResponse<>("error",e.getMessage(),null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }

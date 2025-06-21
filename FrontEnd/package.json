@@ -18,7 +18,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "BROWSER=none react-scripts start",
+    "start:backend": "echo 'Please start your Spring Boot services manually' && echo 'User Service: http://localhost:8085' && echo 'Donation Service: http://localhost:8080' && echo 'Event Service: http://localhost:8090'"
   },
   "eslintConfig": {
     "extends": [

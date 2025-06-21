@@ -1,5 +1,6 @@
-import { useState } from "react"
-import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authService } from "../services/authService";
 const styles = {
   pageBackground: {
     backgroundColor: "#4CAF50",
@@ -26,6 +27,7 @@ const styles = {
 };
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -92,10 +94,10 @@ const Register = () => {
       setErrors(formErrors);
       return;
     }
+      setIsSubmitting(true);
     
-    setIsSubmitting(true);
-    
-    axios.post('http://localhost:8090/api/v1/auth/register', {
+    // Use auth service for registration
+    authService.register({
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
@@ -107,12 +109,12 @@ const Register = () => {
       addressCountry: formData.addressCountry
     })
     .then(response => {
-      console.log("Registration successful:", response.data);
+      console.log("Registration successful:", response);
       setRegistrationSuccess(true);
       
       // Redirect to login page after successful registration
       setTimeout(() => {
-        window.location.href = '/login';
+        navigate('/login');
       }, 1500); // Short delay to show success message
     })
     .catch(error => {

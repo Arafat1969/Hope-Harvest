@@ -1,0 +1,96 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: hope-harvest-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: arafat1969
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  user-service:
+    image: maven:3.9.6-eclipse-temurin-21
+    container_name: user-service
+    working_dir: /app
+    volumes:
+      - ./BackEnd/user-service:/app
+    command: ./mvnw spring-boot:run
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/User_Authentication
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: arafat1969
+      JWT_SECRET: dGhpc2lzYXZlcnlsb25nc2VjcmV0a2V5Zm9yaG9wZWhhcnZlc3RhcHBsaWNhdGlvbjIwMjQ
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  donation-payment:
+    image: maven:3.9.6-eclipse-temurin-21
+    container_name: donation-payment-service
+    working_dir: /app
+    volumes:
+      - ./BackEnd/donation-payment:/app
+    command: ./mvnw spring-boot:run
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/Donation_Payment
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: arafat1969
+    depends_on:
+      - postgres
+
+  event-volunteer:
+    image: maven:3.9.6-eclipse-temurin-21
+    container_name: event-volunteer-service
+    working_dir: /app
+    volumes:
+      - ./BackEnd/event-volunteer:/app
+    command: ./mvnw spring-boot:run
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/Event_Volunteer
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: arafat1969
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    container_name: hope-harvest-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./FrontEnd:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_BASE_URL=http://localhost
+      - REACT_APP_USER_SERVICE_PORT=8085
+      - REACT_APP_DONATION_SERVICE_PORT=8080
+      - REACT_APP_EVENT_SERVICE_PORT=8090
+    depends_on:
+      - user-service
+      - donation-payment
+      - event-volunteer
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:

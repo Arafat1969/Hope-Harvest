@@ -6,6 +6,9 @@ import java.util.UUID;
 public class CampaignRequestResponseDTO {
     private UUID requestId;
     private String title;
+    private UUID externalUserId;
+    private String proposerEmail;
+    private String proposerPhone;
     private String status;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -13,10 +16,12 @@ public class CampaignRequestResponseDTO {
 
     public CampaignRequestResponseDTO() {}
 
-    public CampaignRequestResponseDTO(UUID requestId, String title, String status,
-                                      LocalDate startDate, LocalDate endDate, String feedback) {
+    public CampaignRequestResponseDTO(UUID requestId, String title, UUID externalUserId, String proposerEmail, String proposerPhone, String status, LocalDate startDate, LocalDate endDate, String feedback) {
         this.requestId = requestId;
         this.title = title;
+        this.externalUserId = externalUserId;
+        this.proposerEmail = proposerEmail;
+        this.proposerPhone = proposerPhone;
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -69,5 +74,29 @@ public class CampaignRequestResponseDTO {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public UUID getExternalUserId() {
+        return externalUserId;
+    }
+
+    public void setExternalUserId(UUID externalUserId) {
+        this.externalUserId = externalUserId;
+    }
+
+    public String getProposerEmail() {
+        return proposerEmail;
+    }
+
+    public void setProposerEmail(String proposerEmail) {
+        this.proposerEmail = proposerEmail;
+    }
+
+    public String getProposerPhone() {
+        return proposerPhone;
+    }
+
+    public void setProposerPhone(String proposerPhone) {
+        this.proposerPhone = proposerPhone;
     }
 }

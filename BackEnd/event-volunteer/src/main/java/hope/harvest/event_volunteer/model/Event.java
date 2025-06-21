@@ -21,8 +21,8 @@ public class Event {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "category", length = 100)
-    private String category;
+    @Column(name = "report", length = 100)
+    private String report;
 
     @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime startDate;
@@ -57,10 +57,10 @@ public class Event {
 
     }
 
-    public Event(String title, String description, String category, ZonedDateTime startDate, ZonedDateTime endDate, String locationAddress, String locationCity, String locationDistrict, String status, List<RequiredGood> requiredGoods, BigDecimal budgetAmount, UUID externalCampaignId) {
+    public Event(String title, String description, String report, ZonedDateTime startDate, ZonedDateTime endDate, String locationAddress, String locationCity, String locationDistrict, String status, List<RequiredGood> requiredGoods, BigDecimal budgetAmount, UUID externalCampaignId) {
         this.title = title;
         this.description = description;
-        this.category = category;
+        this.report = report;
         this.startDate = startDate;
         this.endDate = endDate;
         this.locationAddress = locationAddress;
@@ -96,12 +96,12 @@ public class Event {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
+    public String getReport() {
+        return report;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setReport(String report) {
+        this.report = report;
     }
 
     public ZonedDateTime getStartDate() {
@@ -182,7 +182,7 @@ public class Event {
                 "eventId=" + eventId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
+                ", report='" + report + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", locationAddress='" + locationAddress + '\'' +

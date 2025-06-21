@@ -86,8 +86,7 @@ public class Service {
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
         refreshTokenRepo.delete(token);
     }
-
-    // ✅ Get current user profile
+    
     public UserProfileDto getCurrentUserProfile(UUID userId) {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

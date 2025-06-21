@@ -5,12 +5,14 @@ import java.util.UUID;
 public class PaymentVerifyRequestDTO {
     private UUID paymentId;
     private String otp;
+    private String organizationName;
 
     public PaymentVerifyRequestDTO() {}
 
-    public PaymentVerifyRequestDTO(UUID paymentId, String otp) {
+    public PaymentVerifyRequestDTO(UUID paymentId, String otp, String organizationName) {
         this.paymentId = paymentId;
         this.otp = otp;
+        this.organizationName = organizationName;
     }
 
     public UUID getPaymentId() {
@@ -27,5 +29,13 @@ public class PaymentVerifyRequestDTO {
 
     public void setOtp(String otp) {
         this.otp = otp;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 }

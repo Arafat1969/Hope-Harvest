@@ -107,7 +107,7 @@ public class DonationPaymentController {
     @PostMapping("/payment/verify")
     public  ResponseEntity<ApiResponse<DonationSummaryDTO>> verifyPayment(@RequestBody PaymentVerifyRequestDTO requestDTO){
         try {
-            DonationSummaryDTO summaryDTO = service.verifyPayment(requestDTO.getPaymentId(),requestDTO.getOtp());
+            DonationSummaryDTO summaryDTO = service.verifyPayment(requestDTO);
             if(summaryDTO == null){
                 ApiResponse<DonationSummaryDTO> apiResponse = new ApiResponse<>("error","Invalid OTP",null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);

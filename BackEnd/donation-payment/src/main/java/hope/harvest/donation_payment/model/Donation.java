@@ -44,7 +44,7 @@ public class Donation {
 
 
     public Donation() {
-
+        paymentMethod = "none";
     }
 
     public Donation(UUID externalUserID, Campaign campaign, BigDecimal amount, ZonedDateTime donationDate, String status, String paymentMethod, String transactionID, Boolean isAnonymous, String trackingKey) {

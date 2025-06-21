@@ -7,33 +7,29 @@ import java.util.UUID;
 public class DonationDetailsDTO {
 
     private UUID donationId;
+    private UUID userID;
     private String campaignTitle;
     private BigDecimal amount;
     private ZonedDateTime donationDate;
     private String status;
     private String paymentMethod;
-    private String organizationName;
     private String transactionId;
     private String trackingKey;
-    private String donorName;
-    private String donorEmail;
 
     public DonationDetailsDTO() {}
 
-    public DonationDetailsDTO(UUID donationId, String campaignTitle, BigDecimal amount, ZonedDateTime donationDate,
-                              String status, String paymentMethod, String organizationName, String transactionId,
-                              String trackingKey, String donorName, String donorEmail) {
+    public DonationDetailsDTO(UUID donationId,UUID userID, String campaignTitle, BigDecimal amount, ZonedDateTime donationDate,
+                              String status, String paymentMethod, String transactionId,
+                              String trackingKey) {
         this.donationId = donationId;
+        this.userID = userID;
         this.campaignTitle = campaignTitle;
         this.amount = amount;
         this.donationDate = donationDate;
         this.status = status;
         this.paymentMethod = paymentMethod;
-        this.organizationName = organizationName;
         this.transactionId = transactionId;
         this.trackingKey = trackingKey;
-        this.donorName = donorName;
-        this.donorEmail = donorEmail;
     }
 
     public UUID getDonationId() {
@@ -42,6 +38,14 @@ public class DonationDetailsDTO {
 
     public void setDonationId(UUID donationId) {
         this.donationId = donationId;
+    }
+
+    public UUID getUserID() {
+        return userID;
+    }
+
+    public void setUserID(UUID userID) {
+        this.userID = userID;
     }
 
     public String getCampaignTitle() {
@@ -84,14 +88,6 @@ public class DonationDetailsDTO {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getOrganizationName() {
-        return organizationName;
-    }
-
-    public void setOrganizationName(String organizationName) {
-        this.organizationName = organizationName;
-    }
-
     public String getTransactionId() {
         return transactionId;
     }
@@ -108,19 +104,4 @@ public class DonationDetailsDTO {
         this.trackingKey = trackingKey;
     }
 
-    public String getDonorName() {
-        return donorName;
-    }
-
-    public void setDonorName(String donorName) {
-        this.donorName = donorName;
-    }
-
-    public String getDonorEmail() {
-        return donorEmail;
-    }
-
-    public void setDonorEmail(String donorEmail) {
-        this.donorEmail = donorEmail;
-    }
 }
