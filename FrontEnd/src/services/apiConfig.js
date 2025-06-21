@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+// http://74.225.246.127:
+
 const API_BASE_URLs = {
-  USER_SERVICE: 'http://localhost:8085/api/v1',
-  DONATION_SERVICE: 'http://localhost:8080/api/v1',
-  EVENT_SERVICE: 'http://localhost:8090/api/v1'
+  USER_SERVICE: 'http://74.225.246.127:8085/api/v1',
+  DONATION_SERVICE: 'http://74.225.246.127:8080/api/v1',
+  EVENT_SERVICE: 'http://74.225.246.127:8090/api/v1'
 };
 
 const createAuthenticatedAxios = () => {
