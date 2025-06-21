@@ -51,7 +51,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: arafat1969
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   event-volunteer:
     image: maven:3.9.6-eclipse-temurin-21
@@ -67,7 +68,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: arafat1969
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   frontend:
     build:
