@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { campaignService } from '../services/campaignService';
 import { donationService } from '../services/donationService';
@@ -23,6 +24,7 @@ const styles = {
 };
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [donations, setDonations] = useState([]);
   const [campaignRequests, setCampaignRequests] = useState([]);
@@ -247,7 +249,7 @@ const UserDashboard = () => {
                           </td>
                           <td>
                             <span className={getStatusBadgeClass(donation.status)}>
-                              {donation.status || 'Pending'}
+                              {donation.status || 'completed'}
                             </span>
                           </td>
                         </tr>
@@ -281,8 +283,10 @@ const UserDashboard = () => {
               {campaignRequests.length === 0 ? (
                 <div className="text-center py-4 text-muted">
                   <i className="fas fa-plus-circle fa-2x mb-3"></i>
-                  <p>No campaign requests yet.</p>
-                  <button className="btn btn-outline-success btn-sm">
+                  <p>No campaign requests yet.</p>                  <button 
+                    className="btn btn-outline-success btn-sm"
+                    onClick={() => navigate('/request-campaign')}
+                  >
                     Submit Request
                   </button>
                 </div>
@@ -324,19 +328,25 @@ const UserDashboard = () => {
               <h5 className="text-success mb-3">Quick Actions</h5>
               <div className="row">
                 <div className="col-md-3 mb-2">
-                  <button className="btn btn-success w-100">
+                  <button className="btn btn-success w-100"
+                    onClick={() => navigate('/donate')}
+                  >
                     <i className="fas fa-heart me-2"></i>
                     Make Donation
                   </button>
-                </div>
-                <div className="col-md-3 mb-2">
-                  <button className="btn btn-outline-success w-100">
+                </div>                <div className="col-md-3 mb-2">
+                  <button 
+                    className="btn btn-outline-success w-100"
+                    onClick={() => navigate('/request-campaign')}
+                  >
                     <i className="fas fa-bullhorn me-2"></i>
                     Request Campaign
                   </button>
                 </div>
                 <div className="col-md-3 mb-2">
-                  <button className="btn btn-outline-success w-100">
+                  <button className="btn btn-outline-success w-100"
+                    onClick={() => navigate('/volunteer-activity')}
+                  >
                     <i className="fas fa-hands-helping me-2"></i>
                     Volunteer
                   </button>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import './gallery.css';
+import { API_BASE_URLs} from '../services/apiConfig';
 
 // Innovative masonry gallery styles
 const styles = {
@@ -148,7 +149,8 @@ const GalleryComponent = () => {
   const [selectedImage, setSelectedImage] = useState(null);  const fetchImages = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/v1/campaigns/images');
+      const url = `${API_BASE_URLs.DONATION_SERVICE}/campaigns/images`;
+      const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error('Failed to fetch images');

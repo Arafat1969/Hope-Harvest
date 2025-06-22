@@ -29,7 +29,7 @@ A comprehensive donation and volunteer management platform built with Spring Boo
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Arafat1969/Hope-Harvest.git
+git clone <repository-url>
 cd hope-harvest
 ```
 

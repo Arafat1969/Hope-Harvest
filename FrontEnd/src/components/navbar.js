@@ -193,9 +193,11 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
               <li className="nav-item">
                 <Link className="nav-link px-3" to="/campaigns" style={styles.navLink}>Campaigns</Link>
               </li>              {user?.role !== 'ADMIN' && (
-                <>
-                  <li className="nav-item">
+                <>                  <li className="nav-item">
                     <Link className="nav-link px-3" to="/donate" style={styles.navLink}>Donate</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link px-3" to="/track-donation" style={styles.navLink}>Track Donation</Link>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link px-3" to="/volunteer-activity" style={styles.navLink}>Volunteer</Link>

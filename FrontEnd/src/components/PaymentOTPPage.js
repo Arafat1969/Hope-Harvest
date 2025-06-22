@@ -55,6 +55,8 @@ const PaymentOTPPage = () => {
   const [error, setError] = useState('');
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes countdown
   const [paymentResponse, setPaymentResponse] = useState(null);
+  const [responseData, setResponseData] = useState(null);
+
   const [paymentMethod, setPaymentMethod] = useState('');
   const [donationData, setDonationData] = useState(null);
 
@@ -94,7 +96,6 @@ const PaymentOTPPage = () => {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
       if (nextInput) nextInput.focus();
@@ -122,7 +123,6 @@ const PaymentOTPPage = () => {
     setLoading(true);
 
     try {
-      // Prepare payment verify request
       const paymentVerifyRequest = {
         paymentId: paymentResponse.paymentId,
         otp: otpValue,
@@ -135,13 +135,15 @@ const PaymentOTPPage = () => {
 
       if (response.status === 'success') {
         console.log('✅ Payment verified successfully:', response);
-        
+        setPaymentResponse(location.state.paymentResponse)
+        setResponseData(response);
         // Navigate to success page
         navigate('/payment-success', {
           state: {
             paymentMethod: paymentMethod,
             donationData: donationData,
-            paymentResponse: paymentResponse
+            paymentResponse: paymentResponse,
+            responseData: response.data
           }
         });
       } else {

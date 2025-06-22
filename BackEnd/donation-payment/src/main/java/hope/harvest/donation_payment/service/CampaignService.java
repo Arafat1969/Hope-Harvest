@@ -144,7 +144,7 @@ public class CampaignService {
                 savedRequest.getStatus(),
                 savedRequest.getStartDate(),
                 savedRequest.getEndDate(),
-                savedRequest.getFeedback()
+                "Feedback is pending"
         );
     }
 
