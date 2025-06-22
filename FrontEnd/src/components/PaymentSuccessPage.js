@@ -62,11 +62,11 @@ const PaymentSuccessPage = () => {
   const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState(null);
   const [confetti, setConfetti] = useState(true);
-
   useEffect(() => {
     if (location.state) {
       setPaymentData(location.state);
       console.log('🎉 Payment success page loaded:', location.state);
+      console.log('📊 Response Data Structure:',  location.state.responseData);
     } else {
       navigate('/');
     }
@@ -104,9 +104,9 @@ const PaymentSuccessPage = () => {
     });
   };
 
-  const generateTransactionId = () => {
-    return `TXN${Date.now()}${Math.floor(Math.random() * 1000)}`;
-  };
+  // const generateTransactionId = () => {
+  //   return `TXN${Date.now()}${Math.floor(Math.random() * 1000)}`;
+  // };
 
   if (!paymentData) {
     return (
@@ -168,15 +168,18 @@ const PaymentSuccessPage = () => {
                   <i className="fas fa-receipt me-2"></i>
                   Payment Details
                 </h5>
-                
-                <div className="row text-start">
+                  <div className="row text-start">
                   <div className="col-md-6 mb-3">
                     <strong>Transaction ID:</strong><br />
-                    <span className="text-muted">{generateTransactionId()}</span>
+                    <span className="text-muted">{paymentData?.responseData?.transactionId}</span>
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <strong>Tracking key:</strong><br />
+                    <span className="text-muted">{paymentData?.responseData?.trackingKey}</span>
                   </div>
                   <div className="col-md-6 mb-3">
                     <strong>Donation ID:</strong><br />
-                    <span className="text-muted">{paymentData.donationData?.donationId}</span>
+                    <span className="text-muted">{paymentData?.donationData?.donationId}</span>
                   </div>
                   <div className="col-md-6 mb-3">
                     <strong>Payment ID:</strong><br />
@@ -212,9 +215,7 @@ const PaymentSuccessPage = () => {
                 <p className="text-muted mb-0">
                   Your donation of <strong>{formatCurrency(paymentData.donationData?.amount)}</strong> will help us make a meaningful difference in communities across Bangladesh. Thank you for being part of our mission!
                 </p>
-              </div>
-
-              {/* Action Buttons */}
+              </div>              {/* Action Buttons */}
               <div className="mt-4">
                 <button
                   style={styles.actionButton}
@@ -234,11 +235,26 @@ const PaymentSuccessPage = () => {
                 
                 <button
                   style={styles.secondaryButton}
+                  onClick={() => navigate('/track-donation')}
+                >
+                  <i className="fas fa-search-dollar me-2"></i>
+                  Track Your Donation
+                </button>
+                
+                <button
+                  style={styles.secondaryButton}
                   onClick={() => navigate('/')}
                 >
                   <i className="fas fa-home me-2"></i>
                   Back to Home
                 </button>
+              </div>
+              
+              <div className="mt-3">
+                <small className="text-muted">
+                  <i className="fas fa-info-circle me-1"></i>
+                  You can track your donation anytime using the tracking key: <strong>{paymentData?.responseData?.trackingKey}</strong>
+                </small>
               </div>
 
               {/* Receipt Options */}

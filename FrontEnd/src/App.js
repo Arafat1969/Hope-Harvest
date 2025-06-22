@@ -5,8 +5,10 @@ import Sidebar from './components/about';
 import AdminDashboard from './components/AdminDashboard';
 import ApiTester from './components/ApiTester';
 import ApplyFundsLayout from './components/applyfundcontent';
+import CampaignRequest from './components/CampaignRequest';
 import CampaignsList from './components/CampaignsList';
 import DonationForm from './components/DonationForm';
+import DonationTrackingPage from './components/DonationTrackingPage';
 import Gallery from './components/gallerycomponent';
 import HomePage from './components/HomePage';
 import Login from './components/login';
@@ -93,8 +95,17 @@ function App() {
         <Route path="/payment-info" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><PaymentInfoPage /></>} />
         <Route path="/payment-otp" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><PaymentOTPPage /></>} />
         <Route path="/payment-success" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><PaymentSuccessPage /></>} />
+        <Route path="/track-donation" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><DonationTrackingPage /></>} />
         <Route path="/volunteer-activity" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><VolunteerActivityLayout /></>} />
         <Route path="/apply-for-funds" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><ApplyFundsLayout /></>} />
+        <Route path="/request-campaign" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <CampaignRequest />
+            </>
+        } />
         <Route path="/gallery" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><Gallery /></>} />
         <Route path="/test-api" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><ApiTester /></>} />
         <Route path="/login" element={

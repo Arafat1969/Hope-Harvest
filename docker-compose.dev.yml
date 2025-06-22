@@ -1,3 +1,4 @@
+version: "3.8"
 
 services:
   postgres:
@@ -12,8 +13,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d
-
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql
+      - ./database/UserService.sql:/docker-entrypoint-initdb.d/02-user-dump.sql
+      - ./database/DonationService.sql:/docker-entrypoint-initdb.d/03-donation-dump.sql
+      - ./database/EventService.sql:/docker-entrypoint-initdb.d/04-event-dump.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -51,8 +54,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: arafat1969
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
 
   event-volunteer:
     image: maven:3.9.6-eclipse-temurin-21
@@ -68,8 +70,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: arafat1969
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
 
   frontend:
     build:
@@ -96,4 +97,3 @@ services:
 
 volumes:
   postgres_data:
-    driver: local
