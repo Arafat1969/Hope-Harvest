@@ -1,0 +1,282 @@
+.heroSection {
+  position: relative;
+  padding: 8rem 0;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.backgroundImage.visible {
+  opacity: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+}
+
+.heroTitle {
+  font-family: var(--font-family-serif);
+  font-size: 4rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  margin-bottom: var(--space-4);
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: var(--space-4);
+}
+
+.heroText {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 550px;
+  margin: 0 auto var(--space-6);
+}
+
+@media (min-width: 992px) {
+  .heroText {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.ctaButtonPrimary {
+  background-color: var(--color-accent-yellow);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  transition: var(--transition);
+  border: none;
+}
+
+.ctaButtonPrimary:hover {
+  background-color: var(--color-accent-yellow-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.ctaButtonSecondary {
+  background-color: transparent;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  transition: var(--transition);
+  border: 2px solid #ffffff;
+}
+
+.ctaButtonSecondary:hover {
+  background-color: #ffffff;
+  color: var(--color-primary-green);
+}
+
+/* --- REDESIGNED STATS SECTION --- */
+.statsSection {
+  padding: var(--space-10) 0;
+  background-color: var(--color-background-light);
+}
+
+.statCard {
+  background-color: var(--color-surface);
+  padding: var(--space-8);
+  border-radius: var(--border-radius);
+  text-align: center;
+  border: 1px solid var(--color-border);
+  transition: var(--transition);
+}
+
+.statCard:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+}
+
+/* .statIcon {
+  display: inline-block;
+  font-size: 2.5rem;
+  color: var(--color-primary-green);
+  margin-bottom: var(--space-6);
+  background-color: #e8f5e9; /* Light green background for the icon 
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  border-radius: 50%;
+} 
+*/
+
+.statNumber {
+  font-family: var(--font-family-sans);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+/* --- END OF REDESIGNED STATS SECTION --- */
+
+/* Features Section */
+.featuresSection {
+  padding: var(--space-10) 0;
+  background-color: var(--color-background-light);
+}
+
+.sectionTitle {
+  font-family: var(--font-family-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primary-green);
+  margin-bottom: var(--space-2);
+}
+
+.sectionSubtitle {
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.featureCard {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.featureCard:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  color: var(--color-primary-green);
+  margin-bottom: var(--space-4);
+}
+
+.featureTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.featureText {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.featureLink {
+  color: var(--color-primary-green);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.featureLink:hover {
+  text-decoration: underline;
+}
+
+/* Final CTA Section */
+.finalCtaSection {
+  padding: var(--space-10) 0;
+  background: linear-gradient(135deg, var(--color-primary-green), var(--color-primary-green-dark));
+  color: white;
+}
+
+.finalCtaTitle {
+  font-family: var(--font-family-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+/* Container for the final buttons */
+.finalCtaButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+/* Base styles for all three buttons */
+.ctaFinalPrimary, .ctaFinalSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+}
+
+/* Primary Button: Start Donating */
+.ctaFinalPrimary {
+  background-color: var(--color-accent-yellow);
+  border-color: var(--color-accent-yellow);
+  color: var(--color-text-primary);
+}
+
+.ctaFinalPrimary:hover {
+  background-color: var(--color-accent-yellow-dark);
+  border-color: var(--color-accent-yellow-dark);
+  transform: translateY(-3px);
+}
+
+/* Secondary Button: Volunteer & Request Campaign */
+.ctaFinalSecondary {
+  background-color: transparent;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.ctaFinalSecondary:hover {
+  background-color: #ffffff;
+  color: var(--color-primary-green);
+}

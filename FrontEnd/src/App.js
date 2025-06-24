@@ -22,6 +22,7 @@ import Register from './components/register';
 import UserDashboard from './components/UserDashboard';
 import UserProfile from './components/UserProfile';
 import VolunteerActivityLayout from './components/volunteeractivity';
+import Footer from './components/Footer';
 
 function App() {
   // Authentication state
@@ -148,6 +149,7 @@ function App() {
         } />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

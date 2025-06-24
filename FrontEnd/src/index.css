@@ -1,3 +1,40 @@
+/* In your main index.css or App.css file */
+:root {
+  /* Color Palette for Hope Harvest */
+  --color-primary-green: #27ae60;
+  --color-primary-green-dark: #229954;
+  --color-accent-yellow: #f2c94c;
+  --color-accent-yellow-dark: #f2994a;
+  --color-background-light: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-text-primary: #2c3e50;
+  --color-text-secondary: #7f8c8d;
+  --color-border: #e0e0e0;
+
+  /* Typography */
+  --font-family-sans: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /* Add Inter from Google Fonts for best results */
+  --font-family-serif: 'Lora', 'Georgia', serif; /* A nice serif for headings */
+
+  /* Spacing */
+  --space-2: 0.5rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  /* Other */
+  --border-radius: 0.75rem;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+  font-family: var(--font-family-sans);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

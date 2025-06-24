@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @org.springframework.stereotype.Service
@@ -43,7 +44,8 @@ public class Service {
         user.setAddressPostalCode(dto.getAddressPostalCode());
         user.setAddressCountry(dto.getAddressCountry());
         user.setEmailVerified(false);
-        if(dto.getEmail() == "admin4860@gmail.com"){
+
+        if(Objects.equals(dto.getEmail(), "admin4860@gmail.com")){
             user.setRole("ADMIN");
         }else {
             user.setRole("USER");

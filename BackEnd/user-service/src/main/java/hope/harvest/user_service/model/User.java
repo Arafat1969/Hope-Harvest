@@ -40,7 +40,7 @@ public class User {
     private String addressCountry;
 
     @Column(name = "role", nullable = false, length = 20)
-    private String role = "USER";
+    private String role;
 
     public User() {}
 
@@ -50,7 +50,6 @@ public class User {
         this.emailVerified = emailVerified;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = "USER";
     }
 
     // Getters & Setters
