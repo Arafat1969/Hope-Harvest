@@ -1,0 +1,144 @@
+/* Main Header Container */
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Top Row Styles */
+.topRow {
+  background-color: var(--color-surface);
+  padding: var(--space-3) var(--space-6);
+}
+.logoText {
+  font-family: var(--font-family-serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: green;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+/* Bottom Nav Styles */
+.bottomNav {
+  background-color: #4CAF50;
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-2) 0;
+  transition: background-color 0.4s ease-in-out;
+}
+.transparentNav {
+  background-color: transparent !important;
+  box-shadow: none;
+  position: absolute;
+  width: 100%;
+}
+
+/* --- REDESIGNED BUTTONS --- */
+.button {
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  border: 2px solid;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.buttonContact {
+  background-color: transparent;
+  border-color: var(--color-primary-green);
+  color: var(--color-primary-green);
+}
+.buttonContact:hover {
+  background-color: var(--color-primary-green);
+  color: white;
+}
+
+.buttonLogin {
+  background-color: var(--color-primary-green);
+  border-color: var(--color-primary-green);
+}
+.buttonLogin:hover {
+  background-color: var(--color-primary-green-dark);
+  border-color: var(--color-primary-green-dark);
+}
+
+.buttonDashboard, .buttonProfile {
+  background-color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+.buttonDashboard:hover, .buttonProfile:hover {
+  background-color: #000;
+  border-color: #000;
+}
+
+.buttonLogout {
+  background-color: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+.buttonLogout:hover {
+  background-color: #c0392b;
+  border-color: #c0392b;
+  color: white;
+}
+
+.adminBadge {
+  font-size: 0.7em;
+  background-color: var(--color-accent-yellow) !important;
+  color: var(--color-text-primary);
+}
+
+/* Navigation Links */
+.navLinksContainer {
+  gap: var(--space-4);
+}
+.navLink {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  font-size: 1.1rem;
+  padding: 0.5rem 0 !important;
+  position: relative;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.navLink:hover {
+  color: #ffffff !important;
+}
+
+/* Underline effect */
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-accent-yellow);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out;
+}
+.navLink:hover::after, .activeLink::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.activeLink {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Mobile Toggler */
+.navbarTogglerIcon {
+  border-color: rgba(255, 255, 255, 0.5);
+}

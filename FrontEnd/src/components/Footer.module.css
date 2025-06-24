@@ -1,0 +1,49 @@
+.footer {
+  background-color: var(--color-text-primary);
+  color: rgba(255, 255, 255, 0.75); /* Increased default text visibility */
+  padding: var(--space-6) var(--space-4); /* Added horizontal padding */
+  font-size: 0.95rem; /* Slightly larger for better readability */
+  letter-spacing: 0.3px; /* Adds a more refined look */
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  gap: var(--space-4);
+  max-width: 1200px; /* Constrains the max width on very large screens */
+  margin: 0 auto;
+}
+
+.copyright {
+  /* On large screens, this will naturally sit on the left */
+  align-self: start;
+}
+
+.footerLinks {
+  display: flex;
+  gap: var(--space-6);
+  /* On large screens, this will naturally sit on the right */
+}
+
+.footerLinks a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.footerLinks a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* On smaller screens, stack the elements and center them */
+@media (max-width: 768px) {
+  .footerContainer {
+    flex-direction: column;
+    justify-content: center; /* Center the column items */
+    gap: var(--space-2);
+  }
+}
