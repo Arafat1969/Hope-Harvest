@@ -31,6 +31,13 @@ public class UserProfileDto {
         this.role = role;
     }
 
+    public UserProfileDto(String firstName, String lastName, String email, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phone;
+    }
+
     public UUID getUserId() {
         return userId;
     }

@@ -21,6 +21,12 @@ public class UserProfileUpdateDto {
         this.addressCountry = addressCountry;
     }
 
+    public UserProfileUpdateDto(String firstName, String lastName, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+    }
+
 
     public String getFirstName() {
         return firstName;

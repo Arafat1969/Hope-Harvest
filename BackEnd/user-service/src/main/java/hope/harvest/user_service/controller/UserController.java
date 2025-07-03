@@ -1,7 +1,7 @@
 package hope.harvest.user_service.controller;
 
 import hope.harvest.user_service.dto.*;
-import hope.harvest.user_service.service.Service;
+import hope.harvest.user_service.service.UserService;
 import hope.harvest.user_service.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class UserController {
 
     @Autowired
-    private Service service;
+    private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping("/auth/register")
     public ResponseEntity<ApiResponse<LoginResponseDto>> register(@RequestBody UserRegistrationDto dto) {
         try {
-            LoginResponseDto response = service.register(dto);
+            LoginResponseDto response = userService.register(dto);
             ApiResponse<LoginResponseDto> apiResponse = new ApiResponse<>("success", "Registration successful", response);
             return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<ApiResponse<LoginResponseDto>> login(@RequestBody LoginDto dto) {
         try {
-            LoginResponseDto response = service.login(dto);
+            LoginResponseDto response = userService.login(dto);
             ApiResponse<LoginResponseDto> apiResponse = new ApiResponse<>("success", "Login successful", response);
             return ResponseEntity.ok(apiResponse);
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class UserController {
     @PostMapping("/auth/logout")
     public ResponseEntity<ApiResponse<String>> logout(@RequestBody LogoutDto dto) {
         try {
-            service.logout(dto.getRefreshToken());
+            userService.logout(dto.getRefreshToken());
             ApiResponse<String> apiResponse = new ApiResponse<>("success", "Logout successful", null);
             return ResponseEntity.ok(apiResponse);
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class UserController {
     @GetMapping("/users/me")
     public ResponseEntity<ApiResponse<UserProfileDto>> getProfile(HttpServletRequest request) {
         UUID userId = extractUserIdFromRequest(request);
-        UserProfileDto dto = service.getCurrentUserProfile(userId);
+        UserProfileDto dto = userService.getCurrentUserProfile(userId);
         return ResponseEntity.ok(new ApiResponse<>("success", "Profile loaded", dto));
     }
 
@@ -89,7 +89,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> updateProfile(@RequestBody UserProfileUpdateDto profileUpdateDto,
                                                              HttpServletRequest request) {
         UUID userId = extractUserIdFromRequest(request);
-        service.updateUserProfile(userId, profileUpdateDto);
+        userService.updateUserProfile(userId, profileUpdateDto);
         return ResponseEntity.ok(new ApiResponse<>("success", "Profile updated", null));
     }
 
@@ -99,7 +99,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> updatePassword(@RequestBody UserPasswordUpdateDto passwordUpdateDto,
                                                               HttpServletRequest request) {
         UUID userId = extractUserIdFromRequest(request);
-        service.updateUserPassword(userId, passwordUpdateDto);
+        userService.updateUserPassword(userId, passwordUpdateDto);
         return ResponseEntity.ok(new ApiResponse<>("success", "Password updated", null));
     }
 
@@ -107,14 +107,14 @@ public class UserController {
 
     @GetMapping("/admin/users")
     public ResponseEntity<ApiResponse<List<AdminUserDto>>> getAllAdminUsers() {
-        List<AdminUserDto> users = service.getAllAdminUsers();
+        List<AdminUserDto> users = userService.getAllAdminUsers();
         return ResponseEntity.ok(new ApiResponse<>("success", "All users fetched", users));
     }
 
 
     @GetMapping("/admin/users/{userId}")
     public ResponseEntity<ApiResponse<AdminUserDto>> getAdminUserById(@PathVariable UUID userId) {
-        AdminUserDto user = service.getAdminUserById(userId);
+        AdminUserDto user = userService.getAdminUserById(userId);
         return ResponseEntity.ok(new ApiResponse<>("success", "User details fetched", user));
     }
 

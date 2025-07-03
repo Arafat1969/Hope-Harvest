@@ -11,7 +11,10 @@ import hope.harvest.donation_payment.repo.PaymentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import hope.harvest.donation_payment.model.DonationStatus;
 
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -164,7 +167,7 @@ public class DonationPaymentService {
         Payment payment = paymentRepo.findById(requestDTO.getPaymentId())
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
-        if (!payment.getStatus().equals("PENDING")) {
+        if (!"PENDING".equals(payment.getStatus())) {
             throw new RuntimeException("Payment already processed");
         }
 
@@ -172,32 +175,44 @@ public class DonationPaymentService {
             throw new RuntimeException("Invalid OTP");
         }
 
+        // Generate transaction ID
         String transactionId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+
         payment.setStatus("COMPLETED");
         payment.setTransactionId(transactionId);
         paymentRepo.save(payment);
 
         Donation donation = payment.getDonation();
+
+        // Set amount from payment if donation amount is 0 or null
+        if (donation.getAmount() == null || donation.getAmount().compareTo(BigDecimal.ZERO) == 0) {
+            donation.setAmount(payment.getAmount());
+        }
+
         donation.setStatus("COMPLETED");
         donation.setTransactionID(transactionId);
         donation.setPaymentMethod(payment.getGatewayName());
         donation.setTrackingKey("TRK-" + donation.getDonationID().toString().substring(0, 8));
         donationRepo.save(donation);
 
-
         Campaign campaign = donation.getCampaign();
-        campaign.setCollectedAmount(campaign.getCollectedAmount().add(donation.getAmount()));
+        BigDecimal donationAmount = donation.getAmount() != null ? donation.getAmount() : BigDecimal.ZERO;
+        BigDecimal currentAmount = campaign.getCollectedAmount() != null ? campaign.getCollectedAmount() : BigDecimal.ZERO;
+
+        campaign.setCollectedAmount(currentAmount.add(donationAmount));
         campaignRepo.save(campaign);
 
         return new DonationSummaryDTO(
                 donation.getDonationID(),
-                donation.getCampaign().getTitle(),
+                campaign.getTitle(),
                 donation.getAmount(),
                 donation.getDonationDate(),
                 donation.getPaymentMethod(),
                 requestDTO.getOrganizationName(),
                 donation.getTransactionID(),
                 donation.getTrackingKey()
+
         );
     }
+
 }

@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @org.springframework.stereotype.Service
-public class Service {
+public class UserService {
 
     @Autowired
     private UserRepo userRepo;

@@ -70,4 +70,12 @@ public class CampaignSummaryDTO {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public String getImageUrl() {
+        if (image != null && !image.isEmpty()) {
+            return image;
+        } else {
+            return "default-image-url"; // Return a default image URL if none is provided
+        }
+    }
 }
