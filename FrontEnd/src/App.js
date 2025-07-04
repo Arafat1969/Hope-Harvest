@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import Sidebar from './components/about';
+import AboutPage from './components/AboutPage';
 import AdminDashboard from './components/AdminDashboard';
 import ApiTester from './components/ApiTester';
 import ApplyFundsLayout from './components/applyfundcontent';
@@ -12,7 +12,7 @@ import DonationTrackingPage from './components/DonationTrackingPage';
 import Gallery from './components/gallerycomponent';
 import HomePage from './components/HomePage';
 import Login from './components/login';
-import Navbar from './components/navbar';
+import Navbar from './components/Navbar';
 import PaymentInfoPage from './components/PaymentInfoPage';
 import PaymentOTPPage from './components/PaymentOTPPage';
 import PaymentPage from './components/PaymentPage';
@@ -25,6 +25,9 @@ import VolunteerActivityLayout from './components/volunteeractivity';
 import Footer from './components/Footer';
 
 function App() {
+  console.log("AboutPage =>", AboutPage);
+  console.log("Navbar =>", Navbar);
+
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
@@ -88,7 +91,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><HomePage /></>} />
-        <Route path="/about" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><Sidebar /></>} />
+        <Route path="/about" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><AboutPage /></>} />
         <Route path="/projects" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><ProjectContent /></>} />
         <Route path="/campaigns" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><CampaignsList /></>} />
         <Route path="/donate" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><DonationForm /></>} />
