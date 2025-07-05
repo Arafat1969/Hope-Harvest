@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './HomePage.module.css';
-import AnimatedNumber from '../components/AnimatedNumber'; // Adjust path if your components folder is elsewhere
+import AnimatedNumber from './AnimatedNumber';
 
 // Custom Hook to detect when an element is in view
 const useInView = (options) => {

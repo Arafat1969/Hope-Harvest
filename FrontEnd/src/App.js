@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import AboutPage from './components/AboutPage';
 import AdminDashboard from './components/AdminDashboard';
@@ -24,9 +24,18 @@ import UserProfile from './components/UserProfile';
 import VolunteerActivityLayout from './components/volunteeractivity';
 import Footer from './components/Footer';
 
+// Redirect component using useNavigate hook
+const Redirect = ({ to, replace = false }) => {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    navigate(to, { replace });
+  }, [navigate, to, replace]);
+  
+  return null;
+};
+
 function App() {
-  console.log("AboutPage =>", AboutPage);
-  console.log("Navbar =>", Navbar);
 
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -104,7 +113,7 @@ function App() {
         <Route path="/apply-for-funds" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><ApplyFundsLayout /></>} />
         <Route path="/request-campaign" element={
           !isAuthenticated ? 
-            <Navigate to="/login" replace /> : 
+            <Redirect to="/login" replace /> : 
             <>
               <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
               <CampaignRequest />
@@ -114,19 +123,19 @@ function App() {
         <Route path="/test-api" element={<><Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} /><ApiTester /></>} />
         <Route path="/login" element={
           isAuthenticated ? 
-            (user?.role === 'ADMIN' ? <Navigate to="/admin-dashboard" replace /> : <Navigate to="/dashboard" replace />) : 
+            (user?.role === 'ADMIN' ? <Redirect to="/admin-dashboard" replace /> : <Redirect to="/dashboard" replace />) : 
             <Login onLoginSuccess={handleLoginSuccess} />
         } />
         <Route path="/register" element={
           isAuthenticated ? 
-            (user?.role === 'ADMIN' ? <Navigate to="/admin-dashboard" replace /> : <Navigate to="/dashboard" replace />) : 
+            (user?.role === 'ADMIN' ? <Redirect to="/admin-dashboard" replace /> : <Redirect to="/dashboard" replace />) : 
             <Register />
         } />
         <Route path="/dashboard" element={
           !isAuthenticated ? 
-            <Navigate to="/login" replace /> : 
+            <Redirect to="/login" replace /> : 
             user?.role === 'ADMIN' ? 
-            <Navigate to="/admin-dashboard" replace /> :
+            <Redirect to="/admin-dashboard" replace /> :
             <>
               <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
               <UserDashboard />
@@ -134,9 +143,9 @@ function App() {
         } />
         <Route path="/admin-dashboard" element={
           !isAuthenticated ? 
-            <Navigate to="/login" replace /> : 
+            <Redirect to="/login" replace /> : 
             user?.role !== 'ADMIN' ? 
-            <Navigate to="/dashboard" replace /> :
+            <Redirect to="/dashboard" replace /> :
             <>
               <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
               <AdminDashboard />
@@ -144,13 +153,13 @@ function App() {
         } />
         <Route path="/profile" element={
           !isAuthenticated ? 
-            <Navigate to="/login" replace /> : 
+            <Redirect to="/login" replace /> : 
             <>
               <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
               <UserProfile user={user} />
             </>
         } />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Redirect to="/" replace />} />
       </Routes>
       <Footer />
     </Router>
