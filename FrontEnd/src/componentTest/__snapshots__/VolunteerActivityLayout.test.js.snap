@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VolunteerActivityLayout matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    style="min-height: 100vh; padding-top: 2rem; padding-bottom: 2rem;"
+  >
+    <div
+      class="container"
+    >
+      <div
+        style="border-radius: 25px; padding: 4rem 2rem; color: white; margin-bottom: 3rem; position: relative; overflow: hidden; text-align: center;"
+      >
+        <i
+          class="fas fa-users"
+          style="position: absolute; top: -50px; right: -50px; opacity: 0.1; font-size: 20rem; transform: rotate(-15deg);"
+        />
+        <h1
+          class="display-3 fw-bold mb-4"
+        >
+          Volunteer with Hope Harvest
+        </h1>
+        <p
+          class="lead mb-4"
+          style="font-size: 1.3rem;"
+        >
+          Join our dedicated community of volunteers making a real difference across Bangladesh
+        </p>
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;"
+        >
+          <div
+            style="color: white; border-radius: 15px; padding: 1.5rem; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1);"
+          >
+            <h3>
+              150K+
+            </h3>
+            <p
+              class="mb-0"
+            >
+              Hours Served
+            </p>
+          </div>
+          <div
+            style="color: white; border-radius: 15px; padding: 1.5rem; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1);"
+          >
+            <h3>
+              100K+
+            </h3>
+            <p
+              class="mb-0"
+            >
+              Lives Touched
+            </p>
+          </div>
+          <div
+            style="color: white; border-radius: 15px; padding: 1.5rem; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1);"
+          >
+            <h3>
+              5K+
+            </h3>
+            <p
+              class="mb-0"
+            >
+              Students Helped
+            </p>
+          </div>
+          <div
+            style="color: white; border-radius: 15px; padding: 1.5rem; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1);"
+          >
+            <h3>
+              35K+
+            </h3>
+            <p
+              class="mb-0"
+            >
+              Patients Served
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="row mb-4"
+      >
+        <div
+          class="col-12"
+        >
+          <h4
+            class="text-center mb-4"
+            style="color: rgb(46, 125, 50); font-weight: 700;"
+          >
+            Explore Volunteer Journey
+          </h4>
+        </div>
+        <div
+          class="col-md-6 col-lg-3 mb-3"
+        >
+          <div
+            style="color: white; border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;"
+          >
+            <i
+              class="fas fa-bullseye"
+              style="font-size: 2rem; margin-bottom: 1rem;"
+            />
+            <h6
+              style="font-weight: 600; margin-bottom: 0.5rem;"
+            >
+              Aim
+            </h6>
+            <small>
+              Step 1
+            </small>
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-lg-3 mb-3"
+        >
+          <div
+            style="background: white; color: rgb(51, 51, 51); border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border: 2px solid #e8f5e9; text-align: center;"
+          >
+            <i
+              class="fas fa-hands-helping"
+              style="font-size: 2rem; margin-bottom: 1rem;"
+            />
+            <h6
+              style="font-weight: 600; margin-bottom: 0.5rem;"
+            >
+              Activity
+            </h6>
+            <small>
+              Step 2
+            </small>
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-lg-3 mb-3"
+        >
+          <div
+            style="background: white; color: rgb(51, 51, 51); border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border: 2px solid #e8f5e9; text-align: center;"
+          >
+            <i
+              class="fas fa-clipboard-check"
+              style="font-size: 2rem; margin-bottom: 1rem;"
+            />
+            <h6
+              style="font-weight: 600; margin-bottom: 0.5rem;"
+            >
+              Requirements
+            </h6>
+            <small>
+              Step 3
+            </small>
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-lg-3 mb-3"
+        >
+          <div
+            style="background: white; color: rgb(51, 51, 51); border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border: 2px solid #e8f5e9; text-align: center;"
+          >
+            <i
+              class="fas fa-trophy"
+              style="font-size: 2rem; margin-bottom: 1rem;"
+            />
+            <h6
+              style="font-weight: 600; margin-bottom: 0.5rem;"
+            >
+              Achievements
+            </h6>
+            <small>
+              Step 4
+            </small>
+          </div>
+        </div>
+      </div>
+      <div
+        style="width: 100%; height: 6px; background: rgb(224, 224, 224); border-radius: 3px; margin-bottom: 2rem; overflow: hidden;"
+      >
+        <div
+          style="height: 100%; border-radius: 3px; transition: width 0.5s ease; width: 25%;"
+        />
+      </div>
+      <div
+        style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;"
+      >
+        <div
+          style="width: 15px; height: 15px; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; transform: scale(1.3);"
+        />
+        <div
+          style="width: 15px; height: 15px; border-radius: 50%; background: rgb(224, 224, 224); cursor: pointer; transition: all 0.3s ease;"
+        />
+        <div
+          style="width: 15px; height: 15px; border-radius: 50%; background: rgb(224, 224, 224); cursor: pointer; transition: all 0.3s ease;"
+        />
+        <div
+          style="width: 15px; height: 15px; border-radius: 50%; background: rgb(224, 224, 224); cursor: pointer; transition: all 0.3s ease;"
+        />
+      </div>
+      <div
+        class="row justify-content-center"
+      >
+        <div
+          class="col-lg-10"
+        >
+          <div
+            class="active-card"
+            style="background: white; border-radius: 20px; padding: 2rem; margin: 1rem 0px; box-shadow: 0 20px 60px rgba(76, 175, 80, 0.3); border: 3px solid transparent; transition: all 0.4s ease; cursor: pointer; position: relative; overflow: hidden; border-color: #4caf50; transform: translateY(-10px);"
+          >
+            <i
+              class="fas fa-bullseye"
+              style="position: absolute; top: 20px; right: 20px; font-size: 2rem; color: rgb(76, 175, 80); transition: all 0.3s ease; transform: scale(1.2);"
+            />
+            <div
+              style="width: 60px; height: 60px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0px auto 1rem; position: relative; z-index: 2;"
+            >
+              1
+            </div>
+            <h3
+              style="color: rgb(46, 125, 50); font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; text-align: center;"
+            >
+              Aim
+            </h3>
+            <div
+              style="color: rgb(51, 51, 51); line-height: 1.7; font-size: 1rem;"
+            >
+              <p
+                class="mb-3"
+                style="text-align: justify;"
+              >
+                The volunteer program at Hope Harvest aims to create a network of dedicated individuals who contribute their time, skills, and passion to make a tangible difference in communities across Bangladesh. We believe in the power of collective action and that every person has something valuable to offer in service to others. Our goal is to harness this potential by providing structured opportunities for meaningful engagement.
+              </p>
+              <p
+                class="mb-3"
+                style="text-align: justify;"
+              >
+                We strive to build a diverse volunteer base that represents all segments of society, including students, professionals, retirees, and homemakers. By bringing together people from different backgrounds, we create a rich pool of skills, perspectives, and experiences that enhance our ability to address complex community challenges. Our volunteer program is designed to be inclusive, welcoming anyone with a sincere desire to help regardless of their previous experience.
+              </p>
+              <p
+                class="mb-3"
+                style="text-align: justify;"
+              >
+                Beyond the immediate impact on beneficiaries, we aim to foster a culture of volunteerism and civic responsibility in Bangladesh. Through volunteering with Hope Harvest, participants develop empathy, leadership skills, and a deeper understanding of social issues. Many volunteers report that their experiences transform their worldview and inspire continued community involvement throughout their lives.
+              </p>
+              <p
+                class="mb-3"
+                style="text-align: justify;"
+              >
+                The program also serves as a bridge between different communities, creating connections between those who serve and those who are served. These relationships help break down stereotypes, build mutual respect, and create a stronger sense of shared humanity. Ultimately, we envision a society where volunteerism is a natural and valued part of citizenship, contributing to social cohesion and collective wellbeing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="row mt-5"
+      >
+        <div
+          class="col-12 text-center"
+        >
+          <button
+            style="border-radius: 50px; padding: 20px 50px; color: white; font-weight: 700; font-size: 1.3rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4); text-transform: uppercase; letter-spacing: 2px;"
+          >
+            <i
+              class="fas fa-hands-helping me-2"
+            />
+            Join as Volunteer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

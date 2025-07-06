@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { campaignService } from '../services/campaignService';
 import { donationService } from '../services/donationService';
+import { volunteerService } from '../services/volunteerService';
+import { eventService } from '../services/eventService';
+import { fundApplicationService } from '../services/fundApplicationService';
 
 const styles = {
   adminCard: {
@@ -12,167 +16,136 @@ const styles = {
   statCard: {
     background: 'linear-gradient(135deg, #FF5722 0%, #D84315 100%)',
     color: 'white',
-    borderRadius: '0.75rem'
+    borderRadius: '0.75rem',
+    cursor: 'pointer',
+    transition: 'transform 0.2s, box-shadow 0.2s'
   },
-  pendingCard: {
-    borderLeft: '4px solid #FF9800'
-  },
-  approvedCard: {
-    borderLeft: '4px solid #4CAF50'
-  },
-  rejectedCard: {
-    borderLeft: '4px solid #F44336'
+  statCardHover: {
+    transform: 'translateY(-2px)',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)'
   }
 };
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [adminStats, setAdminStats] = useState({
     totalCampaigns: 0,
     totalDonations: 0,
     totalUsers: 0,
     pendingCampaigns: 0,
-    totalFundsRaised: 0
-  });  const [recentDonations, setRecentDonations] = useState([]);
-  const [campaignRequests, setCampaignRequests] = useState([]);
+    totalFundsRaised: 0,
+    successfulDonations: 0,
+    failedDonations: 0,
+    pendingDonations: 0,
+    totalVolunteers: 0,
+    totalEvents: 0,
+    totalFundApplications: 0
+  });
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchAdminData();
   }, []);
+
   const fetchAdminData = async () => {
     try {
       setLoading(true);
       
-      // Fetch admin statistics and data using admin APIs
-      const [campaignsRes, donationStatsRes, userStatsRes, campaignRequestsRes, recentDonationsRes] = await Promise.allSettled([
+      // Fetch all admin statistics
+      const [
+        campaignsRes, 
+        donationStatsRes, 
+        userRes, 
+        campaignRequestsRes, 
+        donationsRes,
+        volunteersRes,
+        eventsRes,
+        fundApplicationsRes
+      ] = await Promise.allSettled([
         campaignService.getAllCampaignsAdmin(),
         donationService.getDonationStatistics(),
-        authService.getUserStatistics(),
+        authService.getAllUsers(),
         campaignService.getAllCampaignRequests(),
-        donationService.getRecentDonations(5)
+        donationService.getAllDonations(),
+        volunteerService.getAllVolunteersAdmin(),
+        eventService.getAllEventsAdmin(),
+        fundApplicationService.getAllFundApplicationsAdmin()
       ]);
 
+      // Initialize stats object
+      let stats = {
+        totalCampaigns: 0,
+        totalDonations: 0,
+        totalUsers: 0,
+        pendingCampaigns: 0,
+        totalFundsRaised: 0,
+        successfulDonations: 0,
+        failedDonations: 0,
+        pendingDonations: 0,
+        totalVolunteers: 0,
+        totalEvents: 0,
+        totalFundApplications: 0
+      };
+
       // Handle campaigns data
-      if (campaignsRes.status === 'fulfilled' && campaignsRes.value.status === 'success') {
-        const campaigns = campaignsRes.value.data || [];
-        setAdminStats(prev => ({
-          ...prev,
-          totalCampaigns: campaigns.length,
-          totalFundsRaised: campaigns.reduce((sum, c) => sum + (c.currentAmount || 0), 0)
-        }));
+      if (campaignsRes.status === 'fulfilled' && campaignsRes.value) {
+        const campaigns = campaignsRes.value.data || campaignsRes.value || [];
+        stats.totalCampaigns = campaigns.length;
+        stats.totalFundsRaised = campaigns.reduce((sum, campaign) => sum + (parseFloat(campaign.collectedAmount) || 0), 0);
       }
 
       // Handle donation statistics
-      if (donationStatsRes.status === 'fulfilled' && donationStatsRes.value.status === 'success') {
-        const donationStats = donationStatsRes.value.data || {};
-        setAdminStats(prev => ({
-          ...prev,
-          totalDonations: donationStats.totalDonations || 0,
-          totalFundsRaised: donationStats.totalAmount || prev.totalFundsRaised
-        }));
+      if (donationStatsRes.status === 'fulfilled' && donationStatsRes.value) {
+        const donationStats = donationStatsRes.value.data || donationStatsRes.value || {};
+        stats.totalDonations = donationStats.totalDonations || 0;
+        stats.successfulDonations = donationStats.successfulDonations || 0;
+        stats.failedDonations = donationStats.failedDonations || 0;
+        stats.pendingDonations = donationStats.pendingDonations || 0;
+        if (donationStats.totalAmount) {
+          stats.totalFundsRaised = parseFloat(donationStats.totalAmount);
+        }
       }
 
       // Handle user statistics
-      if (userStatsRes.status === 'fulfilled' && userStatsRes.value.status === 'success') {
-        const userStats = userStatsRes.value.data || {};
-        setAdminStats(prev => ({
-          ...prev,
-          totalUsers: userStats.totalUsers || 0
-        }));
+      if (userRes.status === 'fulfilled' && userRes.value) {
+        const users = userRes.value.data || userRes.value || [];
+        stats.totalUsers = users.length;
       }
 
       // Handle campaign requests
-      if (campaignRequestsRes.status === 'fulfilled' && campaignRequestsRes.value.status === 'success') {
-        const requests = campaignRequestsRes.value.data || [];
-        setCampaignRequests(requests);
-        setAdminStats(prev => ({
-          ...prev,
-          pendingCampaigns: requests.filter(r => r.status === 'pending').length
-        }));
-      } else {
-        // Fallback mock data if API not implemented yet
-        setCampaignRequests([
-          {
-            id: 1,
-            title: "Emergency Flood Relief - Sylhet",
-            requester: "Mohammad Rahman",
-            requestDate: "2025-06-15",
-            status: "pending",
-            targetAmount: 500000
-          },
-          {
-            id: 2,
-            title: "Winter Clothing Distribution",
-            requester: "Fatima Khatun",
-            requestDate: "2025-06-14",
-            status: "pending",
-            targetAmount: 200000
-          }
-        ]);
+      if (campaignRequestsRes.status === 'fulfilled' && campaignRequestsRes.value) {
+        const requests = campaignRequestsRes.value.data || campaignRequestsRes.value || [];
+        stats.pendingCampaigns = requests.filter(r => r.status?.toLowerCase() === 'pending').length;
       }
 
-      // Handle recent donations
-      if (recentDonationsRes.status === 'fulfilled' && recentDonationsRes.value.status === 'success') {
-        const donations = recentDonationsRes.value.data || [];
-        setRecentDonations(donations);
-      } else {
-        // Fallback mock data
-        setRecentDonations([
-          {
-            id: 1,
-            donor: "Anonymous",
-            amount: 5000,
-            campaign: "Flood Relief Fund",
-            date: "2025-06-19",
-            status: "completed"
-          },
-          {
-            id: 2,
-            donor: "Sarah Ahmed",
-            amount: 2000,
-            campaign: "Education Support",
-            date: "2025-06-19",
-            status: "completed"
-          }
-        ]);
+      // Handle volunteers
+      if (volunteersRes.status === 'fulfilled' && volunteersRes.value) {
+        const volunteers = volunteersRes.value.data || volunteersRes.value || [];
+        stats.totalVolunteers = volunteers.length;
       }
+
+      // Handle events
+      if (eventsRes.status === 'fulfilled' && eventsRes.value) {
+        const events = eventsRes.value.data || eventsRes.value || [];
+        stats.totalEvents = events.length;
+      }
+
+      // Handle fund applications
+      if (fundApplicationsRes.status === 'fulfilled' && fundApplicationsRes.value) {
+        const fundApplications = fundApplicationsRes.value.data || fundApplicationsRes.value || [];
+        console.log(fundApplications);
+        stats.totalFundApplications = fundApplications.length;
+      }
+
+      setAdminStats(stats);
 
     } catch (error) {
       console.error('Error fetching admin data:', error);
       setError('Failed to load admin dashboard data');
     } finally {
       setLoading(false);
-    }
-  };
-  const handleCampaignAction = async (requestId, action) => {
-    try {
-      // Use admin APIs to approve/reject campaign requests
-      if (action === 'approve') {
-        await campaignService.approveCampaignRequest(requestId);
-      } else if (action === 'reject') {
-        await campaignService.rejectCampaignRequest(requestId, 'Rejected by admin');
-      }
-      
-      // Update local state
-      setCampaignRequests(prev => 
-        prev.map(req => 
-          req.id === requestId 
-            ? { ...req, status: action === 'approve' ? 'approved' : 'rejected' }
-            : req
-        )
-      );
-
-      // Update pending count
-      setAdminStats(prev => ({
-        ...prev,
-        pendingCampaigns: prev.pendingCampaigns - 1
-      }));
-
-    } catch (error) {
-      console.error(`Error ${action}ing campaign:`, error);
-      // Show error message to user
-      alert(`Failed to ${action} campaign. Please try again.`);
     }
   };
 
@@ -184,18 +157,8 @@ const AdminDashboard = () => {
     }).format(amount || 0);
   };
 
-  const getStatusBadgeClass = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'approved':
-      case 'completed':
-        return 'badge bg-success';
-      case 'pending':
-        return 'badge bg-warning';
-      case 'rejected':
-        return 'badge bg-danger';
-      default:
-        return 'badge bg-secondary';
-    }
+  const handleCardClick = (route) => {
+    navigate(route);
   };
 
   if (loading) {
@@ -239,182 +202,188 @@ const AdminDashboard = () => {
                 Admin Dashboard 🛡️
               </h2>
               <p className="text-muted mb-0">
-                Manage campaigns, donations, and user activities across the platform
+                Manage campaigns, donations, events, volunteers, and user activities across the platform
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Statistics Cards */}
+      {/* Main Statistics Cards */}
       <div className="row mb-5">
-        <div className="col-lg-2 col-md-4 mb-3">
-          <div className="card" style={styles.statCard}>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/campaigns')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
             <div className="card-body text-center">
-              <i className="fas fa-bullhorn fa-2x mb-3"></i>
-              <h4 className="mb-1">{adminStats.totalCampaigns}</h4>
-              <p className="mb-0 small">Total Campaigns</p>
+              <i className="fas fa-bullhorn fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.totalCampaigns}</h3>
+              <p className="mb-0">Total Campaigns</p>
             </div>
           </div>
         </div>
-        <div className="col-lg-2 col-md-4 mb-3">
-          <div className="card" style={styles.statCard}>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/donations')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
             <div className="card-body text-center">
-              <i className="fas fa-hand-holding-heart fa-2x mb-3"></i>
-              <h4 className="mb-1">{adminStats.totalDonations}</h4>
-              <p className="mb-0 small">Total Donations</p>
+              <i className="fas fa-hand-holding-heart fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.totalDonations}</h3>
+              <p className="mb-0">Total Donations</p>
             </div>
           </div>
         </div>
-        <div className="col-lg-2 col-md-4 mb-3">
-          <div className="card" style={styles.statCard}>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/volunteers')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
             <div className="card-body text-center">
-              <i className="fas fa-users fa-2x mb-3"></i>
-              <h4 className="mb-1">{adminStats.totalUsers}</h4>
-              <p className="mb-0 small">Total Users</p>
+              <i className="fas fa-hands-helping fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.totalVolunteers}</h3>
+              <p className="mb-0">Total Volunteers</p>
             </div>
           </div>
         </div>
-        <div className="col-lg-2 col-md-4 mb-3">
-          <div className="card" style={styles.statCard}>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/events')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
             <div className="card-body text-center">
-              <i className="fas fa-clock fa-2x mb-3"></i>
-              <h4 className="mb-1">{adminStats.pendingCampaigns}</h4>
-              <p className="mb-0 small">Pending Requests</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-4 col-md-8 mb-3">
-          <div className="card" style={styles.statCard}>
-            <div className="card-body text-center">
-              <i className="fas fa-money-bill-wave fa-2x mb-3"></i>
-              <h4 className="mb-1">{formatCurrency(adminStats.totalFundsRaised)}</h4>
-              <p className="mb-0 small">Total Funds Raised</p>
+              <i className="fas fa-calendar-alt fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.totalEvents}</h3>
+              <p className="mb-0">Total Events</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="row">
-        {/* Campaign Requests Management */}
-        <div className="col-lg-8 mb-4">
-          <div className="card" style={styles.adminCard}>
-            <div className="card-header bg-white">
-              <h5 className="mb-0 text-danger">
-                <i className="fas fa-tasks me-2"></i>
-                Campaign Requests Management
-              </h5>
-            </div>
-            <div className="card-body">
-              {campaignRequests.length === 0 ? (
-                <div className="text-center py-4 text-muted">
-                  <i className="fas fa-inbox fa-2x mb-3"></i>
-                  <p>No pending campaign requests</p>
-                </div>
-              ) : (
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Campaign Title</th>
-                        <th>Requester</th>
-                        <th>Target Amount</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {campaignRequests.map((request) => (
-                        <tr key={request.id}>
-                          <td>
-                            <div style={request.status === 'pending' ? styles.pendingCard : 
-                                       request.status === 'approved' ? styles.approvedCard : 
-                                       styles.rejectedCard} 
-                                 className="p-2">
-                              <strong>{request.title}</strong>
-                            </div>
-                          </td>
-                          <td>{request.requester}</td>
-                          <td className="fw-bold text-primary">
-                            {formatCurrency(request.targetAmount)}
-                          </td>
-                          <td>
-                            {new Date(request.requestDate).toLocaleDateString()}
-                          </td>
-                          <td>
-                            <span className={getStatusBadgeClass(request.status)}>
-                              {request.status}
-                            </span>
-                          </td>
-                          <td>
-                            {request.status === 'pending' && (
-                              <div className="btn-group" role="group">
-                                <button
-                                  className="btn btn-success btn-sm"
-                                  onClick={() => handleCampaignAction(request.id, 'approve')}
-                                >
-                                  <i className="fas fa-check"></i>
-                                </button>
-                                <button
-                                  className="btn btn-danger btn-sm"
-                                  onClick={() => handleCampaignAction(request.id, 'reject')}
-                                >
-                                  <i className="fas fa-times"></i>
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+      {/* Secondary Statistics Cards */}
+      <div className="row mb-5">
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/users')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
+            <div className="card-body text-center">
+              <i className="fas fa-users fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.totalUsers}</h3>
+              <p className="mb-0">Total Users</p>
             </div>
           </div>
         </div>
 
-        {/* Recent Donations */}
-        <div className="col-lg-4 mb-4">
-          <div className="card" style={styles.adminCard}>
-            <div className="card-header bg-white">
-              <h5 className="mb-0 text-danger">
-                <i className="fas fa-heart me-2"></i>
-                Recent Donations
-              </h5>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/fund-applications')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
+            <div className="card-body text-center">
+              <i className="fas fa-money-check-alt fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.totalFundApplications}</h3>
+              <p className="mb-0">Fund Applications</p>
             </div>
-            <div className="card-body">
-              {recentDonations.length === 0 ? (
-                <div className="text-center py-4 text-muted">
-                  <i className="fas fa-heart fa-2x mb-3"></i>
-                  <p>No recent donations</p>
-                </div>
-              ) : (
-                <div>
-                  {recentDonations.map((donation) => (
-                    <div key={donation.id} className="border-bottom pb-3 mb-3">
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div>
-                          <h6 className="mb-1">{donation.donor}</h6>
-                          <small className="text-muted">{donation.campaign}</small>
-                        </div>
-                        <div className="text-end">
-                          <div className="fw-bold text-success">
-                            {formatCurrency(donation.amount)}
-                          </div>
-                          <span className={getStatusBadgeClass(donation.status)}>
-                            {donation.status}
-                          </span>
-                        </div>
-                      </div>
-                      <small className="text-muted">
-                        {new Date(donation.date).toLocaleDateString()}
-                      </small>
-                    </div>
-                  ))}
-                </div>
-              )}
+          </div>
+        </div>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div 
+            className="card" 
+            style={styles.statCard}
+            onClick={() => handleCardClick('/admin/campaign-requests')}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.statCardHover)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+          >
+            <div className="card-body text-center">
+              <i className="fas fa-clock fa-3x mb-3"></i>
+              <h3 className="mb-1">{adminStats.pendingCampaigns}</h3>
+              <p className="mb-0">Pending Requests</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card" style={styles.statCard}>
+            <div className="card-body text-center">
+              <i className="fas fa-money-bill-wave fa-3x mb-3"></i>
+              <h3 className="mb-1">{formatCurrency(adminStats.totalFundsRaised)}</h3>
+              <p className="mb-0">Total Funds Raised</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Donation Statistics Row */}
+      <div className="row mb-4">
+        <div className="col-md-4 mb-3">
+          <div className="card border-success">
+            <div className="card-body text-center">
+              <i className="fas fa-check-circle text-success fa-2x mb-2"></i>
+              <h5 className="text-success">{adminStats.successfulDonations}</h5>
+              <small className="text-muted">Successful Donations</small>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4 mb-3">
+          <div className="card border-warning">
+            <div className="card-body text-center">
+              <i className="fas fa-hourglass-half text-warning fa-2x mb-2"></i>
+              <h5 className="text-warning">{adminStats.pendingDonations}</h5>
+              <small className="text-muted">Pending Donations</small>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4 mb-3">
+          <div className="card border-danger">
+            <div className="card-body text-center">
+              <i className="fas fa-times-circle text-danger fa-2x mb-2"></i>
+              <h5 className="text-danger">{adminStats.failedDonations}</h5>
+              <small className="text-muted">Failed Donations</small>
             </div>
           </div>
         </div>
@@ -425,42 +394,54 @@ const AdminDashboard = () => {
         <div className="col-12">
           <div className="card" style={styles.adminCard}>
             <div className="card-body">
-              <h5 className="text-danger mb-3">Quick Admin Actions</h5>
+              <h5 className="text-danger mb-3">
+                <i className="fas fa-tools me-2"></i>
+                Quick Admin Actions
+              </h5>
               <div className="row">
-                <div className="col-md-2 mb-2">
-                  <button className="btn btn-danger w-100">
-                    <i className="fas fa-plus me-2"></i>
-                    Create Campaign
+                <div className="col-lg-2 col-md-4 mb-2">
+                  <button 
+                    className="btn btn-danger w-100"
+                    onClick={() => navigate('/admin/create/campaigns')}
+                  >
+                    <i className="fas fa-bullhorn me-2"></i>
+                    Create Campaigns
                   </button>
                 </div>
-                <div className="col-md-2 mb-2">
-                  <button className="btn btn-outline-danger w-100">
-                    <i className="fas fa-users me-2"></i>
-                    Manage Users
+                <div className="col-lg-2 col-md-4 mb-2">
+                  <button 
+                    className="btn btn-outline-danger w-100"
+                    onClick={() => navigate('/admin/create/events')}
+                  >
+                    <i className="fas fa-hands-helping me-2"></i>
+                    Create Event
                   </button>
                 </div>
-                <div className="col-md-2 mb-2">
-                  <button className="btn btn-outline-danger w-100">
-                    <i className="fas fa-chart-bar me-2"></i>
-                    View Reports
+                <div className="col-lg-2 col-md-4 mb-2">
+                  <button 
+                    className="btn btn-outline-danger w-100"
+                    onClick={() => navigate('/admin/create/team')}
+                  >
+                    <i className="fas fa-calendar-alt me-2"></i>
+                    Create Team
                   </button>
                 </div>
-                <div className="col-md-2 mb-2">
-                  <button className="btn btn-outline-danger w-100">
-                    <i className="fas fa-cog me-2"></i>
-                    Settings
-                  </button>
-                </div>
-                <div className="col-md-2 mb-2">
-                  <button className="btn btn-outline-danger w-100">
+                <div className="col-lg-2 col-md-4 mb-2">
+                  <button 
+                    className="btn btn-outline-danger w-100"
+                    onClick={() => navigate('/admin/fund-applications')}
+                  >
                     <i className="fas fa-money-check-alt me-2"></i>
-                    Payments
+                    Fund Applications
                   </button>
                 </div>
-                <div className="col-md-2 mb-2">
-                  <button className="btn btn-outline-danger w-100">
-                    <i className="fas fa-file-export me-2"></i>
-                    Export Data
+                <div className="col-lg-2 col-md-4 mb-2">
+                  <button 
+                    className="btn btn-outline-danger w-100"
+                    onClick={() => navigate('/admin/campaign-requests')}
+                  >
+                    <i className="fas fa-chart-bar me-2"></i>
+                    Campaign Requests
                   </button>
                 </div>
               </div>

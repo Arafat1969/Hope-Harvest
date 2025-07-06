@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/donation-service")
 public class CampaignController {
 
     @Autowired

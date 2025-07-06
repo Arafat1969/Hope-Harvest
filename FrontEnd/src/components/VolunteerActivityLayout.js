@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './volunteerActivity.css';
 
 // Enhanced theme styles with green and white combination - innovative layout
@@ -146,6 +147,7 @@ const styles = {
 };
 
 const VolunteerActivityLayout = () => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
@@ -194,6 +196,10 @@ const VolunteerActivityLayout = () => {
       ]
     }
   ];
+
+  const handleJoinVolunteer = () => {
+    navigate('/volunteer-registration');
+  };
 
   const handleStepClick = (index) => {
     setActiveStep(index);
@@ -351,6 +357,7 @@ const VolunteerActivityLayout = () => {
           <div className="col-12 text-center">
             <button
               style={styles.joinButton}
+              onClick={handleJoinVolunteer}
               onMouseEnter={(e) => handleButtonHover(e, true)}
               onMouseLeave={(e) => handleButtonHover(e, false)}
             >

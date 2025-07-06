@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import Sidebar from './components/about';
+import Sidebar from './components/AboutPage';
 import AdminDashboard from './components/AdminDashboard';
 import ApiTester from './components/ApiTester';
 import ApplyFundsLayout from './components/applyfundcontent';
@@ -21,8 +21,22 @@ import ProjectContent from './components/projectContent';
 import Register from './components/register';
 import UserDashboard from './components/UserDashboard';
 import UserProfile from './components/UserProfile';
-import VolunteerActivityLayout from './components/volunteeractivity';
+import VolunteerActivityLayout from './components/VolunteerActivityLayout';
 import Footer from './components/Footer';
+import AdminDonationsPage from './components/AdminDonationsPage';
+import AdminCampaignsPage from './components/AdminCampaignsPage';
+import AdminVolunteersPage from './components/AdminVolunteersPage';
+import AdminEventsPage from './components/AdminEventsPage';
+import AdminUsersPage from './components/AdminUsersPage';
+import AdminFundApplicationsPage from './components/AdminFundApplicationsPage';
+import AdminCampaignRequestsPage from './components/AdminCampaignRequestsPage';
+import AdminCreateCampaignPage from './components/AdminCreateCampaignPage';
+import AdminCreateCampaignSuccessPage from './components/AdminCreateCampaignSuccessPage';
+import AdminCreateEventPage from './components/AdminCreateEventPage';
+import AdminCreateEventSuccessPage from './components/AdminCreateEventSuccessPage';
+import VolunteerRegistrationPage from './components/VolunteerRegistrationPage';
+import VolunteerRegistrationSuccessPage from './components/VolunteerRegistrationSuccessPage';
+// ...existing imports...
 
 function App() {
   // Authentication state
@@ -139,6 +153,150 @@ function App() {
               <AdminDashboard />
             </>
         } />
+        
+        <Route path="/admin/donations" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminDonationsPage />
+            </>
+        } />
+
+        <Route path="/admin/campaigns" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminCampaignsPage />
+            </>
+        } />
+
+
+         <Route path="/admin/volunteers" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminVolunteersPage />
+            </>
+        } />
+
+        <Route path="/admin/events" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminEventsPage />
+            </>
+        } />
+
+
+        <Route path="/admin/users" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminUsersPage />
+            </>
+        } />
+
+        <Route path="/admin/fund-applications" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminFundApplicationsPage />
+            </>
+        } />
+
+        <Route path="/admin/campaign-requests" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminCampaignRequestsPage />
+            </>
+        } />
+
+
+        <Route path="/admin/create/campaigns" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminCreateCampaignPage />
+            </>
+        } />
+        
+        <Route path="/admin/create/campaigns/success" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminCreateCampaignSuccessPage />
+            </>
+        } />
+
+        <Route path="/admin/create/events" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminCreateEventPage />
+            </>
+        } />
+        
+        <Route path="/admin/create/events/success" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <AdminCreateEventSuccessPage />
+            </>
+        } />
+
+
+        <Route path="/volunteer-registration" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <VolunteerRegistrationPage />
+            </>
+        } />
+        
+        <Route path="/volunteer-registration/success" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <VolunteerRegistrationSuccessPage />
+            </>
+        } />
+
         <Route path="/profile" element={
           !isAuthenticated ? 
             <Navigate to="/login" replace /> : 

@@ -1,6 +1,8 @@
 package hope.harvest.event_volunteer.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -42,7 +44,7 @@ public class Event {
     @Column(name = "status", nullable = false, length = 20)
     private String status = "UPCOMING";
 
-    @Convert(converter = RequiredGoodsConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "required_goods", columnDefinition = "jsonb")
     private List<RequiredGood> requiredGoods;
 

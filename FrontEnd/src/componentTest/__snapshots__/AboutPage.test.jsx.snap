@@ -1,0 +1,306 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AboutPage Component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    style="min-height: 100vh; padding-top: 2rem; padding-bottom: 2rem;"
+  >
+    <div
+      class="container"
+    >
+      <div
+        style="border-radius: 20px; padding: 3rem 2rem; color: white; margin-bottom: 3rem; position: relative; overflow: hidden;"
+      >
+        <i
+          class="fas fa-heart"
+          style="position: absolute; top: -50px; right: -50px; opacity: 0.1; font-size: 15rem; transform: rotate(-15deg);"
+        />
+        <div
+          class="row align-items-center"
+        >
+          <div
+            class="col-md-8"
+          >
+            <h1
+              class="display-4 fw-bold mb-4"
+            >
+              About Hope Harvest
+            </h1>
+            <p
+              class="lead mb-4"
+            >
+              Sowing Seeds of Hope, Reaping Change - Learn about our mission, values, and impact in creating sustainable positive change across Bangladesh.
+            </p>
+          </div>
+          <div
+            class="col-md-4 text-center"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="col-6"
+              >
+                <div
+                  style="color: white; border-radius: 15px; padding: 1.5rem; text-align: center; margin: 0.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"
+                >
+                  <h4>
+                    2025
+                  </h4>
+                  <p
+                    class="mb-0"
+                  >
+                    Established
+                  </p>
+                </div>
+              </div>
+              <div
+                class="col-6"
+              >
+                <div
+                  style="color: white; border-radius: 15px; padding: 1.5rem; text-align: center; margin: 0.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"
+                >
+                  <h4>
+                    25K+
+                  </h4>
+                  <p
+                    class="mb-0"
+                  >
+                    Lives Impacted
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+              
+      <div
+        class="row d-flex align-items-stretch"
+        style="min-height: 700px;"
+      >
+        <div
+          class="col-md-4"
+        >
+          <div
+            style="background: white; border-radius: 15px; padding: 1.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); min-height: 700px; width: 100%;"
+          >
+            <h4
+              style="color: rgb(46, 125, 50); font-weight: 700; margin-bottom: 1.5rem; text-align: center; font-size: 1.3rem;"
+            >
+              <i
+                class="fas fa-book-open me-2"
+              />
+              Explore Our Story
+            </h4>
+            <ul
+              class="list-unstyled"
+            >
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; color: white; transform: translateX(8px); box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-home"
+                  />
+                </div>
+                Introduction
+              </li>
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border: 1px solid #e9ecef; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; background-color: rgb(248, 249, 250); color: rgb(73, 80, 87);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-balance-scale"
+                  />
+                </div>
+                Principles and Norms
+              </li>
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border: 1px solid #e9ecef; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; background-color: rgb(248, 249, 250); color: rgb(73, 80, 87);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-target"
+                  />
+                </div>
+                Goals and Objectives
+              </li>
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border: 1px solid #e9ecef; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; background-color: rgb(248, 249, 250); color: rgb(73, 80, 87);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-hands-helping"
+                  />
+                </div>
+                Activities
+              </li>
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border: 1px solid #e9ecef; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; background-color: rgb(248, 249, 250); color: rgb(73, 80, 87);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-money-bill-wave"
+                  />
+                </div>
+                Sources of funds and income
+              </li>
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border: 1px solid #e9ecef; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; background-color: rgb(248, 249, 250); color: rgb(73, 80, 87);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-chart-pie"
+                  />
+                </div>
+                Expenditure policy
+              </li>
+              <li
+                class="list-group-item-action"
+                style="cursor: pointer; transition: all 0.3s ease; border: 1px solid #e9ecef; border-radius: 10px; margin: 0.3rem 0px; padding: 1rem 1.2rem; font-size: 1rem; font-weight: 500; position: relative; overflow: hidden; background-color: rgb(248, 249, 250); color: rgb(73, 80, 87);"
+              >
+                <div
+                  style="width: 40px; height: 40px; border-radius: 50%; background: rgba(76, 175, 80, 0.1); display: inline-flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.2rem; color: rgb(76, 175, 80);"
+                >
+                  <i
+                    class="fas fa-trophy"
+                  />
+                </div>
+                Achievements
+              </li>
+            </ul>
+          </div>
+        </div>
+                  
+        <div
+          class="col-md-8"
+        >
+          <div
+            style="background-color: rgb(255, 255, 255); border-radius: 15px; padding: 2.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); border: 1px solid rgba(76, 175, 80, 0.1); min-height: 700px; width: 100%;"
+          >
+            <h2
+              style="color: rgb(46, 125, 50); font-weight: 700; font-size: 2rem; margin-bottom: 1rem; text-align: center; position: relative;"
+            >
+              Introduction
+            </h2>
+            <div
+              style="width: 80px; height: 4px; margin: 0px auto 2rem; border-radius: 2px;"
+            />
+            <div>
+              <div
+                class="text-center mb-4"
+              >
+                <i
+                  class="fas fa-seedling fa-3x"
+                  style="color: rgb(76, 175, 80); margin-bottom: 1rem;"
+                />
+              </div>
+              <ul
+                class="list-unstyled"
+              >
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  Hope Harvest was established in 2025 as a charitable foundation with the mission of "Sowing Seeds of Hope, Reaping Change."
+                </li>
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  Our foundation focuses on providing sustainable relief, empowering communities, and creating long-term positive impact across Bangladesh.
+                </li>
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  Founded by a group of dedicated community leaders who recognized the need for transparent and efficient charitable services.
+                </li>
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  We operate through three key service areas: User Authentication & Management, Donation & Payment Services, and Event & Volunteer Coordination.
+                </li>
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  Our digital platform enables secure donations, transparent fund management, volunteer coordination, and efficient event organization.
+                </li>
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  Through campaigns and events, we've touched the lives of thousands across various districts, focusing on areas like disaster relief, education, healthcare, and community development.
+                </li>
+                <li
+                  style="margin-bottom: 1.2rem; padding: 1rem; background-color: rgb(248, 249, 250); border-radius: 10px; border: 1px solid #e9ecef; transition: all 0.3s ease; position: relative; font-size: 1rem; line-height: 1.6;"
+                >
+                  <span
+                    style="color: rgb(76, 175, 80); font-size: 1.2rem; margin-right: 0.8rem; display: inline-block; animation: pulse 2s infinite;"
+                  >
+                    🟢
+                  </span>
+                  We maintain complete transparency in our operations, with detailed tracking of all donations and their impacts.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <style>
+      
+        @keyframes pulse {
+          0% { transform: scale(1); }          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+      
+    </style>
+  </div>
+</DocumentFragment>
+`;

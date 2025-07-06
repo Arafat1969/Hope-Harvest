@@ -30,11 +30,21 @@ export const campaignService = {  // Get all campaigns for homepage
     return response.data;
   },
 
+  // Get all images for gallery
+  getAllImagesForGallery: async () => {
+    const response = await axios.get(`${API_BASE_URLs.DONATION_SERVICE}/campaigns/images`);
+    return response.data;
+  },
+
+   // ===== USER AUTHENTICATED APIS =====
+
   // Request new campaign (authenticated)
   requestCampaign: async (campaignData) => {
     const response = await authAxios.post(`${API_BASE_URLs.DONATION_SERVICE}/campaigns/request`, campaignData);
     return response.data;
-  },  // Get user's campaign requests (authenticated)
+  },  
+  
+  // Get user's campaign requests (authenticated)
   getUserCampaignRequests: async (userId = null) => {
     try {
       if (!userId) {
@@ -78,6 +88,28 @@ export const campaignService = {  // Get all campaigns for homepage
   },
 
   // ===== ADMIN APIS =====
+
+
+  // Admin Category Management
+  createCampaignCategory: async (categoryData) => {
+    const response = await authAxios.post(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/categories`, categoryData);
+    return response.data;
+  },
+
+  getAllCampaignCategoriesAdmin: async () => {
+    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/categories`);
+    return response.data;
+  },
+
+  getCampaignCategoryById: async (categoryId) => {
+    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/categories/${categoryId}`);
+    return response.data;
+  },
+
+  updateCampaignCategory: async (categoryId, categoryData) => {
+    const response = await authAxios.put(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/categories/${categoryId}`, categoryData);
+    return response.data;
+  },
   
   // Get all campaign requests for admin review (authenticated admin only)
   getAllCampaignRequests: async () => {
@@ -85,23 +117,33 @@ export const campaignService = {  // Get all campaigns for homepage
     return response.data;
   },
 
-  // Approve campaign request (authenticated admin only)
-  approveCampaignRequest: async (requestId) => {
-    const response = await authAxios.put(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/requests/${requestId}/approve`);
+  getCampaignRequestById: async (requestId) => {
+    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/requests/${requestId}`);
     return response.data;
   },
 
-  // Reject campaign request (authenticated admin only)
-  rejectCampaignRequest: async (requestId, reason) => {
-    const response = await authAxios.put(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/requests/${requestId}/reject`, {
-      reason: reason
-    });
+  updateCampaignRequestStatus: async (requestId, statusData) => {
+    const response = await authAxios.patch(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/requests/${requestId}`, statusData);
     return response.data;
   },
+
+  
+  // Admin Campaign Management
 
   // Create campaign directly (authenticated admin only)
   createCampaign: async (campaignData) => {
     const response = await authAxios.post(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns`, campaignData);
+    return response.data;
+  },
+
+
+  getAllCampaignsAdmin: async () => {
+    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns`);
+    return response.data;
+  },
+
+  getCampaignByIdAdmin: async (campaignId) => {
+    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/${campaignId}`);
     return response.data;
   },
 
@@ -117,21 +159,9 @@ export const campaignService = {  // Get all campaigns for homepage
     return response.data;
   },
 
-  // Get campaign statistics for admin dashboard
-  getCampaignStatistics: async () => {
-    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/statistics`);
+  // Update campaign status (authenticated admin only)
+  updateCampaignStatus: async (campaignId, statusData) => {
+    const response = await authAxios.patch(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/${campaignId}/status`, statusData);
     return response.data;
   },
-
-  // Get all campaigns with admin details (including inactive/pending)
-  getAllCampaignsAdmin: async () => {
-    const response = await authAxios.get(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns`);
-    return response.data;
-  },
-
-  // Toggle campaign status (active/inactive)
-  toggleCampaignStatus: async (campaignId) => {
-    const response = await authAxios.patch(`${API_BASE_URLs.DONATION_SERVICE}/admin/campaigns/${campaignId}/toggle-status`);
-    return response.data;
-  }
 };

@@ -20,12 +20,13 @@ import java.util.UUID;
  * Dummy payment gateway endpoints are implemented to provide realtime payment simulations.
  * </p>
  *
+ *
  * @author Md Hasin Arafat Al Sifat
  * @since 1.0
  */
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/donation-service")
 public class DonationPaymentController {
 
     /**

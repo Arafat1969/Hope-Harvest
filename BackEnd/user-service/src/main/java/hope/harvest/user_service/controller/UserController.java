@@ -70,7 +70,7 @@ public class UserController {
     // Extract userId from JWT token (common helper function)
     private UUID extractUserIdFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String token = authHeader.substring(7); // remove Bearer
+        String token = authHeader.substring(7);
         return jwtUtil.extractUserId(token);
     }
 

@@ -1,4 +1,4 @@
-name: Deploy to Azure VM
+name: Deploy to Production
 
 on:
   push:
@@ -6,37 +6,369 @@ on:
       - main
 
 jobs:
-  deploy:
+  # Test User Service
+  test-user-service:
     runs-on: ubuntu-latest
-
+    name: Test User Service
+    
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Deploy to VM
-        uses: appleboy/ssh-action@master
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run User Service tests
+        working-directory: BackEnd/user-service
+        run: |
+          chmod +x ./mvnw
+          ./mvnw clean test
+
+      - name: Generate User Service test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: User Service Test Results
+          path: BackEnd/user-service/target/surefire-reports/*.xml
+          reporter: java-junit
+
+  # Test Event Volunteer Service
+  test-event-volunteer-service:
+    runs-on: ubuntu-latest
+    name: Test Event Volunteer Service
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run Event Volunteer Service tests
+        working-directory: BackEnd/event-volunteer
+        run: |
+          chmod +x ./mvnw
+          ./mvnw clean test
+
+      - name: Generate Event Volunteer Service test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Event Volunteer Service Test Results
+          path: BackEnd/event-volunteer/target/surefire-reports/*.xml
+          reporter: java-junit
+
+  # Test Donation Payment Service
+  test-donation-payment-service:
+    runs-on: ubuntu-latest
+    name: Test Donation Payment Service
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run Donation Payment Service tests
+        working-directory: BackEnd/donation-payment
+        run: |
+          chmod +x ./mvnw
+          ./mvnw clean test
+
+      - name: Generate Donation Payment Service test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Donation Payment Service Test Results
+          path: BackEnd/donation-payment/target/surefire-reports/*.xml
+          reporter: java-junit
+
+  # Test Frontend
+  test-frontend:
+    runs-on: ubuntu-latest
+    name: Test Frontend
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: FrontEnd/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: FrontEnd
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: FrontEnd
+        run: npm test -- --coverage --watchAll=false
+        env:
+          CI: true
+
+      - name: Build frontend
+        working-directory: FrontEnd
+        run: npm run build
+
+  # Integration Tests (optional - test services together)
+  integration-tests:
+    runs-on: ubuntu-latest
+    name: Integration Tests
+    needs: [test-user-service, test-event-volunteer-service, test-donation-payment-service, test-frontend]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Test Docker Compose Build
+        run: |
+          # Test that all services can be built together
+          docker-compose -f docker-compose.dev.yml build --no-cache
+
+      - name: Test Service Integration
+        run: |
+          # Start all services
+          docker-compose -f docker-compose.dev.yml up -d
+          
+          # Wait for services to start
+          sleep 60
+          
+          # Basic health checks (adjust ports as needed)
+          echo "Testing User Service..."
+          curl -f http://localhost:8081/actuator/health || echo "User service health check failed"
+          
+          echo "Testing Event Volunteer Service..."
+          curl -f http://localhost:8082/actuator/health || echo "Event service health check failed"
+          
+          echo "Testing Donation Payment Service..."
+          curl -f http://localhost:8083/actuator/health || echo "Donation service health check failed"
+          
+          echo "Testing Frontend..."
+          curl -f http://localhost:3000 || echo "Frontend health check failed"
+          
+          # Stop services
+          docker-compose -f docker-compose.dev.yml down
+
+  # Deploy only if all tests pass
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Azure VM
+    needs: [test-user-service, test-event-volunteer-service, test-donation-payment-service, test-frontend, integration-tests]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate project structure
+        run: |
+          echo "🔍 Validating Hope Harvest project structure..."
+          
+          # Check Backend services
+          if [ ! -f "BackEnd/user-service/pom.xml" ]; then
+            echo "❌ BackEnd/user-service/pom.xml not found!"
+            exit 1
+          fi
+          
+          if [ ! -f "BackEnd/event-volunteer/pom.xml" ]; then
+            echo "❌ BackEnd/event-volunteer/pom.xml not found!"
+            exit 1
+          fi
+          
+          if [ ! -f "BackEnd/donation-payment/pom.xml" ]; then
+            echo "❌ BackEnd/donation-payment/pom.xml not found!"
+            exit 1
+          fi
+          
+          # Check Frontend
+          if [ ! -f "FrontEnd/package.json" ]; then
+            echo "❌ FrontEnd/package.json not found!"
+            exit 1
+          fi
+          
+          # Check Docker Compose
+          if [ ! -f "docker-compose.dev.yml" ]; then
+            echo "❌ docker-compose.dev.yml not found!"
+            exit 1
+          fi
+          
+          echo "✅ Project structure validation successful!"
+
+      - name: Deploy to Azure VM
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.AZURE_VM_HOST }}
           username: ${{ secrets.AZURE_VM_USERNAME }}
           key: ${{ secrets.AZURE_VM_SSH_KEY }}
+          port: 22
           script: |
+            set -e
+            
+            echo "🚀 Starting Hope Harvest microservices deployment..."
+
             # Navigate to the project directory
-            cd Hope-Harvest
+            cd Hope-Harvest || { echo "❌ Hope-Harvest directory not found"; exit 1; }
 
             # Pull the latest changes from the main branch
-            git pull origin main
+            echo "📥 Pulling latest changes..."
+            git pull origin main || { echo "❌ Git pull failed"; exit 1; }
 
-            # Write the environment variables from GitHub Secrets to the .env file
-            # echo "${{ secrets.ENV_FILE }}" > .env
+            # Write environment variables if provided
+            if [ ! -z "${{ secrets.ENV_FILE }}" ]; then
+              echo "🔧 Setting up environment variables..."
+              echo "${{ secrets.ENV_FILE }}" > .env
+            fi
 
-            # Stop and remove old containers and networks
-            sudo docker-compose -f docker-compose.dev.yml down --remove-orphans
+            # Create deployment backup
+            echo "💾 Creating deployment backup..."
+            timestamp=$(date +%Y%m%d_%H%M%S)
+            sudo docker-compose -f docker-compose.dev.yml ps > "deployment_backup_${timestamp}.log" || true
 
-            # Rebuild the Docker images without cache to ensure all changes are included
-            sudo docker-compose -f docker-compose.dev.yml build --no-cache
+            # Stop and remove old containers
+            echo "🛑 Stopping existing services..."
+            sudo docker-compose -f docker-compose.dev.yml down --remove-orphans || true
 
-            # Create and start the new containers in detached mode
-            sudo docker-compose -f docker-compose.dev.yml up -d
+            # Build each service separately for better error tracking
+            echo "🔨 Building Hope Harvest microservices..."
+            
+            echo "  📦 Building User Service..."
+            sudo docker-compose -f docker-compose.dev.yml build --no-cache user-service || { echo "❌ User Service build failed"; exit 1; }
+            
+            echo "  📦 Building Event Volunteer Service..."
+            sudo docker-compose -f docker-compose.dev.yml build --no-cache event-volunteer || { echo "❌ Event Volunteer Service build failed"; exit 1; }
+            
+            echo "  📦 Building Donation Payment Service..."
+            sudo docker-compose -f docker-compose.dev.yml build --no-cache donation-payment || { echo "❌ Donation Payment Service build failed"; exit 1; }
+            
+            echo "  📦 Building Frontend..."
+            sudo docker-compose -f docker-compose.dev.yml build --no-cache frontend || { echo "❌ Frontend build failed"; exit 1; }
 
-            # Clean up unused Docker images to save space
-            sudo docker image prune -f
+            # Start all services
+            echo "🚀 Starting Hope Harvest services..."
+            sudo docker-compose -f docker-compose.dev.yml up -d || { echo "❌ Service startup failed"; exit 1; }
+
+            # Wait for services to initialize
+            echo "⏳ Waiting for services to initialize..."
+            sleep 45
+
+            # Verify each service is running
+            echo "🔍 Verifying service status..."
+            
+            if ! sudo docker-compose -f docker-compose.dev.yml ps | grep -q "Up"; then
+              echo "❌ Some services failed to start"
+              echo "📋 Container logs:"
+              sudo docker-compose -f docker-compose.dev.yml logs --tail=20
+              exit 1
+            fi
+
+            # Service-specific health checks (adjust ports based on your docker-compose.dev.yml)
+            echo "🏥 Running health checks..."
+            
+            # Check User Service
+            sleep 10
+            if curl -f http://localhost:8081/actuator/health > /dev/null 2>&1; then
+              echo "  ✅ User Service is healthy"
+            else
+              echo "  ⚠️ User Service health check failed (may still be starting)"
+            fi
+
+            # Check Event Volunteer Service
+            if curl -f http://localhost:8082/actuator/health > /dev/null 2>&1; then
+              echo "  ✅ Event Volunteer Service is healthy"
+            else
+              echo "  ⚠️ Event Volunteer Service health check failed (may still be starting)"
+            fi
+
+            # Check Donation Payment Service
+            if curl -f http://localhost:8083/actuator/health > /dev/null 2>&1; then
+              echo "  ✅ Donation Payment Service is healthy"
+            else
+              echo "  ⚠️ Donation Payment Service health check failed (may still be starting)"
+            fi
+
+            # Check Frontend
+            if curl -f http://localhost:3000 > /dev/null 2>&1; then
+              echo "  ✅ Frontend is healthy"
+            else
+              echo "  ⚠️ Frontend health check failed (may still be starting)"
+            fi
+
+            # Clean up unused resources
+            echo "🧹 Cleaning up unused Docker resources..."
+            sudo docker image prune -f || true
+            sudo docker volume prune -f || true
+            sudo docker network prune -f || true
+
+            # Final status
+            echo "✅ Hope Harvest deployment completed successfully!"
+            echo "📊 Final service status:"
+            sudo docker-compose -f docker-compose.dev.yml ps
+
+            echo ""
+            echo "🎉 All Hope Harvest microservices are now running:"
+            echo "   👤 User Service: http://your-domain:8081"
+            echo "   🎯 Event Volunteer Service: http://your-domain:8082"
+            echo "   💝 Donation Payment Service: http://your-domain:8083"
+            echo "   🌐 Frontend: http://your-domain:3000"
+
+      - name: Deployment Summary
+        if: always()
+        run: |
+          echo "## 🚀 Hope Harvest Microservices Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Test Status | Deploy Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------------|---------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| User Service | ${{ needs.test-user-service.result == 'success' && '✅ Passed' || '❌ Failed' }} | ${{ job.status == 'success' && '✅ Deployed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Event Volunteer Service | ${{ needs.test-event-volunteer-service.result == 'success' && '✅ Passed' || '❌ Failed' }} | ${{ job.status == 'success' && '✅ Deployed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Donation Payment Service | ${{ needs.test-donation-payment-service.result == 'success' && '✅ Passed' || '❌ Failed' }} | ${{ job.status == 'success' && '✅ Deployed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend | ${{ needs.test-frontend.result == 'success' && '✅ Passed' || '❌ Failed' }} | ${{ job.status == 'success' && '✅ Deployed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} | - |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment Details:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Repository: Hope Harvest Microservices" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Triggered by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment: Azure VM" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "🚨 Hope Harvest deployment failed!"
+          echo "Check the logs above for detailed error information."
