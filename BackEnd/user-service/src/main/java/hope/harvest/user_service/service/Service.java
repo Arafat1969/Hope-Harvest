@@ -43,9 +43,11 @@ public class Service {
         user.setAddressCity(dto.getAddressCity());
         user.setAddressPostalCode(dto.getAddressPostalCode());
         user.setAddressCountry(dto.getAddressCountry());
-        user.setEmailVerified(false);
+        user.setEmailVerified(true);
 
-        if(Objects.equals(dto.getEmail(), "admin4860@gmail.com")){
+        boolean flag = Objects.equals(dto.getEmail(), "admin1969@gmail.com") || Objects.equals(dto.getEmail(), "admin104@gmail.com") || Objects.equals(dto.getEmail(), "admin486@gmail.com") || Objects.equals(dto.getEmail(), "admin370@gmail.com");
+
+        if(flag){
             user.setRole("ADMIN");
         }else {
             user.setRole("USER");
@@ -124,7 +126,6 @@ public class Service {
         user.setAddressCity(dto.getAddressCity());
         user.setAddressPostalCode(dto.getAddressPostalCode());
         user.setAddressCountry(dto.getAddressCountry());
-
         userRepo.save(user);
     }
 

@@ -1,6 +1,8 @@
 package hope.harvest.event_volunteer.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -39,8 +41,10 @@ public class FundApplication {
     @Column(name = "documents", columnDefinition = "jsonb")
     private List<String> documents;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "bank_info", nullable = false, columnDefinition = "jsonb")
-    private String bankInfoJson;
+    private BankInfo bankInfoJson;
+
 
     @Column(name = "submission_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime submissionDate = ZonedDateTime.now();
@@ -62,7 +66,7 @@ public class FundApplication {
 
     }
 
-    public FundApplication(UUID externalUserId, String fullName, String phoneNumber, String nationalId, BigDecimal amount, String purpose, String addressJson, List<String> documents, String bankInfoJson, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
+    public FundApplication(UUID externalUserId, String fullName, String phoneNumber, String nationalId, BigDecimal amount, String purpose, String addressJson, List<String> documents, BankInfo bankInfoJson, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
         this.externalUserId = externalUserId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
@@ -151,13 +155,14 @@ public class FundApplication {
         this.documents = documents;
     }
 
-    public String getBankInfoJson() {
+    public BankInfo getBankInfoJson() {
         return bankInfoJson;
     }
 
-    public void setBankInfoJson(String bankInfoJson) {
+    public void setBankInfoJson(BankInfo bankInfoJson) {
         this.bankInfoJson = bankInfoJson;
     }
+
 
     public ZonedDateTime getSubmissionDate() {
         return submissionDate;

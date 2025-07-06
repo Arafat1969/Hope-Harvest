@@ -1,0 +1,359 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage Component matches snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <section
+      class="heroSection"
+    >
+      <div
+        class="heroBackground"
+      >
+        <img
+          alt="Hope Harvest initiative background"
+          class="backgroundImage visible"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Agriculture_in_Rural_Bangladesh.jpg/2560px-Agriculture_in_Rural_Bangladesh.jpg"
+        />
+        <img
+          alt="Hope Harvest initiative background"
+          class="backgroundImage "
+          src="https://tds-images.thedailystar.net/sites/default/files/styles/very_big_201/public/images/2023/03/22/char_1.jpg"
+        />
+        <img
+          alt="Hope Harvest initiative background"
+          class="backgroundImage "
+          src="https://cdn.pixabay.com/photo/2021/02/12/16/08/children-6008967_1280.jpg"
+        />
+        <img
+          alt="Hope Harvest initiative background"
+          class="backgroundImage "
+          src="https://s.france24.com/media/display/cb41bca0-6201-11ef-9d3e-005056bf30b7/w:1280/p:16x9/5db8797c814b2f749a6d17aa7a5dc022e7f7be13.jpg"
+        />
+        <img
+          alt="Hope Harvest initiative background"
+          class="backgroundImage "
+          src="https://im.indiatimes.in/amp/2019/Jul/trees_1562664811.jpg?w=1200&h=900&cc=1&webp=1&q=75"
+        />
+      </div>
+      <div
+        class="container heroContent"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-lg-7 text-center text-lg-start"
+          >
+            <h1
+              class="heroTitle"
+            >
+              Hope Harvest
+            </h1>
+            <h2
+              class="heroSubtitle"
+            >
+              Sowing Seeds of Change, Reaping a Brighter Future.
+            </h2>
+            <p
+              class="heroText"
+            >
+              We empower communities across Bangladesh through sustainable microfinance, education, and direct relief, creating lasting, positive change from the ground up.
+            </p>
+            <div
+              class="d-flex gap-3 justify-content-center justify-content-lg-start"
+            >
+              <a
+                class="btn ctaButtonPrimary"
+                href="/donate"
+              >
+                <i
+                  class="fas fa-hand-holding-heart me-2"
+                />
+                Donate Now
+              </a>
+              <a
+                class="btn ctaButtonSecondary"
+                href="/campaigns"
+              >
+                View Campaigns
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="statsSection"
+    >
+      <div
+        class="container"
+      >
+        <div
+          class="row g-4"
+        >
+          <div
+            class="col-lg-3 col-md-6"
+          >
+            <div
+              class="statCard"
+            >
+              <i
+                class="fas fa-users statIcon"
+              />
+              <h3
+                class="statNumber"
+              >
+                <span>
+                  0+
+                </span>
+              </h3>
+              <p
+                class="statLabel"
+              >
+                Lives Impacted
+              </p>
+            </div>
+          </div>
+          <div
+            class="col-lg-3 col-md-6"
+          >
+            <div
+              class="statCard"
+            >
+              <i
+                class="fas fa-bullhorn statIcon"
+              />
+              <h3
+                class="statNumber"
+              >
+                <span>
+                  0+
+                </span>
+              </h3>
+              <p
+                class="statLabel"
+              >
+                Active Campaigns
+              </p>
+            </div>
+          </div>
+          <div
+            class="col-lg-3 col-md-6"
+          >
+            <div
+              class="statCard"
+            >
+              <i
+                class="fas fa-hand-holding-heart statIcon"
+              />
+              <h3
+                class="statNumber"
+              >
+                <span>
+                  0+
+                </span>
+              </h3>
+              <p
+                class="statLabel"
+              >
+                Taka Raised
+              </p>
+            </div>
+          </div>
+          <div
+            class="col-lg-3 col-md-6"
+          >
+            <div
+              class="statCard"
+            >
+              <i
+                class="fas fa-hands-helping statIcon"
+              />
+              <h3
+                class="statNumber"
+              >
+                <span>
+                  0+
+                </span>
+              </h3>
+              <p
+                class="statLabel"
+              >
+                Volunteers
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="featuresSection"
+    >
+      <div
+        class="container"
+      >
+        <div
+          class="text-center mb-5"
+        >
+          <h2
+            class="sectionTitle"
+          >
+            How We Make a Difference
+          </h2>
+          <p
+            class="sectionSubtitle"
+          >
+            Our comprehensive approach to community development
+          </p>
+        </div>
+        <div
+          class="row"
+        >
+          <div
+            class="col-lg-4 mb-4"
+          >
+            <div
+              class="card h-100 featureCard"
+            >
+              <div
+                class="card-body p-4"
+              >
+                <i
+                  class="fas fa-seedling featureIcon"
+                />
+                <h4
+                  class="featureTitle"
+                >
+                  Self-Reliance Programs
+                </h4>
+                <p
+                  class="featureText"
+                >
+                  Microfinance, skills development, and entrepreneurship training to build sustainable livelihoods.
+                </p>
+                <a
+                  class="featureLink"
+                  href="/campaigns"
+                >
+                  Learn More →
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-4 mb-4"
+          >
+            <div
+              class="card h-100 featureCard"
+            >
+              <div
+                class="card-body p-4"
+              >
+                <i
+                  class="fas fa-hands-helping featureIcon"
+                />
+                <h4
+                  class="featureTitle"
+                >
+                  Emergency Relief
+                </h4>
+                <p
+                  class="featureText"
+                >
+                  Rapid response to natural disasters, food security, and essential support for vulnerable communities.
+                </p>
+                <a
+                  class="featureLink"
+                  href="/campaigns"
+                >
+                  Learn More →
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-4 mb-4"
+          >
+            <div
+              class="card h-100 featureCard"
+            >
+              <div
+                class="card-body p-4"
+              >
+                <i
+                  class="fas fa-graduation-cap featureIcon"
+                />
+                <h4
+                  class="featureTitle"
+                >
+                  Education & Training
+                </h4>
+                <p
+                  class="featureText"
+                >
+                  Comprehensive education programs, vocational training, and digital literacy initiatives.
+                </p>
+                <a
+                  class="featureLink"
+                  href="/campaigns"
+                >
+                  Learn More →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="finalCtaSection"
+    >
+      <div
+        class="container text-center"
+      >
+        <h2
+          class="finalCtaTitle"
+        >
+          Ready to Make a Difference?
+        </h2>
+        <p
+          class="lead mb-4"
+        >
+          Join thousands of donors and volunteers who are building a better future for Bangladesh.
+        </p>
+        <div
+          class="finalCtaButtons"
+        >
+          <a
+            class="ctaFinalPrimary"
+            href="/donate"
+          >
+            <i
+              class="fas fa-heart me-2"
+            />
+            Start Donating
+          </a>
+          <a
+            class="ctaFinalSecondary"
+            href="/volunteer-activity"
+          >
+            <i
+              class="fas fa-hands-helping me-2"
+            />
+            Become a Volunteer
+          </a>
+          <a
+            class="ctaFinalSecondary"
+            href="/request-campaign"
+          >
+            <i
+              class="fas fa-plus-circle me-2"
+            />
+            Request a New Campaign
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</DocumentFragment>
+`;

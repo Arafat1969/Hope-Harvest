@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class RequiredGood {
     private String item;
     private int quantity;
+    private String unit;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
 
@@ -12,9 +13,10 @@ public class RequiredGood {
 
     }
 
-    public RequiredGood(String item, int quantity, BigDecimal unitPrice, BigDecimal totalPrice) {
+    public RequiredGood(String item, int quantity,String unit, BigDecimal unitPrice, BigDecimal totalPrice) {
         this.item = item;
         this.quantity = quantity;
+        this.unit = unit;
         this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
     }
@@ -33,6 +35,14 @@ public class RequiredGood {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public BigDecimal getUnitPrice() {
@@ -56,6 +66,7 @@ public class RequiredGood {
         return "RequiredGood{" +
                 "item='" + item + '\'' +
                 ", quantity=" + quantity +
+                ", unit='" + unit + '\'' +
                 ", unitPrice=" + unitPrice +
                 ", totalPrice=" + totalPrice +
                 '}';

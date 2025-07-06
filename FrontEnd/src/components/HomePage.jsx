@@ -12,7 +12,7 @@ const useInView = (options) => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsInView(true);
-        observer.disconnect(); // Disconnect after it's visible once
+        observer.disconnect();
       }
     }, options);
 

@@ -147,7 +147,7 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink className={getNavLinkClass} to="/manage-users">Manage Users</NavLink>
+                    <NavLink className={getNavLinkClass} to="/admin/users">Manage Users</NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink className={getNavLinkClass} to="/reports">Reports</NavLink>

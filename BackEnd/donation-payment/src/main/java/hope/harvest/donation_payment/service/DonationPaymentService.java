@@ -178,6 +178,7 @@ public class DonationPaymentService {
         paymentRepo.save(payment);
 
         Donation donation = payment.getDonation();
+        donation.setAmount(payment.getAmount());
         donation.setStatus("COMPLETED");
         donation.setTransactionID(transactionId);
         donation.setPaymentMethod(payment.getGatewayName());
