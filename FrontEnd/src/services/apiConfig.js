@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-// const API_BASE_URLs = {
-//   USER_SERVICE: 'http://localhost:8085/api/v1/user-service',
-//   DONATION_SERVICE: 'http://localhost:8080/api/v1/donation-service',
-//   EVENT_SERVICE: 'http://localhost:8090/api/v1/event-service'
-// };
-
 const API_BASE_URLs = {
-  USER_SERVICE: 'http://74.225.246.127:8085/api/v1/user-service',
-  DONATION_SERVICE: 'http://74.225.246.127:8080/api/v1/donation-service',
-  EVENT_SERVICE: 'http://74.225.246.127:8090/api/v1/event-service'
+  USER_SERVICE: 'http://localhost:8085/api/v1/user-service',
+  DONATION_SERVICE: 'http://localhost:8080/api/v1/donation-service',
+  EVENT_SERVICE: 'http://localhost:8090/api/v1/event-service'
 };
+
+// const API_BASE_URLs = {
+//   USER_SERVICE: 'http://74.225.246.127:8085/api/v1/user-service',
+//   DONATION_SERVICE: 'http://74.225.246.127:8080/api/v1/donation-service',
+//   EVENT_SERVICE: 'http://74.225.246.127:8090/api/v1/event-service'
+// };
 
 const createAuthenticatedAxios = () => {
   const instance = axios.create();
