@@ -1,23 +1,49 @@
 ﻿# Hope Harvest - Donation & Volunteer Platform
 
-A comprehensive donation and volunteer management platform built with Spring Boot microservices and React frontend.
+A comprehensive donation and volunteer management platform built with Spring Boot microservices and React frontend. Hope Harvest connects donors, volunteers, and beneficiaries to create meaningful impact across Bangladesh.
 
 ## 🏗️ Architecture
 
-- **Frontend**: React.js with Bootstrap
-- **Backend**: Spring Boot microservices
-- **Database**: PostgreSQL
+- **Frontend**: React.js with Bootstrap 5 & CSS Modules
+- **Backend**: Spring Boot 3.x microservices (Java 21)
+- **Database**: PostgreSQL 15 with separate schemas
 - **Containerization**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions with automated testing
+- **Authentication**: JWT-based with role-based access control
 
 ## 📋 Services
 
-| Service          | Port | Database            | Description                      |
-| ---------------- | ---- | ------------------- | -------------------------------- |
-| Frontend         | 3000 | -                   | React web application            |
-| User Service     | 8085 | User_Authentication | User management & authentication |
-| Donation Payment | 8080 | Donation_Payment    | Donation processing & payment    |
-| Event Volunteer  | 8090 | Event_Volunteer     | Event & volunteer management     |
-| PostgreSQL       | 5432 | -                   | Database server                  |
+| Service          | Port | Database            | Technology Stack             | Description                      |
+| ---------------- | ---- | ------------------- | ---------------------------- | -------------------------------- |
+| Frontend         | 3000 | -                   | React 18, Bootstrap 5, Axios | Web application with admin panel |
+| User Service     | 8085 | User_Authentication | Spring Boot 3, JWT, JPA      | User management & authentication |
+| Donation Payment | 8080 | Donation_Payment    | Spring Boot 3, JPA, UUID     | Donation processing & campaigns  |
+| Event Volunteer  | 8090 | Event_Volunteer     | Spring Boot 3, JPA           | Event & volunteer management     |
+| PostgreSQL       | 5433 | Multiple Schemas    | PostgreSQL 15                | Database server (external port)  |
+
+## 🌟 Key Features
+
+### For Donors
+
+- 💳 **Multiple Payment Methods**: bKash, Nagad, Rocket, Upay, Cards
+- 📊 **Real-time Tracking**: Track donation status and campaign progress
+- 🎯 **Campaign Categories**: Education, Healthcare, Environment, etc.
+- 📱 **Anonymous Donations**: Support causes without revealing identity
+
+### For Volunteers
+
+- 📝 **Easy Registration**: Simple volunteer application process
+- 📅 **Event Management**: Browse and join volunteer opportunities
+- 🏆 **Activity Tracking**: Monitor volunteer hours and impact
+- 👥 **Team Building**: Collaborate with other volunteers
+
+### For Administrators
+
+- 📈 **Comprehensive Dashboard**: Monitor all platform activities
+- ⚙️ **Campaign Management**: Create and manage fundraising campaigns
+- 👤 **User Management**: Handle user accounts and permissions
+- 📊 **Analytics**: Detailed reports on donations and volunteer activities
+- 🔧 **Category Management**: Organize campaigns by categories
 
 ## 🚀 Quick Start with Docker (Recommended)
 
@@ -49,9 +75,30 @@ docker-compose -f docker-compose.dev.yml up --build -d
 - **User Service API**: http://localhost:8085
 - **Donation Service API**: http://localhost:8080
 - **Event Service API**: http://localhost:8090
-- **Database**: localhost:5432
+- **Database**: localhost:5433 (external port)
+- **API Documentation**:
+  - User Service: http://localhost:8085/swagger-ui.html
+  - Donation Service: http://localhost:8080/swagger-ui.html
+  - Event Service: http://localhost:8090/swagger-ui.html
 
-### 4. Stop Services
+### 4. Default Admin Credentials
+
+```
+Email: admin@hopeharvest.org
+Password: admin123
+Role: ADMIN
+```
+
+### 5. Health Checks
+
+```bash
+# Check all services health
+curl http://localhost:8085/actuator/health  # User Service
+curl http://localhost:8080/actuator/health  # Donation Service
+curl http://localhost:8090/actuator/health  # Event Service
+```
+
+### 6. Stop Services
 
 ```bash
 # Stop all services
@@ -59,16 +106,20 @@ docker-compose -f docker-compose.dev.yml down
 
 # Stop and remove volumes (reset database)
 docker-compose -f docker-compose.dev.yml down -v
+
+# View service logs
+docker-compose -f docker-compose.dev.yml logs [service-name]
 ```
 
 ## 🛠️ Manual Setup (Alternative)
 
 ### Prerequisites
 
-- Java 21 or higher
-- Node.js 18 or higher
+- Java 21 (Eclipse Temurin recommended)
+- Node.js 18+ and npm
 - PostgreSQL 15
 - Maven 3.9+
+- Git
 
 ### 1. Database Setup
 
@@ -78,37 +129,39 @@ createdb User_Authentication
 createdb Donation_Payment
 createdb Event_Volunteer
 
-# Run initialization scripts
-psql -d User_Authentication -f UserInit.sql
-psql -d Donation_Payment -f DonationInit.sql
-psql -d Event_Volunteer -f EventInit.sql
-
-# Insert sample data
-psql -d Donation_Payment -f InsertSQL.sql
+# Run initialization scripts (automatically handled by Docker)
+psql -d User_Authentication -f database/UserService.sql
+psql -d Donation_Payment -f database/DonationService.sql
+psql -d Event_Volunteer -f database/EventService.sql
 ```
 
 ### 2. Backend Services
 
-#### User Service
+Start each service in separate terminals:
+
+#### User Service (Port 8085)
 
 ```bash
 cd BackEnd/user-service
+chmod +x ./mvnw
 ./mvnw clean install
 ./mvnw spring-boot:run
 ```
 
-#### Donation Payment Service
+#### Donation Payment Service (Port 8080)
 
 ```bash
-cd BackEnd/donation-payment-service
+cd BackEnd/donation-payment
+chmod +x ./mvnw
 ./mvnw clean install
 ./mvnw spring-boot:run
 ```
 
-#### Event Volunteer Service
+#### Event Volunteer Service (Port 8090)
 
 ```bash
-cd BackEnd/event-volunteer-service
+cd BackEnd/event-volunteer
+chmod +x ./mvnw
 ./mvnw clean install
 ./mvnw spring-boot:run
 ```
@@ -140,77 +193,138 @@ JWT_SECRET=dGhpc2lzYXZlcnlsb25nc2VjcmV0a2V5Zm9yaG9wZWhhcnZlc3RhcHBsaWNhdGlvbjIwM
 Create `.env` file in `FrontEnd` directory:
 
 ```bash
+# API Configuration
 REACT_APP_API_BASE_URL=http://localhost
 REACT_APP_USER_SERVICE_PORT=8085
 REACT_APP_DONATION_SERVICE_PORT=8080
 REACT_APP_EVENT_SERVICE_PORT=8090
+
+# Development Settings
+CHOKIDAR_USEPOLLING=true
+GENERATE_SOURCEMAP=false
 ```
 
 ## 📊 Database Schema
 
 ### User Authentication Database
 
-- Users table with authentication credentials
-- JWT token management
-- Role-based access control
+- **Users**: User credentials, roles (USER/ADMIN), profile information
+- **JWT Tokens**: Token management and refresh functionality
+- **Roles**: Role-based access control (RBAC)
 
 ### Donation Payment Database
 
-- Donations tracking
-- Payment gateway integration
-- Campaign management
-- Anonymous donation support
+- **Donations**: Donation records with UUID tracking
+- **Payments**: Payment gateway integration with OTP verification
+- **Campaigns**: Fundraising campaigns with categories and goals
+- **Categories**: Campaign categorization system
+- **Anonymous Support**: Anonymous donation capability
 
 ### Event Volunteer Database
 
-- Events and campaigns
-- Volunteer registrations
-- Event scheduling
+- **Events**: Event scheduling and management
+- **Volunteers**: Volunteer registrations and profiles
+- **Applications**: Volunteer application tracking
+- **Teams**: Team management for collaborative efforts
 
 ## 🧪 Testing
+
+### Automated Testing (CI/CD)
+
+The project includes automated testing via GitHub Actions:
+
+```bash
+# GitHub Actions workflow runs:
+# 1. Frontend tests (Jest + React Testing Library)
+# 2. Backend tests (JUnit 5 + Mockito) for all 3 services
+# 3. Integration tests with Docker Compose
+# 4. Deployment to Azure VM (on main branch)
+```
 
 ### Frontend Testing
 
 ```bash
 cd FrontEnd
-npm test
+npm test                    # Run tests in watch mode
+npm test -- --coverage    # Run with coverage report
+npm test -- --watchAll=false  # Run once (CI mode)
 ```
 
 ### Backend Testing
 
+Test each microservice individually:
+
 ```bash
-cd BackEnd/[service-name]
+# User Service
+cd BackEnd/user-service
 ./mvnw test
+
+# Donation Payment Service
+cd BackEnd/donation-payment
+./mvnw test
+
+# Event Volunteer Service
+cd BackEnd/event-volunteer
+./mvnw test
+
+# Run all tests with coverage
+./mvnw clean test jacoco:report
 ```
 
 ## 🔍 API Documentation
 
 ### User Service (Port 8085)
 
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
-- `POST /api/auth/refresh` - Refresh JWT token
+- `POST /api/auth/register` - User registration with email verification
+- `POST /api/auth/login` - User login with JWT token generation
+- `GET /api/auth/profile` - Get authenticated user profile
+- `POST /api/auth/refresh` - Refresh JWT access token
+- `PUT /api/auth/profile` - Update user profile information
+- `GET /api/admin/users` - Admin: Get all users (paginated)
 
 ### Donation Service (Port 8080)
 
-- `POST /donations` - Create authenticated donation
-- `POST /donations/anonymous` - Create anonymous donation
-- `GET /donations` - Get user donations
-- `POST /payment/initiate` - Initiate payment
-- `POST /payment/verify` - Verify payment
+- `POST /api/donations` - Create authenticated donation
+- `POST /api/donations/anonymous` - Create anonymous donation
+- `GET /api/donations` - Get user donation history
+- `POST /api/payment/initiate` - Initiate payment with gateway
+- `POST /api/payment/verify` - Verify payment with OTP
+- `GET /api/campaigns` - Get all active campaigns
+- `POST /api/admin/campaigns` - Admin: Create new campaign
+- `GET /api/admin/campaigns/categories` - Get campaign categories
+- `POST /api/admin/campaigns/categories` - Admin: Create category
 
 ### Event Service (Port 8090)
 
-- `GET /events` - Get all events
-- `POST /events` - Create new event
-- `GET /events/{id}` - Get event details
-- `POST /volunteer` - Register as volunteer
+- `GET /api/events` - Get all upcoming events
+- `POST /api/events` - Admin: Create new event
+- `GET /api/events/{id}` - Get event details
+- `POST /api/volunteer/register` - Register as volunteer for event
+- `GET /api/volunteers` - Get volunteer registrations
+- `PUT /api/volunteer/{id}/status` - Admin: Update volunteer status
 
 ## 🎨 Payment Methods Supported
 
-- **Mobile Banking**: bKash, Nagad, Rocket, Upay, Q-Cash
-- **Cards**: Visa, MasterCard, American Express
+### Mobile Financial Services (MFS)
+
+- **bKash** - Most popular in Bangladesh
+- **Nagad** - Government-backed digital wallet
+- **Rocket** - Dutch-Bangla Bank mobile banking
+- **Upay** - UCB Fintech Company solution
+- **Q-Cash** - Quick cash transfer service
+
+### International Cards
+
+- **Visa** - Global payment network
+- **MasterCard** - Worldwide payment solution
+- **American Express** - Premium card services
+
+### Security Features
+
+- 🔒 **OTP Verification** - SMS-based transaction verification
+- 🛡️ **Encrypted Storage** - Secure payment data handling
+- ⚡ **Real-time Processing** - Instant payment confirmation
+- 📱 **Mobile Optimized** - Touch-friendly payment interface
 
 ## 🔐 Security Features
 
@@ -289,7 +403,6 @@ hope-harvest/
 │   ├── src/
 │   ├── public/
 │   └── package.json
-├── Images/
 ├── docker-compose.dev.yml
 └── README.md
 ```
@@ -321,6 +434,3 @@ For support and questions:
 - Create an issue in the repository
 - Contact the development team
 
----
-
-**Happy Coding! 🚀**
