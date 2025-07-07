@@ -1,42 +1,42 @@
-name: Deploy to Azure VM
+# name: Deploy to Azure VM
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Deploy to VM
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.AZURE_VM_HOST }}
-          username: ${{ secrets.AZURE_VM_USERNAME }}
-          key: ${{ secrets.AZURE_VM_SSH_KEY }}
-          script: |
-            # Navigate to the project directory
-            cd Hope-Harvest
+#       - name: Deploy to VM
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.AZURE_VM_HOST }}
+#           username: ${{ secrets.AZURE_VM_USERNAME }}
+#           key: ${{ secrets.AZURE_VM_SSH_KEY }}
+#           script: |
+#             # Navigate to the project directory
+#             cd Hope-Harvest
 
-            # Pull the latest changes from the main branch
-            git pull origin main
+#             # Pull the latest changes from the main branch
+#             git pull origin main
 
-            # Write the environment variables from GitHub Secrets to the .env file
-            # echo "${{ secrets.ENV_FILE }}" > .env
+#             # Write the environment variables from GitHub Secrets to the .env file
+#             # echo "${{ secrets.ENV_FILE }}" > .env
 
-            # Stop and remove old containers and networks
-            sudo docker-compose -f docker-compose.dev.yml down --remove-orphans
+#             # Stop and remove old containers and networks
+#             sudo docker-compose -f docker-compose.dev.yml down --remove-orphans
 
-            # Rebuild the Docker images without cache to ensure all changes are included
-            sudo docker-compose -f docker-compose.dev.yml build --no-cache
+#             # Rebuild the Docker images without cache to ensure all changes are included
+#             sudo docker-compose -f docker-compose.dev.yml build --no-cache
 
-            # Create and start the new containers in detached mode
-            sudo docker-compose -f docker-compose.dev.yml up -d
+#             # Create and start the new containers in detached mode
+#             sudo docker-compose -f docker-compose.dev.yml up -d
 
-            # Clean up unused Docker images to save space
-            sudo docker image prune -f
+#             # Clean up unused Docker images to save space
+#             sudo docker image prune -f
