@@ -36,7 +36,8 @@ import AdminCreateEventPage from './components/AdminCreateEventPage';
 import AdminCreateEventSuccessPage from './components/AdminCreateEventSuccessPage';
 import VolunteerRegistrationPage from './components/VolunteerRegistrationPage';
 import VolunteerRegistrationSuccessPage from './components/VolunteerRegistrationSuccessPage';
-// ...existing imports...
+import CreateCategory from './components/CreateCategory';
+import CreateCategorySuccess from './components/CreateCategorySuccess';
 
 function App() {
   // Authentication state
@@ -275,6 +276,28 @@ function App() {
             <>
               <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
               <AdminCreateEventSuccessPage />
+            </>
+        } />
+
+        <Route path="/admin/create/category" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <CreateCategory />
+            </>
+        } />
+
+        <Route path="/admin/create/category/success" element={
+          !isAuthenticated ? 
+            <Navigate to="/login" replace /> : 
+            user?.role !== 'ADMIN' ? 
+            <Navigate to="/dashboard" replace /> :
+            <>
+              <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+              <CreateCategorySuccess />
             </>
         } />
 

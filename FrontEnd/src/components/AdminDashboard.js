@@ -401,7 +401,16 @@ const AdminDashboard = () => {
               <div className="row">
                 <div className="col-lg-2 col-md-4 mb-2">
                   <button 
-                    className="btn btn-danger w-100"
+                    className="btn btn-outline-danger w-100"
+                    onClick={() => navigate('/admin/create/category')}
+                  >
+                    <i className="fas fa-bullhorn me-2"></i>
+                    Create Category
+                  </button>
+                </div>
+                <div className="col-lg-2 col-md-4 mb-2">
+                  <button 
+                    className="btn btn-outline-danger w-100"
                     onClick={() => navigate('/admin/create/campaigns')}
                   >
                     <i className="fas fa-bullhorn me-2"></i>
