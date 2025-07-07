@@ -1,4 +1,4 @@
-package hope.harvest.donation_payment;
+package hope.harvest.donation_payment.controller;
 
 import hope.harvest.donation_payment.controller.DonationPaymentController;
 import hope.harvest.donation_payment.dto.ApiResponse;

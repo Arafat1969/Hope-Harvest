@@ -1,10 +1,9 @@
-package hope.harvest.donation_payment;
+package hope.harvest.donation_payment.service;
 
 import hope.harvest.donation_payment.dto.donation.*;
 import hope.harvest.donation_payment.dto.payment.*;
 import hope.harvest.donation_payment.model.*;
 import hope.harvest.donation_payment.repo.*;
-import hope.harvest.donation_payment.service.DonationPaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 //import hope.harvest.donation_payment.model.DonationStatus;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;

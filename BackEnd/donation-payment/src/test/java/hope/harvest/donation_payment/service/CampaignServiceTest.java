@@ -1,10 +1,9 @@
-package hope.harvest.donation_payment;
+package hope.harvest.donation_payment.service;
 
 import hope.harvest.donation_payment.dto.campaign.*;
 import hope.harvest.donation_payment.dto.donation.DonationSummaryDTO;
 import hope.harvest.donation_payment.model.*;
 import hope.harvest.donation_payment.repo.*;
-import hope.harvest.donation_payment.service.CampaignService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
