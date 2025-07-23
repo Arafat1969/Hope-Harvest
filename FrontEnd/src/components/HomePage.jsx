@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './HomePage.module.css';
 import AnimatedNumber from '../components/AnimatedNumber'; // Adjust path if your components folder is elsewhere
+import BlurText from './BlurText';
 
 // Custom Hook to detect when an element is in view
 const useInView = (options) => {
@@ -29,6 +30,11 @@ const useInView = (options) => {
 
   return [ref, isInView];
 };
+
+const handleAnimationComplete = () => {
+  console.log('Animation completed!');
+};
+
 
 
 const HomePage = () => {
@@ -71,7 +77,16 @@ const HomePage = () => {
           <div className="row">
             <div className="col-lg-7 text-center text-lg-start">
               <h1 className={styles.heroTitle}>Hope Harvest</h1>
-              <h2 className={styles.heroSubtitle}>Sowing Seeds of Change, Reaping a Brighter Future.</h2>
+              <h2 className={styles.heroSubtitle}>
+              <BlurText
+                text="Sowing Seeds of Change, Reaping a Brighter Future."
+                delay={150}
+                animateBy="letters"
+                direction="top"
+                onAnimationComplete={handleAnimationComplete}
+                className="text-2xl text-white mb-8"
+              />
+              </h2>
               <p className={styles.heroText}>
                 We empower communities across Bangladesh through sustainable microfinance, education, and direct relief, creating lasting, positive change from the ground up.
               </p>

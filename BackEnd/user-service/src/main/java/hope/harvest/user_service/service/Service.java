@@ -120,12 +120,29 @@ public class Service {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setPhoneNumber(dto.getPhoneNumber());
-        user.setAddressCity(dto.getAddressCity());
-        user.setAddressPostalCode(dto.getAddressPostalCode());
-        user.setAddressCountry(dto.getAddressCountry());
+        if(dto.getFirstName()!=null){
+            user.setFirstName(dto.getFirstName());
+        }
+
+        if(dto.getLastName()!=null){
+            user.setLastName(dto.getLastName());
+        }
+
+        if(dto.getPhoneNumber() !=null){
+            user.setPhoneNumber(dto.getPhoneNumber());
+        }
+
+        if(dto.getAddressCity()!=null){
+            user.setAddressCity(dto.getAddressCity());
+        }
+
+        if(dto.getAddressPostalCode() != null){
+            user.setAddressPostalCode(dto.getAddressPostalCode());
+        }
+
+        if(dto.getAddressCountry()!=null) {
+            user.setAddressCountry(dto.getAddressCountry());
+        }
         userRepo.save(user);
     }
 

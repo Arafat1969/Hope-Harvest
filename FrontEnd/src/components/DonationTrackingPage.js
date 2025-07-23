@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { donationService } from '../services/donationService';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const styles = {
   container: {
@@ -31,6 +33,70 @@ const styles = {
     borderRadius: '10px',
     padding: '1.5rem',
     marginTop: '1.5rem'
+  },
+  receiptContainer: {
+    background: 'white',
+    padding: '40px',
+    fontFamily: 'Arial, sans-serif',
+    lineHeight: '1.6',
+    color: '#333'
+  },
+  receiptHeader: {
+    textAlign: 'center',
+    marginBottom: '30px',
+    borderBottom: '3px solid #4CAF50',
+    paddingBottom: '20px'
+  },
+  receiptTitle: {
+    fontSize: '32px',
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    margin: '0 0 10px 0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px'
+  },
+  receiptSubtitle: {
+    fontSize: '16px',
+    color: '#666',
+    margin: '0'
+  },
+  receiptDetails: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '20px',
+    marginBottom: '30px'
+  },
+  receiptRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '12px 0',
+    borderBottom: '1px solid #eee'
+  },
+  receiptLabel: {
+    fontWeight: 'bold',
+    color: '#555'
+  },
+  receiptValue: {
+    color: '#333'
+  },
+  receiptAmount: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    textAlign: 'center',
+    padding: '20px',
+    background: '#f8f9fa',
+    borderRadius: '10px',
+    margin: '20px 0'
+  },
+  receiptFooter: {
+    textAlign: 'center',
+    marginTop: '40px',
+    padding: '20px',
+    background: '#f8f9fa',
+    borderRadius: '10px'
   }
 };
 
@@ -38,6 +104,7 @@ const DonationTrackingPage = () => {
   const [trackingKey, setTrackingKey] = useState('');
   const [donation, setDonation] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -83,6 +150,142 @@ const DonationTrackingPage = () => {
       currency: 'BDT',
       minimumFractionDigits: 0
     }).format(amount || 0);
+  };
+
+  const generatePDFReceipt = async () => {
+    if (!donation) return;
+    
+    setDownloadingPDF(true);
+    
+    try {
+      // Create a temporary container for the receipt
+      const receiptElement = document.createElement('div');
+      receiptElement.style.position = 'absolute';
+      receiptElement.style.left = '-9999px';
+      receiptElement.style.top = '-9999px';
+      receiptElement.style.width = '800px';
+      receiptElement.style.background = 'white';
+      
+      // Generate the receipt HTML
+      receiptElement.innerHTML = `
+        <div style="background: white; padding: 40px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #4CAF50; padding-bottom: 20px;">
+            <div style="font-size: 32px; font-weight: bold; color: #4CAF50; margin: 0 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+              🌱 Hope Harvest
+            </div>
+            <div style="font-size: 18px; color: #666; margin: 0;">
+              Donation Receipt
+            </div>
+            <div style="font-size: 14px; color: #888; margin-top: 5px;">
+              Thank you for making a difference!
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 30px;">
+            <div style="font-size: 24px; font-weight: bold; color: #4CAF50; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
+              Total Donation: ${formatCurrency(donation.data.amount)}
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Campaign:</span>
+                <span style="color: #333;">${donation.data.campaignTitle}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Date:</span>
+                <span style="color: #333;">${formatDate(donation.data.donationDate)}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Payment Method:</span>
+                <span style="color: #333;">${donation.data.paymentMethod}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Organization:</span>
+                <span style="color: #333;">${donation.data.organizationName}</span>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Transaction ID:</span>
+                <span style="color: #333;">${donation.data.transactionId}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Donation ID:</span>
+                <span style="color: #333;">${donation.data.donationId}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Tracking Key:</span>
+                <span style="color: #333;">${donation.data.trackingKey}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: bold; color: #555;">Receipt Date:</span>
+                <span style="color: #333;">${new Date().toLocaleDateString('en-BD')}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <p style="margin: 0 0 10px 0; font-size: 16px; color: #4CAF50; font-weight: bold;">
+              Your generosity makes our mission possible!
+            </p>
+            <p style="margin: 0; font-size: 14px; color: #666;">
+              This receipt serves as proof of your donation. Please keep it for your records.
+            </p>
+            <div style="margin-top: 20px; font-size: 12px; color: #888;">
+              <p style="margin: 5px 0;">Hope Harvest Foundation</p>
+              <p style="margin: 5px 0;">Dhaka, Bangladesh</p>
+              <p style="margin: 5px 0;">Email: info@hopeharvest.bd | Phone: +880 1700-000000</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Append to document
+      document.body.appendChild(receiptElement);
+      
+      // Generate canvas from HTML
+      const canvas = await html2canvas(receiptElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+      
+      // Remove the temporary element
+      document.body.removeChild(receiptElement);
+      
+      // Create PDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      // Download the PDF
+      const fileName = `Hope_Harvest_Receipt_${donation.data.trackingKey}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    } finally {
+      setDownloadingPDF(false);
+    }
   };
 
   return (
@@ -154,10 +357,29 @@ const DonationTrackingPage = () => {
                     </div>
                     
                     <div style={styles.detailsCard}>
-                      <h5 className="mb-3 text-success">
-                        <i className="fas fa-receipt me-2"></i>
-                        Donation Details
-                      </h5>
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h5 className="mb-0 text-success">
+                          <i className="fas fa-receipt me-2"></i>
+                          Donation Details
+                        </h5>
+                        <button 
+                          className="btn btn-outline-success"
+                          onClick={generatePDFReceipt}
+                          disabled={downloadingPDF}
+                        >
+                          {downloadingPDF ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2"></span>
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fas fa-download me-2"></i>
+                              Download Receipt
+                            </>
+                          )}
+                        </button>
+                      </div>
                       
                       <div className="row">
                         <div className="col-md-6 mb-3">

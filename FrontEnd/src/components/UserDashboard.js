@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { campaignService } from '../services/campaignService';
 import { donationService } from '../services/donationService';
+import { fundApplicationService } from '../services/fundApplicationService';
 
 const styles = {
   dashboardCard: {
@@ -20,6 +21,19 @@ const styles = {
   },
   campaignCard: {
     borderLeft: '4px solid #FF9800'
+  },
+  fundCard: {
+    borderLeft: '4px solid #2196F3'
+  },
+  clickableCard: {
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    border: '1px solid transparent'
+  },
+  clickableCardHover: {
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    borderColor: '#e9ecef'
   }
 };
 
@@ -28,12 +42,14 @@ const UserDashboard = () => {
   const [user, setUser] = useState(null);
   const [donations, setDonations] = useState([]);
   const [campaignRequests, setCampaignRequests] = useState([]);
+  const [fundApplications, setFundApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState({
     totalDonated: 0,
     donationCount: 0,
-    campaignRequests: 0
+    campaignRequests: 0,
+    fundApplications: 0
   });
 
   useEffect(() => {
@@ -43,7 +59,7 @@ const UserDashboard = () => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-        // Get user profile
+      // Get user profile
       const userResponse = await authService.getProfile();
       if (userResponse.status === 'success') {
         console.log('User profile response:', userResponse.data); // Debug log
@@ -55,17 +71,22 @@ const UserDashboard = () => {
         
         if (userId) {
           // Get user donations
-          const donationsResponse = await donationService.getUserDonations(userId);
-          if (donationsResponse.status === 'success') {
-            setDonations(donationsResponse.data || []);
-            
-            // Calculate stats
-            const totalDonated = donationsResponse.data?.reduce((sum, donation) => sum + (donation.amount || 0), 0) || 0;
-            setStats(prev => ({
-              ...prev,
-              totalDonated,
-              donationCount: donationsResponse.data?.length || 0
-            }));
+          try {
+            const donationsResponse = await donationService.getUserDonations(userId);
+            if (donationsResponse.status === 'success') {
+              setDonations(donationsResponse.data || []);
+              
+              // Calculate donation stats
+              const totalDonated = donationsResponse.data?.reduce((sum, donation) => sum + (donation.amount || 0), 0) || 0;
+              setStats(prev => ({
+                ...prev,
+                totalDonated,
+                donationCount: donationsResponse.data?.length || 0
+              }));
+            }
+          } catch (donationError) {
+            console.warn('Donations not available:', donationError);
+            setDonations([]);
           }
           
           // Get campaign requests with userId
@@ -80,11 +101,27 @@ const UserDashboard = () => {
             }
           } catch (campaignError) {
             console.warn('Campaign requests not available:', campaignError);
-            // Set empty campaign requests if API not implemented yet
             setCampaignRequests([]);
+          }
+
+          // Get fund applications with userId
+          try {
+            const fundResponse = await fundApplicationService.getUserFundApplications(userId);
+            console.log('Fund applications response:', fundResponse); // Debug log
+            
+            // Handle both direct array and wrapped response
+            const fundData = fundResponse.data || fundResponse || [];
+            setFundApplications(Array.isArray(fundData) ? fundData : []);
             setStats(prev => ({
               ...prev,
-              campaignRequests: 0
+              fundApplications: Array.isArray(fundData) ? fundData.length : 0
+            }));
+          } catch (fundError) {
+            console.warn('Fund applications not available:', fundError);
+            setFundApplications([]);
+            setStats(prev => ({
+              ...prev,
+              fundApplications: 0
             }));
           }
         } else {
@@ -107,18 +144,59 @@ const UserDashboard = () => {
     }).format(amount || 0);
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  };
+
   const getStatusBadgeClass = (status) => {
     switch (status?.toLowerCase()) {
       case 'completed':
       case 'verified':
+      case 'approved':
+      case 'disbursed':
         return 'badge bg-success';
       case 'pending':
+      case 'under_review':
         return 'badge bg-warning';
       case 'failed':
       case 'rejected':
+      case 'cancelled':
         return 'badge bg-danger';
       default:
         return 'badge bg-secondary';
+    }
+  };
+
+  // Navigation handlers
+  const handleDonationClick = (donationId) => {
+    navigate(`/my-donations/${donationId}`);
+  };
+
+  const handleCampaignRequestClick = (requestId) => {
+    navigate(`/my-campaign-requests/${requestId}`);
+  };
+
+  const handleFundApplicationClick = (applicationId) => {
+    navigate(`/my-fund-applications/${applicationId}`);
+  };
+
+  // Hover effect handlers
+  const handleCardHover = (e, isEntering) => {
+    if (isEntering) {
+      Object.assign(e.currentTarget.style, styles.clickableCardHover);
+    } else {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+      e.currentTarget.style.borderColor = 'transparent';
     }
   };
 
@@ -171,7 +249,7 @@ const UserDashboard = () => {
 
       {/* Statistics Cards */}
       <div className="row mb-5">
-        <div className="col-md-4 mb-3">
+        <div className="col-lg-3 col-md-6 mb-3">
           <div className="card" style={styles.statCard}>
             <div className="card-body text-center">
               <i className="fas fa-heart fa-3x mb-3"></i>
@@ -180,7 +258,7 @@ const UserDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-4 mb-3">
+        <div className="col-lg-3 col-md-6 mb-3">
           <div className="card" style={styles.statCard}>
             <div className="card-body text-center">
               <i className="fas fa-hand-holding-heart fa-3x mb-3"></i>
@@ -189,7 +267,7 @@ const UserDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-4 mb-3">
+        <div className="col-lg-3 col-md-6 mb-3">
           <div className="card" style={styles.statCard}>
             <div className="card-body text-center">
               <i className="fas fa-bullhorn fa-3x mb-3"></i>
@@ -198,15 +276,24 @@ const UserDashboard = () => {
             </div>
           </div>
         </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card" style={styles.statCard}>
+            <div className="card-body text-center">
+              <i className="fas fa-money-check-alt fa-3x mb-3"></i>
+              <h3 className="mb-1">{stats.fundApplications}</h3>
+              <p className="mb-0">Fund Applications</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="row">
         {/* Recent Donations */}
-        <div className="col-lg-8 mb-4">
+        <div className="col-lg-4 mb-4">
           <div className="card" style={styles.dashboardCard}>
             <div className="card-header bg-white">
               <h5 className="mb-0 text-success">
-                <i className="fas fa-list me-2"></i>
+                <i className="fas fa-heart me-2"></i>
                 Recent Donations
               </h5>
             </div>
@@ -215,55 +302,61 @@ const UserDashboard = () => {
                 <div className="text-center py-4 text-muted">
                   <i className="fas fa-heart fa-2x mb-3"></i>
                   <p>No donations yet. Start making a difference today!</p>
-                  <button className="btn btn-success">Make Your First Donation</button>
+                  <button 
+                    className="btn btn-success btn-sm"
+                    onClick={() => navigate('/donate')}
+                  >
+                    Make Your First Donation
+                  </button>
                 </div>
               ) : (
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Campaign</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {donations.slice(0, 5).map((donation) => (
-                        <tr key={donation.donationId}>
-                          <td>
-                            <div style={styles.donationCard} className="p-2">
-                              <strong>{donation.campaignTitle || 'Campaign'}</strong>
-                              {donation.message && (
-                                <small className="d-block text-muted">
-                                  "{donation.message}"
-                                </small>
-                              )}
-                            </div>
-                          </td>
-                          <td className="fw-bold text-success">
-                            {formatCurrency(donation.amount)}
-                          </td>
-                          <td>
-                            {new Date(donation.donationDate).toLocaleDateString()}
-                          </td>
-                          <td>
-                            <span className={getStatusBadgeClass(donation.status)}>
-                              {donation.status || 'completed'}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              
-              {donations.length > 5 && (
-                <div className="text-center mt-3">
-                  <button className="btn btn-outline-success">
-                    View All Donations
-                  </button>
+                <div>
+                  {donations.slice(0, 4).map((donation) => (
+                    <div key={donation.donationId} className="border-bottom pb-3 mb-3">
+                      <div 
+                        style={{...styles.donationCard, ...styles.clickableCard}} 
+                        className="p-2"
+                        onClick={() => handleDonationClick(donation.donationId)}
+                        onMouseEnter={(e) => handleCardHover(e, true)}
+                        onMouseLeave={(e) => handleCardHover(e, false)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleDonationClick(donation.donationId);
+                          }
+                        }}
+                      >
+                        <h6 className="mb-1">
+                          {donation.campaignTitle || 'Campaign'}
+                          <i className="fas fa-external-link-alt ms-2 text-muted" style={{fontSize: '0.8rem'}}></i>
+                        </h6>
+                        <div className="d-flex justify-content-between align-items-center mb-1">
+                          <strong className="text-success">{formatCurrency(donation.amount)}</strong>
+                          <small className="text-muted">{formatDate(donation.donationDate)}</small>
+                        </div>
+                        <span className={getStatusBadgeClass(donation.status)}>
+                          {donation.status || 'completed'}
+                        </span>
+                        {donation.message && (
+                          <small className="d-block text-muted mt-1">
+                            "{donation.message}"
+                          </small>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {donations.length > 4 && (
+                    <div className="text-center mt-3">
+                      <button 
+                        className="btn btn-outline-success btn-sm"
+                        onClick={() => navigate('/my-donations')}
+                      >
+                        View All Donations ({donations.length})
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -283,7 +376,8 @@ const UserDashboard = () => {
               {campaignRequests.length === 0 ? (
                 <div className="text-center py-4 text-muted">
                   <i className="fas fa-plus-circle fa-2x mb-3"></i>
-                  <p>No campaign requests yet.</p>                  <button 
+                  <p>No campaign requests yet.</p>
+                  <button 
                     className="btn btn-outline-success btn-sm"
                     onClick={() => navigate('/request-campaign')}
                   >
@@ -292,12 +386,28 @@ const UserDashboard = () => {
                 </div>
               ) : (
                 <div>
-                  {campaignRequests.slice(0, 3).map((request) => (
+                  {campaignRequests.slice(0, 4).map((request) => (
                     <div key={request.requestId} className="border-bottom pb-3 mb-3">
-                      <div style={styles.campaignCard} className="p-2">
-                        <h6 className="mb-1">{request.title}</h6>
+                      <div 
+                        style={{...styles.campaignCard, ...styles.clickableCard}} 
+                        className="p-2"
+                        onClick={() => handleCampaignRequestClick(request.requestId)}
+                        onMouseEnter={(e) => handleCardHover(e, true)}
+                        onMouseLeave={(e) => handleCardHover(e, false)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleCampaignRequestClick(request.requestId);
+                          }
+                        }}
+                      >
+                        <h6 className="mb-1">
+                          {request.title}
+                          <i className="fas fa-external-link-alt ms-2 text-muted" style={{fontSize: '0.8rem'}}></i>
+                        </h6>
                         <small className="text-muted d-block mb-2">
-                          Requested: {new Date(request.requestDate).toLocaleDateString()}
+                          Requested: {formatDate(request.requestDate)}
                         </small>
                         <span className={getStatusBadgeClass(request.status)}>
                           {request.status || 'Pending'}
@@ -306,10 +416,93 @@ const UserDashboard = () => {
                     </div>
                   ))}
                   
-                  {campaignRequests.length > 3 && (
-                    <div className="text-center">
-                      <button className="btn btn-outline-success btn-sm">
-                        View All Requests
+                  {campaignRequests.length > 4 && (
+                    <div className="text-center mt-3">
+                      <button 
+                        className="btn btn-outline-success btn-sm"
+                        onClick={() => navigate('/my-campaign-requests')}
+                      >
+                        View All Requests ({campaignRequests.length})
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Fund Applications */}
+        <div className="col-lg-4 mb-4">
+          <div className="card" style={styles.dashboardCard}>
+            <div className="card-header bg-white">
+              <h5 className="mb-0 text-success">
+                <i className="fas fa-money-check-alt me-2"></i>
+                Fund Applications
+              </h5>
+            </div>
+            <div className="card-body">
+              {fundApplications.length === 0 ? (
+                <div className="text-center py-4 text-muted">
+                  <i className="fas fa-file-invoice-dollar fa-2x mb-3"></i>
+                  <p>No fund applications yet.</p>
+                  <button 
+                    className="btn btn-outline-success btn-sm"
+                    onClick={() => navigate('/apply-for-funds')}
+                  >
+                    Apply for Funds
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  {fundApplications.slice(0, 4).map((application) => (
+                    <div key={application.applicationId} className="border-bottom pb-3 mb-3">
+                      <div 
+                        style={{...styles.fundCard, ...styles.clickableCard}} 
+                        className="p-2"
+                        onClick={() => handleFundApplicationClick(application.applicationId)}
+                        onMouseEnter={(e) => handleCardHover(e, true)}
+                        onMouseLeave={(e) => handleCardHover(e, false)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleFundApplicationClick(application.applicationId);
+                          }
+                        }}
+                      >
+                        <h6 className="mb-1">
+                          {application.purpose}
+                          <i className="fas fa-external-link-alt ms-2 text-muted" style={{fontSize: '0.8rem'}}></i>
+                        </h6>
+                        <div className="d-flex justify-content-between align-items-center mb-1">
+                          <strong className="text-primary">{formatCurrency(application.amount)}</strong>
+                          <small className="text-muted">{formatDate(application.submissionDate)}</small>
+                        </div>
+                        <span className={getStatusBadgeClass(application.status)}>
+                          {application.status || 'Pending'}
+                        </span>
+                        {application.disbursedAmount && application.disbursedAmount > 0 && (
+                          <small className="d-block text-success mt-1">
+                            Disbursed: {formatCurrency(application.disbursedAmount)}
+                          </small>
+                        )}
+                        {application.feedback && (
+                          <small className="d-block text-muted mt-1">
+                            "{application.feedback}"
+                          </small>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {fundApplications.length > 4 && (
+                    <div className="text-center mt-3">
+                      <button 
+                        className="btn btn-outline-success btn-sm"
+                        onClick={() => navigate('/my-fund-applications')}
+                      >
+                        View All Applications ({fundApplications.length})
                       </button>
                     </div>
                   )}
@@ -327,14 +520,16 @@ const UserDashboard = () => {
             <div className="card-body">
               <h5 className="text-success mb-3">Quick Actions</h5>
               <div className="row">
-                <div className="col-md-3 mb-2">
-                  <button className="btn btn-success w-100"
+                <div className="col-lg-3 col-md-6 mb-2">
+                  <button 
+                    className="btn btn-success w-100"
                     onClick={() => navigate('/donate')}
                   >
                     <i className="fas fa-heart me-2"></i>
                     Make Donation
                   </button>
-                </div>                <div className="col-md-3 mb-2">
+                </div>
+                <div className="col-lg-3 col-md-6 mb-2">
                   <button 
                     className="btn btn-outline-success w-100"
                     onClick={() => navigate('/request-campaign')}
@@ -343,18 +538,22 @@ const UserDashboard = () => {
                     Request Campaign
                   </button>
                 </div>
-                <div className="col-md-3 mb-2">
-                  <button className="btn btn-outline-success w-100"
+                <div className="col-lg-3 col-md-6 mb-2">
+                  <button 
+                    className="btn btn-outline-success w-100"
+                    onClick={() => navigate('/apply-for-funds')}
+                  >
+                    <i className="fas fa-money-check-alt me-2"></i>
+                    Apply for Funds
+                  </button>
+                </div>
+                <div className="col-lg-3 col-md-6 mb-2">
+                  <button 
+                    className="btn btn-outline-success w-100"
                     onClick={() => navigate('/volunteer-activity')}
                   >
                     <i className="fas fa-hands-helping me-2"></i>
                     Volunteer
-                  </button>
-                </div>
-                <div className="col-md-3 mb-2">
-                  <button className="btn btn-outline-success w-100">
-                    <i className="fas fa-user me-2"></i>
-                    Edit Profile
                   </button>
                 </div>
               </div>

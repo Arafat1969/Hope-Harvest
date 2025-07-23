@@ -34,8 +34,6 @@ public class DonationPaymentService {
         if ( requestDTO.getExternalUserId() != null) {
             throw new IllegalArgumentException("Non-anonymous donations must have a user ID." +requestDTO.isAnonymous());
         }
-
-
         Campaign campaign = campaignRepo.findById(requestDTO.getCampaignId())
                 .orElseThrow(() -> new RuntimeException("Campaign not found"));
 

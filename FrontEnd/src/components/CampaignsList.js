@@ -175,7 +175,7 @@ const CampaignsList = () => {
       {/* Header */}
       <div className="text-center mb-5">
         <h1 className="display-4 text-success fw-bold">Active Campaigns</h1>
-        <p className="lead text-muted">
+        <p className="lead text-muted text-center">
           Support our ongoing campaigns and make a difference in communities
         </p>
       </div>
@@ -351,10 +351,10 @@ const CampaignsList = () => {
                       style={styles.donateButton}
                       onClick={() => handleDonate(campaign.campaignId, campaign)}
                       onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1B5E20';
+                        e.currentTarget.style.backgroundColor = '#013405ff';
                       }}
                       onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#2E7D32';
+                        e.currentTarget.style.backgroundColor = '#013004ff';
                       }}
                     >
                       <i className="fas fa-heart me-2"></i>
@@ -373,10 +373,10 @@ const CampaignsList = () => {
         <div className="card bg-light">
           <div className="card-body py-4">
             <h4 className="text-success">Want to start your own campaign?</h4>
-            <p className="text-muted mb-3">
+            <p className="text-muted mb-3 text-center">
               Have a project idea that can help your community? Submit a campaign request!
             </p>
-            <button className="btn btn-outline-success">
+            <button className="btn btn-outline-success" onClick={() => navigate('/request-campaign')}>
               Request New Campaign
             </button>
           </div>        </div>

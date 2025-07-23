@@ -13,10 +13,27 @@ const styles = {
     border: '1px solid #e0e0e0'
   },
   imagePreview: {
-    maxWidth: '100px',
-    maxHeight: '100px',
+    width: '100%',
+    height: '150px',
     objectFit: 'cover',
     borderRadius: '0.5rem'
+  },
+  uploadArea: {
+    border: '2px dashed #dee2e6',
+    borderRadius: '0.5rem',
+    padding: '2rem',
+    textAlign: 'center',
+    backgroundColor: '#f8f9fa',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease'
+  },
+  uploadAreaHover: {
+    borderColor: '#007bff',
+    backgroundColor: '#e3f2fd'
+  },
+  uploadAreaDragging: {
+    borderColor: '#28a745',
+    backgroundColor: '#e8f5e9'
   }
 };
 
@@ -26,7 +43,8 @@ const AdminCreateCampaignPage = () => {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [imageUrlInput, setImageUrlInput] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -56,7 +74,6 @@ const AdminCreateCampaignPage = () => {
     } catch (error) {
       console.error('Error fetching categories:', error);
       setError('Failed to load categories. Using default options.');
-      // Set some default categories if API fails
       setCategories([
         { categoryId: 'default-1', name: 'Health & Medical' },
         { categoryId: 'default-2', name: 'Education' },
@@ -75,7 +92,6 @@ const AdminCreateCampaignPage = () => {
       [name]: value
     }));
     
-    // Clear error when user starts typing
     if (formErrors[name]) {
       setFormErrors(prev => ({
         ...prev,
@@ -84,19 +100,94 @@ const AdminCreateCampaignPage = () => {
     }
   };
 
-  const handleAddImageUrl = () => {
-    if (imageUrlInput.trim()) {
-      // Basic URL validation
-      try {
-        new URL(imageUrlInput.trim());
+  // Image Upload Functions
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      const response = await fetch('https://api.imgbb.com/1/upload?key=fb30e28eaa1aa590e4676b9284b04709', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        return result.data.url; // Returns the direct image URL
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw new Error('Failed to upload image. Please try again.');
+    }
+  };
+
+  const handleFileSelect = async (files) => {
+    const validFiles = Array.from(files).filter(file => {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert(`${file.name} is not a valid image file.`);
+        return false;
+      }
+      
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`${file.name} is too large. Maximum size is 10MB.`);
+        return false;
+      }
+      
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
+    setUploadingImage(true);
+    
+    try {
+      for (const file of validFiles) {
+        console.log(`Uploading ${file.name}...`);
+        const imageUrl = await uploadImageToImgBB(file);
+        
         setFormData(prev => ({
           ...prev,
-          imageUrls: [...prev.imageUrls, imageUrlInput.trim()]
+          imageUrls: [...prev.imageUrls, imageUrl]
         }));
-        setImageUrlInput('');
-      } catch (error) {
-        alert('Please enter a valid URL');
+        
+        console.log(`Successfully uploaded: ${imageUrl}`);
       }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleFileInputChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFileSelect(e.target.files);
+    }
+    // Reset input value to allow selecting the same file again
+    e.target.value = '';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFileSelect(e.dataTransfer.files);
     }
   };
 
@@ -147,7 +238,7 @@ const AdminCreateCampaignPage = () => {
     }
 
     if (formData.imageUrls.length === 0) {
-      errors.imageUrls = 'At least one image URL is required';
+      errors.imageUrls = 'At least one image is required';
     }
 
     setFormErrors(errors);
@@ -181,7 +272,6 @@ const AdminCreateCampaignPage = () => {
       const response = await campaignService.createCampaign(campaignData);
       console.log('Campaign created successfully:', response);
 
-      // Navigate to success page with campaign data
       navigate('/admin/create/campaigns/success', { 
         state: { campaignData: response.data || response } 
       });
@@ -423,64 +513,97 @@ const AdminCreateCampaignPage = () => {
                   )}
                 </div>
 
-                {/* Image URLs */}
+                {/* Image Upload Section */}
                 <div className="col-12 mb-3">
                   <label className="form-label">
                     Campaign Images <span className="text-danger">*</span>
                   </label>
                   
-                  {/* Add Image URL Input */}
-                  <div className="input-group mb-3">
+                  {/* File Upload Area */}
+                  <div 
+                    style={{
+                      ...styles.uploadArea,
+                      ...(dragOver ? styles.uploadAreaDragging : {})
+                    }}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => document.getElementById('imageInput').click()}
+                  >
                     <input
-                      type="url"
-                      className="form-control"
-                      value={imageUrlInput}
-                      onChange={(e) => setImageUrlInput(e.target.value)}
-                      placeholder="Enter image URL (https://...)"
+                      type="file"
+                      id="imageInput"
+                      multiple
+                      accept="image/*"
+                      onChange={handleFileInputChange}
+                      style={{ display: 'none' }}
+                      disabled={uploadingImage}
                     />
-                    <button
-                      type="button"
-                      className="btn btn-outline-primary"
-                      onClick={handleAddImageUrl}
-                    >
-                      <i className="fas fa-plus me-1"></i>
-                      Add Image
-                    </button>
+                    
+                    {uploadingImage ? (
+                      <div>
+                        <div className="spinner-border text-primary mb-3" role="status">
+                          <span className="visually-hidden">Uploading...</span>
+                        </div>
+                        <h5 className="text-primary">Uploading Images...</h5>
+                        <p className="text-muted mb-0">Please wait while we upload your images</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <i className="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                        <h5 className="text-primary">Upload Campaign Images</h5>
+                        <p className="text-muted mb-2">
+                          Drag and drop images here, or click to select files
+                        </p>
+                        <small className="text-muted">
+                          Supports: JPG, PNG, GIF (Max 10MB per image)
+                        </small>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Display Added Images */}
+                  {/* Display Uploaded Images */}
                   {formData.imageUrls.length > 0 && (
-                    <div className="row">
-                      {formData.imageUrls.map((url, index) => (
-                        <div key={index} className="col-md-4 mb-3">
-                          <div className="card">
-                            <img
-                              src={url}
-                              alt={`Campaign image ${index + 1}`}
-                              className="card-img-top"
-                              style={styles.imagePreview}
-                              onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/100x100?text=Invalid+Image';
-                              }}
-                            />
-                            <div className="card-body p-2">
-                              <button
-                                type="button"
-                                className="btn btn-danger btn-sm w-100"
-                                onClick={() => handleRemoveImageUrl(index)}
-                              >
-                                <i className="fas fa-trash me-1"></i>
-                                Remove
-                              </button>
+                    <div className="mt-3">
+                      <h6 className="text-muted mb-3">
+                        Uploaded Images ({formData.imageUrls.length})
+                      </h6>
+                      <div className="row">
+                        {formData.imageUrls.map((url, index) => (
+                          <div key={index} className="col-md-4 col-lg-3 mb-3">
+                            <div className="card">
+                              <img
+                                src={url}
+                                alt={`Campaign image ${index + 1}`}
+                                className="card-img-top"
+                                style={styles.imagePreview}
+                                onError={(e) => {
+                                  e.target.src = 'https://via.placeholder.com/150x150?text=Failed+to+Load';
+                                }}
+                              />
+                              <div className="card-body p-2">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger btn-sm w-100"
+                                  onClick={() => handleRemoveImageUrl(index)}
+                                  disabled={uploadingImage}
+                                >
+                                  <i className="fas fa-trash me-1"></i>
+                                  Remove
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
 
                   {formErrors.imageUrls && (
-                    <div className="text-danger small">{formErrors.imageUrls}</div>
+                    <div className="text-danger small mt-2">
+                      <i className="fas fa-exclamation-circle me-1"></i>
+                      {formErrors.imageUrls}
+                    </div>
                   )}
                 </div>
 
@@ -490,7 +613,7 @@ const AdminCreateCampaignPage = () => {
                     <button
                       type="submit"
                       className="btn btn-danger"
-                      disabled={loading}
+                      disabled={loading || uploadingImage}
                     >
                       {loading ? (
                         <>
@@ -508,6 +631,7 @@ const AdminCreateCampaignPage = () => {
                       type="button"
                       className="btn btn-outline-secondary"
                       onClick={() => navigate('/admin-dashboard')}
+                      disabled={loading || uploadingImage}
                     >
                       Cancel
                     </button>

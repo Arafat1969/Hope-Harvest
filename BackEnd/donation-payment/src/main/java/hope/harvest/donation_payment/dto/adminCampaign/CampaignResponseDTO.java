@@ -7,6 +7,8 @@ import java.util.UUID;
 public class CampaignResponseDTO {
     private UUID campaignId;
     private String title;
+    private String description;
+    private String details;
     private BigDecimal goalAmount;
     private BigDecimal collectedAmount;
     private LocalDate startDate;
@@ -16,16 +18,19 @@ public class CampaignResponseDTO {
 
     public CampaignResponseDTO() {}
 
-    public CampaignResponseDTO(UUID campaignId, String title, BigDecimal goalAmount, BigDecimal collectedAmount,
+    public CampaignResponseDTO(UUID campaignId, String title,String description, String details, BigDecimal goalAmount, BigDecimal collectedAmount,
                                LocalDate startDate, LocalDate endDate, String status) {
         this.campaignId = campaignId;
         this.title = title;
+        this.description = description;
+        this.details = details;
         this.goalAmount = goalAmount;
         this.collectedAmount = collectedAmount;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
     }
+
 
     public UUID getCampaignId() {
         return campaignId;
@@ -37,6 +42,22 @@ public class CampaignResponseDTO {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public void setTitle(String title) {

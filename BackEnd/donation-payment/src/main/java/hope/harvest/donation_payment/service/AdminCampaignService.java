@@ -181,7 +181,14 @@ public class AdminCampaignService {
         CampaignResponseDTO responseDTO = new CampaignResponseDTO();
         responseDTO.setCampaignId(campaign.getCampaignID());
         responseDTO.setTitle(campaign.getTitle());
-        responseDTO.setStatus("Fetched");
+        responseDTO.setDescription(campaign.getDescription());
+        responseDTO.setDetails(campaign.getDetails());
+        if (LocalDate.now().isBefore(campaign.getEndDate())) {
+            responseDTO.setStatus("Ongoing");
+        }else {
+            responseDTO.setStatus("Completed");
+        }
+
         responseDTO.setGoalAmount(campaign.getGoalAmount());
         responseDTO.setCollectedAmount(campaign.getCollectedAmount());
         responseDTO.setStartDate(campaign.getStartDate());

@@ -138,7 +138,6 @@ public class Donation {
     public void setTrackingKey(String trackingKey) {
         this.trackingKey = trackingKey;
     }
-
     @Override
     public String toString() {
         return "Donation{" +

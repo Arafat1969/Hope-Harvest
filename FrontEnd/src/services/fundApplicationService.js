@@ -50,4 +50,4 @@ export const fundApplicationService ={
 		const response = await authAxios.post(`${API_BASE_URLs.EVENT_SERVICE}/admin/funds/${applicationId}/volunteer-assign`, volunteerData);
 		return response.data;
 	}
-}
+};

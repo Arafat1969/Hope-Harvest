@@ -6,6 +6,8 @@ const API_BASE_URLs = {
   EVENT_SERVICE: 'http://localhost:8090/api/v1/event-service'
 };
 
+const API_key = 'fb30e28eaa1aa590e4676b9284b04709';
+
 //hgyugjghjhhj
 
 // const API_BASE_URLs = {
@@ -56,4 +58,5 @@ const createAuthenticatedAxios = () => {
 
 export const authAxios = createAuthenticatedAxios();
 export { API_BASE_URLs };
+export {API_key};
 

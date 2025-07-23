@@ -1,30 +1,173 @@
 .footer {
   background-color: var(--color-text-primary);
   color: rgba(255, 255, 255, 0.75); /* Increased default text visibility */
-  padding: var(--space-6) var(--space-4); /* Added horizontal padding */
+  padding: var(--space-8) var(--space-4); /* Increased top/bottom padding for more content */
   font-size: 0.95rem; /* Slightly larger for better readability */
   letter-spacing: 0.3px; /* Adds a more refined look */
 }
 
 .footerContainer {
+  max-width: 1200px; /* Constrains the max width on very large screens */
+  margin: 0 auto;
+}
+
+/* Main footer content grid */
+.footerContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.footerSection {
+  margin-bottom: var(--space-4);
+}
+
+/* Brand logo styling */
+.brandLogo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.brandLogo i {
+  font-size: 2rem;
+}
+
+/* Mission statement */
+.missionStatement {
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Section titles */
+.sectionTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  color: #4CAF50;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: var(--space-1);
+  display: inline-block;
+}
+
+/* Link lists */
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linkList li {
+  margin-bottom: var(--space-2);
+}
+
+.linkList a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+
+.linkList a:hover {
+  color: #4CAF50;
+  text-decoration: underline;
+}
+
+.linkList a::before {
+  content: '▶';
+  margin-right: var(--space-2);
+  font-size: 0.7rem;
+  color: #4CAF50;
+}
+
+/* Contact information */
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contactItem i {
+  color: #4CAF50;
+  width: 1.2rem;
+  text-align: center;
+}
+
+/* Social media links */
+.socialLinks {
+  display: flex;
+  gap: var(--space-4); /* Increased gap for better spacing between icons */
+  margin-top: var(--space-4);
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px; /* Slightly larger container for better visual balance */
+  height: 45px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 8px; /* Added padding for better image spacing */
+}
+
+.socialLink:hover {
+  background-color: #4CAF50;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Social media icon images */
+.socialIcon {
+  width: 28px; /* Consistent icon size */
+  height: 28px;
+  object-fit: contain; /* Maintains aspect ratio */
+  border-radius: 4px; /* Slight rounding for better appearance */
+  transition: all 0.3s ease;
+}
+
+.socialLink:hover .socialIcon {
+  filter: brightness(1.1); /* Slightly brighten on hover */
+}
+
+/* Footer bottom section */
+.footerBottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: var(--space-6);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap; /* Allows wrapping on smaller screens */
   gap: var(--space-4);
-  max-width: 1200px; /* Constrains the max width on very large screens */
-  margin: 0 auto;
 }
 
 .copyright {
-  /* On large screens, this will naturally sit on the left */
-  align-self: start;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
 }
 
 .footerLinks {
   display: flex;
   gap: var(--space-6);
-  /* On large screens, this will naturally sit on the right */
 }
 
 .footerLinks a {
@@ -35,15 +178,66 @@
 }
 
 .footerLinks a:hover {
-  color: #ffffff;
+  color: #4CAF50;
   text-decoration: underline;
 }
 
-/* On smaller screens, stack the elements and center them */
+/* Responsive design */
 @media (max-width: 768px) {
-  .footerContainer {
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  
+  .footerBottom {
     flex-direction: column;
-    justify-content: center; /* Center the column items */
-    gap: var(--space-2);
+    justify-content: center;
+    gap: var(--space-4);
+    text-align: center;
+  }
+  
+  .footerLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+  
+  .socialLinks {
+    justify-content: center;
+    gap: var(--space-3); /* Slightly reduced gap on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: var(--space-6) var(--space-2);
+  }
+  
+  .footerLinks {
+    gap: var(--space-3);
+  }
+  
+  .brandLogo {
+    font-size: 1.5rem;
+    justify-content: center;
+  }
+  
+  .brandLogo i {
+    font-size: 1.7rem;
+  }
+  
+  .socialLinks {
+    gap: var(--space-3);
+  }
+  
+  .socialLink {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+  }
+  
+  .socialIcon {
+    width: 24px;
+    height: 24px;
   }
 }

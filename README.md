@@ -1,4 +1,6 @@
-﻿# Hope Harvest - Donation & Volunteer Platform
+﻿[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+# Hope Harvest - Donation & Volunteer Platform
 
 A comprehensive donation and volunteer management platform built with Spring Boot microservices and React frontend. Hope Harvest connects donors, volunteers, and beneficiaries to create meaningful impact across Bangladesh.
 
