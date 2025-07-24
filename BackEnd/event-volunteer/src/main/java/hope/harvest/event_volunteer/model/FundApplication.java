@@ -34,12 +34,14 @@ public class FundApplication {
     @Column(name = "purpose", nullable = false, length = 255)
     private String purpose;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "address", nullable = false, columnDefinition = "jsonb")
     private String addressJson;
 
-    @ElementCollection
-    @Column(name = "documents", columnDefinition = "jsonb")
-    private List<String> documents;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "documents", columnDefinition = "jsonb[]")
+    private String[] documents;
+
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "bank_info", nullable = false, columnDefinition = "jsonb")
@@ -66,7 +68,7 @@ public class FundApplication {
 
     }
 
-    public FundApplication(UUID externalUserId, String fullName, String phoneNumber, String nationalId, BigDecimal amount, String purpose, String addressJson, List<String> documents, BankInfo bankInfoJson, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
+    public FundApplication(UUID externalUserId, String fullName, String phoneNumber, String nationalId, BigDecimal amount, String purpose, String addressJson, String[] documents, BankInfo bankInfoJson, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
         this.externalUserId = externalUserId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
@@ -147,11 +149,11 @@ public class FundApplication {
         this.addressJson = addressJson;
     }
 
-    public List<String> getDocuments() {
+    public String[] getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<String> documents) {
+    public void setDocuments(String[] documents) {
         this.documents = documents;
     }
 

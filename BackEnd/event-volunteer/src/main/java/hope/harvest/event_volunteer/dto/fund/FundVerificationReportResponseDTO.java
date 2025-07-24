@@ -16,7 +16,7 @@ public class FundVerificationReportResponseDTO {
     private String purpose;
     private BigDecimal amount;
     private String addressJson;
-    private List<String> documents;
+    private String[] documents;
     private String bankAccountNumber;
     private String bankAccountType;
     private String bankAccountBranch;
@@ -31,7 +31,7 @@ public class FundVerificationReportResponseDTO {
 
     }
 
-    public FundVerificationReportResponseDTO(UUID verificationId, UUID applicationId, UUID externalUserId, String fullName, String phoneNumber, String nationalId, String purpose, BigDecimal amount, String addressJson, List<String> documents, String bankAccountNumber, String bankAccountType, String bankAccountBranch, ZonedDateTime verificationDueDate, String recommendation, BigDecimal recommendedAmount, String report, String status) {
+    public FundVerificationReportResponseDTO(UUID verificationId, UUID applicationId, UUID externalUserId, String fullName, String phoneNumber, String nationalId, String purpose, BigDecimal amount, String addressJson, String[] documents, String bankAccountNumber, String bankAccountType, String bankAccountBranch, ZonedDateTime verificationDueDate, String recommendation, BigDecimal recommendedAmount, String report, String status) {
         this.verificationId = verificationId;
         this.applicationId = applicationId;
         this.externalUserId = externalUserId;
@@ -124,11 +124,11 @@ public class FundVerificationReportResponseDTO {
         this.addressJson = addressJson;
     }
 
-    public List<String> getDocuments() {
+    public String[] getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<String> documents) {
+    public void setDocuments(String[] documents) {
         this.documents = documents;
     }
 

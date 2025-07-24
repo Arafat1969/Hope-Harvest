@@ -12,7 +12,7 @@ public class FundApplicationRequestDTO {
     private String purpose;
     private BigDecimal amount;
     private String addressJson;
-    private List<String> documents;
+    private String[] documents;
     private String bankAccountNumber;
     private String bankAccountType;
     private String bankAccountBranch;
@@ -22,7 +22,7 @@ public class FundApplicationRequestDTO {
 
     }
 
-    public FundApplicationRequestDTO(String fullName,UUID externalUserId, String nationalId, String phoneNumber, String purpose, BigDecimal amount, String addressJson, List<String> documents, String bankAccountNumber, String bankAccountType, String bankAccountBranch) {
+    public FundApplicationRequestDTO(String fullName,UUID externalUserId, String nationalId, String phoneNumber, String purpose, BigDecimal amount, String addressJson, String[] documents, String bankAccountNumber, String bankAccountType, String bankAccountBranch) {
         this.fullName = fullName;
         this.externalUserId = externalUserId;
         this.nationalId = nationalId;
@@ -92,11 +92,11 @@ public class FundApplicationRequestDTO {
         this.addressJson = addressJson;
     }
 
-    public List<String> getDocuments() {
+    public String[] getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<String> documents) {
+    public void setDocuments(String[] documents) {
         this.documents = documents;
     }
 

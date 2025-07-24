@@ -15,7 +15,7 @@ public class FundDetailsAdminDTO {
     private String purpose;
     private BigDecimal amount;
     private String addressJson;
-    private List<String> documents;
+    private String[] documents;
 
     // Flattened Bank Info
     private String bankAccountNumber;
@@ -38,7 +38,7 @@ public class FundDetailsAdminDTO {
 
     public FundDetailsAdminDTO(UUID applicationId, UUID externalUserId, String fullName, String phoneNumber,
                                String nationalId, String purpose, BigDecimal amount, String addressJson,
-                               List<String> documents, String bankAccountNumber, String bankAccountType,
+                               String[] documents, String bankAccountNumber, String bankAccountType,
                                String bankAccountBranch, ZonedDateTime submissionDate, String status,
                                String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate,
                                UUID assignedVolunteerId, String recommendation, BigDecimal recommendedAmount, String report) {
@@ -163,11 +163,11 @@ public class FundDetailsAdminDTO {
         this.addressJson = addressJson;
     }
 
-    public List<String> getDocuments() {
+    public String[] getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<String> documents) {
+    public void setDocuments(String[] documents) {
         this.documents = documents;
     }
 

@@ -12,6 +12,7 @@ import hope.harvest.donation_payment.repo.CampaignRepo;
 import hope.harvest.donation_payment.repo.CampaignRequestRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -200,6 +201,7 @@ public class AdminCampaignService {
         return responseDTO;
     }
 
+    @Transactional
     public CampaignResponseDTO updateCampaignByCampaignID(UUID campaignID, CampaignUpdateRequestDTO dto) {
         Campaign campaign = campaignRepo.findById(campaignID)
                 .orElseThrow(() -> new RuntimeException("Campaign not found"));
@@ -249,8 +251,24 @@ public class AdminCampaignService {
         response.setEndDate(campaign.getEndDate());
         response.setStatus(updated ? "Updated successfully" : "No changes detected");
 
-        campaignImagesRepo.findByCampaign(campaign)
-                .ifPresent(img -> response.setImageUrl(img.getImageUrl()));
+        boolean isPresent = campaignImagesRepo.findByCampaign(campaign).isPresent();
+
+        if(isPresent){
+            CampaignImages campaignImages = campaignImagesRepo.findByCampaign(campaign)
+                                            .orElseThrow(() -> new RuntimeException("Campaign image not found"));
+            if(!dto.getImageUrls().isEmpty()){
+                campaignImages.setImageUrl(dto.getImageUrls().get(0));
+            }
+        }else{
+            if(!dto.getImageUrls().isEmpty()){
+                CampaignImages campaignImages = new CampaignImages();
+                campaignImages.setCampaign(campaign);
+                campaignImages.setImageUrl(dto.getImageUrls().get(0));
+                campaignImages.setDisplayOrder(0);
+                campaignImages.setImageAltText(campaign.getTitle());
+                campaignImagesRepo.save(campaignImages);
+            }
+        }
 
         return response;
     }
