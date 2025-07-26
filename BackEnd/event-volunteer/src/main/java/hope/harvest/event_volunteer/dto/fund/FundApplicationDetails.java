@@ -12,7 +12,10 @@ public class FundApplicationDetails {
     private UUID applicationId;
     private String purpose;
     private BigDecimal amount;
-    private String addressJson;
+    private String union;
+    private String upazilla;
+    private String district;
+    private String postalCode;
     private ZonedDateTime submissionDate;
     private String status;
     private String feedback;
@@ -21,20 +24,20 @@ public class FundApplicationDetails {
 
     public FundApplicationDetails() {}
 
-    public FundApplicationDetails(UUID applicationId, String purpose, BigDecimal amount, String addressJson,
-                                  ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount,
-                                  ZonedDateTime disbursementDate) {
+    public FundApplicationDetails(UUID applicationId, String purpose, BigDecimal amount, String union, String upazilla, String district, String postalCode, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
         this.applicationId = applicationId;
         this.purpose = purpose;
         this.amount = amount;
-        this.addressJson = addressJson;
+        this.union = union;
+        this.upazilla = upazilla;
+        this.district = district;
+        this.postalCode = postalCode;
         this.submissionDate = submissionDate;
         this.status = status;
         this.feedback = feedback;
         this.disbursedAmount = disbursedAmount;
         this.disbursementDate = disbursementDate;
     }
-
 
     public UUID getApplicationId() {
         return applicationId;
@@ -61,12 +64,36 @@ public class FundApplicationDetails {
         this.amount = amount;
     }
 
-    public String getAddressJson() {
-        return addressJson;
+    public String getUnion() {
+        return union;
     }
 
-    public void setAddressJson(String addressJson) {
-        this.addressJson = addressJson;
+    public void setUnion(String union) {
+        this.union = union;
+    }
+
+    public String getUpazilla() {
+        return upazilla;
+    }
+
+    public void setUpazilla(String upazilla) {
+        this.upazilla = upazilla;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public ZonedDateTime getSubmissionDate() {

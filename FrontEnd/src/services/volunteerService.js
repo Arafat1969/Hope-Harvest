@@ -8,9 +8,9 @@ export const volunteerService = {
     return response.data;
   },
 
-  // Get volunteer profile by volunteer ID
-  getVolunteerProfile: async (volunteerId) => {
-    const response = await authAxios.get(`${API_BASE_URLs.EVENT_SERVICE}/volunteers/${volunteerId}`);
+  // Get volunteer profile by user ID
+  getVolunteerProfile: async (userId) => {
+    const response = await authAxios.get(`${API_BASE_URLs.EVENT_SERVICE}/volunteers/${userId}`);
     return response.data;
   },
 

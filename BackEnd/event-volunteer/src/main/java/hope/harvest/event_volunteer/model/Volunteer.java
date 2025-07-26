@@ -35,11 +35,9 @@ public class Volunteer {
     @Column(name = "address_district", nullable = false, length = 100)
     private String addressDistrict;
 
-    @ElementCollection
     @Column(name = "skills", columnDefinition = "TEXT")
     private List<String> skills;
 
-    @ElementCollection
     @Column(name = "interests", columnDefinition = "TEXT")
     private List<String> interests;
 

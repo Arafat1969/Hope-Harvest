@@ -11,10 +11,15 @@ public class FundApplicationRequestDTO {
     private String phoneNumber;
     private String purpose;
     private BigDecimal amount;
-    private String addressJson;
-    private String[] documents;
+    private String union;
+    private String upazilla;
+    private String district;
+    private String postalCode;
+    private String nid;
+    private String nationalityProof;
+    private String otherDocuments;
     private String bankAccountNumber;
-    private String bankAccountType;
+    private String bankName;
     private String bankAccountBranch;
 
 
@@ -22,18 +27,64 @@ public class FundApplicationRequestDTO {
 
     }
 
-    public FundApplicationRequestDTO(String fullName,UUID externalUserId, String nationalId, String phoneNumber, String purpose, BigDecimal amount, String addressJson, String[] documents, String bankAccountNumber, String bankAccountType, String bankAccountBranch) {
+    public FundApplicationRequestDTO(String fullName, UUID externalUserId, String nationalId, String phoneNumber, String purpose, BigDecimal amount, String union, String upazilla, String district, String postalCode, String nid, String nationalityProof, String otherDocuments, String bankAccountNumber, String bankName, String bankAccountBranch) {
         this.fullName = fullName;
         this.externalUserId = externalUserId;
         this.nationalId = nationalId;
         this.phoneNumber = phoneNumber;
         this.purpose = purpose;
         this.amount = amount;
-        this.addressJson = addressJson;
-        this.documents = documents;
+        this.union = union;
+        this.upazilla = upazilla;
+        this.district = district;
+        this.postalCode = postalCode;
+        this.nid = nid;
+        this.nationalityProof = nationalityProof;
+        this.otherDocuments = otherDocuments;
         this.bankAccountNumber = bankAccountNumber;
-        this.bankAccountType = bankAccountType;
+        this.bankName = bankName;
         this.bankAccountBranch = bankAccountBranch;
+    }
+
+
+    public String getUnion() {
+        return union;
+    }
+
+    public void setUnion(String union) {
+        this.union = union;
+    }
+
+    public String getUpazilla() {
+        return upazilla;
+    }
+
+    public void setUpazilla(String upazilla) {
+        this.upazilla = upazilla;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     public String getFullName() {
@@ -84,20 +135,28 @@ public class FundApplicationRequestDTO {
         this.amount = amount;
     }
 
-    public String getAddressJson() {
-        return addressJson;
+    public String getNid() {
+        return nid;
     }
 
-    public void setAddressJson(String addressJson) {
-        this.addressJson = addressJson;
+    public void setNid(String nid) {
+        this.nid = nid;
     }
 
-    public String[] getDocuments() {
-        return documents;
+    public String getNationalityProof() {
+        return nationalityProof;
     }
 
-    public void setDocuments(String[] documents) {
-        this.documents = documents;
+    public void setNationalityProof(String nationalityProof) {
+        this.nationalityProof = nationalityProof;
+    }
+
+    public String getOtherDocuments() {
+        return otherDocuments;
+    }
+
+    public void setOtherDocuments(String otherDocuments) {
+        this.otherDocuments = otherDocuments;
     }
 
     public String getBankAccountNumber() {
@@ -108,13 +167,6 @@ public class FundApplicationRequestDTO {
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    public String getBankAccountType() {
-        return bankAccountType;
-    }
-
-    public void setBankAccountType(String bankAccountType) {
-        this.bankAccountType = bankAccountType;
-    }
 
     public String getBankAccountBranch() {
         return bankAccountBranch;

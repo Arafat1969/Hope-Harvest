@@ -142,7 +142,7 @@ public class AdminService {
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         Volunteer leader = volunteerRepo.findById(requestDTO.getLeaderId())
-                .orElseThrow(() -> new EntityNotFoundException("Volunteer not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Volunteer leader not found"));
 
 //            private List<UUID> memberList;
 
@@ -156,7 +156,8 @@ public class AdminService {
         team.setUpdatedAt(ZonedDateTime.now());
         team = teamRepo.save(team);
 
-
+        TeamMember leaderMember = new TeamMember(team,leader);
+        teamMemberRepo.save(leaderMember);
 
         List<TeamMember> members = new ArrayList<TeamMember>();
         for(UUID memberId : requestDTO.getMemberList()){

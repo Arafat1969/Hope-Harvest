@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface VolunteerRepo extends JpaRepository<Volunteer, UUID> {
     boolean existsByExternalUserId(UUID externalUserId);
+    Optional<Volunteer> findByExternalUserId(UUID externalUserId);
 }

@@ -207,27 +207,19 @@ const FundApplicationForm = () => {
     phoneNumber: '',
     purpose: '',
     amount: '',
-    addressJson: JSON.stringify({
-      street: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: 'Bangladesh'
-    }),
+    union: '',
+    upazilla: '',
+    district: '',
+    postalCode: '',
+    nid: '',
+    nationalityProof: '',
+    otherDocuments: '',
     bankAccountNumber: '',
-    bankAccountType: 'savings',
+    bankName: '',
     bankAccountBranch: ''
   });
 
-  const [address, setAddress] = useState({
-    street: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: 'Bangladesh'
-  });
-
-  // Separate document states
+  // Document file states for UI display
   const [nidDocument, setNidDocument] = useState(null);
   const [nationalityDocument, setNationalityDocument] = useState(null);
   const [otherDocuments, setOtherDocuments] = useState([]);
@@ -268,6 +260,21 @@ const FundApplicationForm = () => {
     }
   ];
 
+  // Bangladesh Districts by Division
+  const districtsByDivision = {
+    'Dhaka': ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Kishoreganj', 'Madaripur', 'Manikganj', 'Munshiganj', 'Narayanganj', 'Narsingdi', 'Rajbari', 'Shariatpur', 'Tangail'],
+    'Chittagong': ['Bandarban', 'Brahmanbaria', 'Chandpur', 'Chittagong', 'Comilla', 'Cox\'s Bazar', 'Feni', 'Khagrachhari', 'Lakshmipur', 'Noakhali', 'Rangamati'],
+    'Rajshahi': ['Bogra', 'Joypurhat', 'Naogaon', 'Natore', 'Nawabganj', 'Pabna', 'Rajshahi', 'Sirajganj'],
+    'Khulna': ['Bagerhat', 'Chuadanga', 'Jessore', 'Jhenaidah', 'Khulna', 'Kushtia', 'Magura', 'Meherpur', 'Narail', 'Satkhira'],
+    'Barisal': ['Barguna', 'Barisal', 'Bhola', 'Jhalokati', 'Patuakhali', 'Pirojpur'],
+    'Sylhet': ['Habiganj', 'Moulvibazar', 'Sunamganj', 'Sylhet'],
+    'Rangpur': ['Dinajpur', 'Gaibandha', 'Kurigram', 'Lalmonirhat', 'Nilphamari', 'Panchagarh', 'Rangpur', 'Thakurgaon'],
+    'Mymensingh': ['Jamalpur', 'Mymensingh', 'Netrokona', 'Sherpur']
+  };
+
+  const [selectedDivision, setSelectedDivision] = useState('');
+  const [availableDistricts, setAvailableDistricts] = useState([]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -283,21 +290,16 @@ const FundApplicationForm = () => {
     }
   };
 
-  const handleAddressChange = (e) => {
-    const { name, value } = e.target;
-    setAddress(prev => {
-      const newAddress = {
-        ...prev,
-        [name]: value
-      };
-      
-      setFormData(prevForm => ({
-        ...prevForm,
-        addressJson: JSON.stringify(newAddress)
-      }));
-      
-      return newAddress;
-    });
+  const handleDivisionChange = (e) => {
+    const division = e.target.value;
+    setSelectedDivision(division);
+    setAvailableDistricts(districtsByDivision[division] || []);
+    
+    // Reset district when division changes
+    setFormData(prev => ({
+      ...prev,
+      district: ''
+    }));
   };
 
   const handleFileUpload = async (files, documentType) => {
@@ -332,8 +334,10 @@ const FundApplicationForm = () => {
 
           if (documentType === 'nid') {
             setNidDocument(documentData);
+            setFormData(prev => ({ ...prev, nid: uploadedUrl }));
           } else if (documentType === 'nationality') {
             setNationalityDocument(documentData);
+            setFormData(prev => ({ ...prev, nationalityProof: uploadedUrl }));
           }
 
           setErrors(prev => ({
@@ -344,6 +348,7 @@ const FundApplicationForm = () => {
           alert(`Failed to upload ${file.name}. Please try again.`);
         }
       } else if (documentType === 'other') {
+        const uploadedUrls = [];
         const newUploadedDocs = [];
 
         for (let i = 0; i < files.length; i++) {
@@ -363,6 +368,7 @@ const FundApplicationForm = () => {
           const uploadedUrl = await uploadPdfToPdfCo(file);
           
           if (uploadedUrl) {
+            uploadedUrls.push(uploadedUrl);
             newUploadedDocs.push({
               name: file.name,
               url: uploadedUrl,
@@ -375,6 +381,11 @@ const FundApplicationForm = () => {
         }
 
         setOtherDocuments(prev => [...prev, ...newUploadedDocs]);
+        
+        // Update form data with comma-separated URLs
+        const currentOtherDocs = formData.otherDocuments ? formData.otherDocuments.split(',').filter(url => url.trim()) : [];
+        const allOtherDocs = [...currentOtherDocs, ...uploadedUrls];
+        setFormData(prev => ({ ...prev, otherDocuments: allOtherDocs.join(',') }));
       }
 
     } catch (error) {
@@ -388,10 +399,18 @@ const FundApplicationForm = () => {
   const removeDocument = (documentType, index = null) => {
     if (documentType === 'nid') {
       setNidDocument(null);
+      setFormData(prev => ({ ...prev, nid: '' }));
     } else if (documentType === 'nationality') {
       setNationalityDocument(null);
+      setFormData(prev => ({ ...prev, nationalityProof: '' }));
     } else if (documentType === 'other' && index !== null) {
+      const removedDoc = otherDocuments[index];
       setOtherDocuments(prev => prev.filter((_, i) => i !== index));
+      
+      // Update form data by removing the specific URL
+      const currentUrls = formData.otherDocuments ? formData.otherDocuments.split(',').filter(url => url.trim()) : [];
+      const updatedUrls = currentUrls.filter(url => url !== removedDoc.url);
+      setFormData(prev => ({ ...prev, otherDocuments: updatedUrls.join(',') }));
     }
   };
 
@@ -403,14 +422,15 @@ const FundApplicationForm = () => {
     if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
     if (!formData.purpose.trim()) newErrors.purpose = 'Purpose is required';
     if (!formData.amount || parseFloat(formData.amount) <= 0) newErrors.amount = 'Valid amount is required';
-    if (!address.street.trim()) newErrors.street = 'Street address is required';
-    if (!address.city.trim()) newErrors.city = 'City is required';
-    if (!address.state.trim()) newErrors.state = 'State/Division is required';
+    if (!formData.union.trim()) newErrors.union = 'Union is required';
+    if (!formData.upazilla.trim()) newErrors.upazilla = 'Upazilla is required';
+    if (!formData.district.trim()) newErrors.district = 'District is required';
     if (!formData.bankAccountNumber.trim()) newErrors.bankAccountNumber = 'Bank account number is required';
+    if (!formData.bankName.trim()) newErrors.bankName = 'Bank name is required';
     if (!formData.bankAccountBranch.trim()) newErrors.bankAccountBranch = 'Bank branch is required';
 
-    if (!nidDocument) newErrors.nid = 'National ID document is required';
-    if (!nationalityDocument) newErrors.nationality = 'Nationality proof document is required';
+    if (!formData.nid) newErrors.nid = 'National ID document is required';
+    if (!formData.nationalityProof) newErrors.nationality = 'Nationality proof document is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -429,19 +449,23 @@ const FundApplicationForm = () => {
         throw new Error('User ID not found. Please log in again.');
       }
 
-      const documents = [];
-      if (nidDocument) documents.push(nidDocument.url);
-      if (nationalityDocument) documents.push(nationalityDocument.url);
-      if (otherDocuments.length > 0) {
-        documents.push(...otherDocuments.map(doc => doc.url));
-      }
-
       const applicationData = {
-        ...formData,
+        fullName: formData.fullName,
         externalUserId: userId,
+        nationalId: formData.nationalId,
+        phoneNumber: formData.phoneNumber,
+        purpose: formData.purpose,
         amount: parseFloat(formData.amount),
-        documents: documents,
-        addressJson: formData.addressJson
+        union: formData.union,
+        upazilla: formData.upazilla,
+        district: formData.district,
+        postalCode: formData.postalCode,
+        nid: formData.nid,
+        nationalityProof: formData.nationalityProof,
+        otherDocuments: formData.otherDocuments,
+        bankAccountNumber: formData.bankAccountNumber,
+        bankName: formData.bankName,
+        bankAccountBranch: formData.bankAccountBranch
       };
 
       console.log('Submitting application data:', applicationData);
@@ -667,18 +691,38 @@ const FundApplicationForm = () => {
                   </h3>
                   
                   <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>Street Address *</label>
-                        <input
-                          type="text"
-                          name="street"
-                          value={address.street}
-                          onChange={handleAddressChange}
-                          style={styles.input}
-                          placeholder="House/Building number, Street name"
-                        />
-                        {errors.street && <div style={styles.errorText}>{errors.street}</div>}
+                        <label style={styles.label}>Division *</label>
+                        <select
+                          value={selectedDivision}
+                          onChange={handleDivisionChange}
+                          style={styles.select}
+                        >
+                          <option value="">Select Division</option>
+                          {Object.keys(districtsByDivision).map(division => (
+                            <option key={division} value={division}>{division}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="col-md-6">
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>District *</label>
+                        <select
+                          name="district"
+                          value={formData.district}
+                          onChange={handleInputChange}
+                          style={styles.select}
+                          disabled={!selectedDivision}
+                        >
+                          <option value="">Select District</option>
+                          {availableDistricts.map(district => (
+                            <option key={district} value={district}>{district}</option>
+                          ))}
+                        </select>
+                        {errors.district && <div style={styles.errorText}>{errors.district}</div>}
                       </div>
                     </div>
                   </div>
@@ -686,52 +730,44 @@ const FundApplicationForm = () => {
                   <div className="row">
                     <div className="col-md-4">
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>City *</label>
+                        <label style={styles.label}>Upazilla *</label>
                         <input
                           type="text"
-                          name="city"
-                          value={address.city}
-                          onChange={handleAddressChange}
+                          name="upazilla"
+                          value={formData.upazilla}
+                          onChange={handleInputChange}
                           style={styles.input}
-                          placeholder="City name"
+                          placeholder="Enter upazilla name"
                         />
-                        {errors.city && <div style={styles.errorText}>{errors.city}</div>}
+                        {errors.upazilla && <div style={styles.errorText}>{errors.upazilla}</div>}
                       </div>
                     </div>
                     
                     <div className="col-md-4">
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>State/Division *</label>
-                        <select
-                          name="state"
-                          value={address.state}
-                          onChange={handleAddressChange}
-                          style={styles.select}
-                        >
-                          <option value="">Select Division</option>
-                          <option value="Dhaka">Dhaka</option>
-                          <option value="Chittagong">Chittagong</option>
-                          <option value="Rajshahi">Rajshahi</option>
-                          <option value="Khulna">Khulna</option>
-                          <option value="Barisal">Barisal</option>
-                          <option value="Sylhet">Sylhet</option>
-                          <option value="Rangpur">Rangpur</option>
-                          <option value="Mymensingh">Mymensingh</option>
-                        </select>
-                        {errors.state && <div style={styles.errorText}>{errors.state}</div>}
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-4">
-                      <div style={styles.inputGroup}>
-                        <label style={styles.label}>Zip Code</label>
+                        <label style={styles.label}>Union *</label>
                         <input
                           type="text"
-                          name="zipCode"
-                          value={address.zipCode}
-                          onChange={handleAddressChange}
+                          name="union"
+                          value={formData.union}
+                          onChange={handleInputChange}
                           style={styles.input}
-                          placeholder="Postal code"
+                          placeholder="Enter union name"
+                        />
+                        {errors.union && <div style={styles.errorText}>{errors.union}</div>}
+                      </div>
+                    </div>
+                    
+                    <div className="col-md-4">
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>Postal Code</label>
+                        <input
+                          type="text"
+                          name="postalCode"
+                          value={formData.postalCode}
+                          onChange={handleInputChange}
+                          style={styles.input}
+                          placeholder="Enter postal code"
                         />
                       </div>
                     </div>
@@ -791,7 +827,22 @@ const FundApplicationForm = () => {
                   <div className="row">
                     <div className="col-md-6">
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>Bank Account Number *</label>
+                        <label style={styles.label}>Bank Name *</label>
+                        <input
+                          type="text"
+                          name="bankName"
+                          value={formData.bankName}
+                          onChange={handleInputChange}
+                          style={styles.input}
+                          placeholder="Enter bank name (e.g., Dutch Bangla Bank)"
+                        />
+                        {errors.bankName && <div style={styles.errorText}>{errors.bankName}</div>}
+                      </div>
+                    </div>
+                    
+                    <div className="col-md-6">
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>Account Number *</label>
                         <input
                           type="text"
                           name="bankAccountNumber"
@@ -801,22 +852,6 @@ const FundApplicationForm = () => {
                           placeholder="Enter your bank account number"
                         />
                         {errors.bankAccountNumber && <div style={styles.errorText}>{errors.bankAccountNumber}</div>}
-                      </div>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <div style={styles.inputGroup}>
-                        <label style={styles.label}>Account Type *</label>
-                        <select
-                          name="bankAccountType"
-                          value={formData.bankAccountType}
-                          onChange={handleInputChange}
-                          style={styles.select}
-                        >
-                          <option value="savings">Savings Account</option>
-                          <option value="current">Current Account</option>
-                          <option value="student">Student Account</option>
-                        </select>
                       </div>
                     </div>
                   </div>

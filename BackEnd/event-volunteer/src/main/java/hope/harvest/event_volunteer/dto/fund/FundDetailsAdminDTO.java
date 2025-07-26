@@ -14,13 +14,18 @@ public class FundDetailsAdminDTO {
     private String nationalId;
     private String purpose;
     private BigDecimal amount;
-    private String addressJson;
-    private String[] documents;
+    private String union;
+    private String upazilla;
+    private String district;
+    private String postalCode;
+    private String nid;
+    private String nationalityProof;
+    private String otherDocument;
 
     // Flattened Bank Info
     private String bankAccountNumber;
-    private String bankAccountType;
-    private String bankAccountBranch;
+    private String bankName;
+    private String bankBranch;
 
     // FundVerification Info
     private UUID assignedVolunteerId;
@@ -36,12 +41,7 @@ public class FundDetailsAdminDTO {
 
     public FundDetailsAdminDTO() {}
 
-    public FundDetailsAdminDTO(UUID applicationId, UUID externalUserId, String fullName, String phoneNumber,
-                               String nationalId, String purpose, BigDecimal amount, String addressJson,
-                               String[] documents, String bankAccountNumber, String bankAccountType,
-                               String bankAccountBranch, ZonedDateTime submissionDate, String status,
-                               String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate,
-                               UUID assignedVolunteerId, String recommendation, BigDecimal recommendedAmount, String report) {
+    public FundDetailsAdminDTO(UUID applicationId, UUID externalUserId, String fullName, String phoneNumber, String nationalId, String purpose, BigDecimal amount, String union, String upazilla, String district, String postalCode, String nid, String nationalityProof, String otherDocument, String bankAccountNumber, String bankName, String bankBranch, UUID assignedVolunteerId, String recommendation, BigDecimal recommendedAmount, String report, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
         this.applicationId = applicationId;
         this.externalUserId = externalUserId;
         this.fullName = fullName;
@@ -49,55 +49,28 @@ public class FundDetailsAdminDTO {
         this.nationalId = nationalId;
         this.purpose = purpose;
         this.amount = amount;
-        this.addressJson = addressJson;
-        this.documents = documents;
+        this.union = union;
+        this.upazilla = upazilla;
+        this.district = district;
+        this.postalCode = postalCode;
+        this.nid = nid;
+        this.nationalityProof = nationalityProof;
+        this.otherDocument = otherDocument;
         this.bankAccountNumber = bankAccountNumber;
-        this.bankAccountType = bankAccountType;
-        this.bankAccountBranch = bankAccountBranch;
+        this.bankName = bankName;
+        this.bankBranch = bankBranch;
+        this.assignedVolunteerId = assignedVolunteerId;
+        this.recommendation = recommendation;
+        this.recommendedAmount = recommendedAmount;
+        this.report = report;
         this.submissionDate = submissionDate;
         this.status = status;
         this.feedback = feedback;
         this.disbursedAmount = disbursedAmount;
         this.disbursementDate = disbursementDate;
-        this.assignedVolunteerId = assignedVolunteerId;
-        this.recommendation = recommendation;
-        this.recommendedAmount = recommendedAmount;
-        this.report = report;
     }
 
     // Getters and setters
-
-    public UUID getAssignedVolunteerId() {
-        return assignedVolunteerId;
-    }
-
-    public void setAssignedVolunteerId(UUID assignedVolunteerId) {
-        this.assignedVolunteerId = assignedVolunteerId;
-    }
-
-    public String getRecommendation() {
-        return recommendation;
-    }
-
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
-    }
-
-    public BigDecimal getRecommendedAmount() {
-        return recommendedAmount;
-    }
-
-    public void setRecommendedAmount(BigDecimal recommendedAmount) {
-        this.recommendedAmount = recommendedAmount;
-    }
-
-    public String getReport() {
-        return report;
-    }
-
-    public void setReport(String report) {
-        this.report = report;
-    }
 
     public UUID getApplicationId() {
         return applicationId;
@@ -155,20 +128,60 @@ public class FundDetailsAdminDTO {
         this.amount = amount;
     }
 
-    public String getAddressJson() {
-        return addressJson;
+    public String getUnion() {
+        return union;
     }
 
-    public void setAddressJson(String addressJson) {
-        this.addressJson = addressJson;
+    public void setUnion(String union) {
+        this.union = union;
     }
 
-    public String[] getDocuments() {
-        return documents;
+    public String getUpazilla() {
+        return upazilla;
     }
 
-    public void setDocuments(String[] documents) {
-        this.documents = documents;
+    public void setUpazilla(String upazilla) {
+        this.upazilla = upazilla;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public String getNationalityProof() {
+        return nationalityProof;
+    }
+
+    public void setNationalityProof(String nationalityProof) {
+        this.nationalityProof = nationalityProof;
+    }
+
+    public String getOtherDocument() {
+        return otherDocument;
+    }
+
+    public void setOtherDocument(String otherDocument) {
+        this.otherDocument = otherDocument;
     }
 
     public String getBankAccountNumber() {
@@ -179,20 +192,52 @@ public class FundDetailsAdminDTO {
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    public String getBankAccountType() {
-        return bankAccountType;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setBankAccountType(String bankAccountType) {
-        this.bankAccountType = bankAccountType;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
-    public String getBankAccountBranch() {
-        return bankAccountBranch;
+    public String getBankBranch() {
+        return bankBranch;
     }
 
-    public void setBankAccountBranch(String bankAccountBranch) {
-        this.bankAccountBranch = bankAccountBranch;
+    public void setBankBranch(String bankBranch) {
+        this.bankBranch = bankBranch;
+    }
+
+    public UUID getAssignedVolunteerId() {
+        return assignedVolunteerId;
+    }
+
+    public void setAssignedVolunteerId(UUID assignedVolunteerId) {
+        this.assignedVolunteerId = assignedVolunteerId;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public BigDecimal getRecommendedAmount() {
+        return recommendedAmount;
+    }
+
+    public void setRecommendedAmount(BigDecimal recommendedAmount) {
+        this.recommendedAmount = recommendedAmount;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
     }
 
     public ZonedDateTime getSubmissionDate() {

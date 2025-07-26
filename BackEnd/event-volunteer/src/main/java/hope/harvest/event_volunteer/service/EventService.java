@@ -164,12 +164,17 @@ public class EventService {
         int newAssignments = prevAssignments + 1;
         int newTotalHours = prevTotalHours + (ratingDTO.getHoursWorked() != null ? ratingDTO.getHoursWorked() : 0);
 
-        BigDecimal newTotalRating = prevAvgRating.multiply(BigDecimal.valueOf(prevAssignments))
-                .add(saved.getOverallRating() != null ? saved.getOverallRating() : BigDecimal.ZERO);
+        BigDecimal newRating = BigDecimal.valueOf((ratingDTO.getCommunicationRating()+ ratingDTO.getPerformanceRating()+ ratingDTO.getPerformanceRating())/3.0);
 
-        BigDecimal updatedAvgRating = newTotalRating.divide(BigDecimal.valueOf(newAssignments),2,MathContext.DECIMAL128.getRoundingMode());
+        BigDecimal newTotalRating1 = prevAvgRating.multiply(BigDecimal.valueOf(prevAssignments))
+                .add(newRating);
+
+        BigDecimal updatedAvgRating = newTotalRating1.divide(BigDecimal.valueOf(newAssignments),2,MathContext.DECIMAL128.getRoundingMode());
 
 
+//        if(saved.getOverallRating()==null){
+//            throw new RuntimeException("overall rating: " + newRating);
+//        }
         volunteer.setAssignmentsCompleted(newAssignments);
         volunteer.setTotalHours(newTotalHours);
         volunteer.setAverageRating(updatedAvgRating);

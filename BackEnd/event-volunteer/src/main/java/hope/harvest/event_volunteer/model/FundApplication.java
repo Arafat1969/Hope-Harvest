@@ -1,16 +1,13 @@
 package hope.harvest.event_volunteer.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "fund_applications")
 public class FundApplication {
+
     @Id
     @GeneratedValue
     @Column(name = "application_id", columnDefinition = "UUID", nullable = false, updatable = false)
@@ -34,19 +31,35 @@ public class FundApplication {
     @Column(name = "purpose", nullable = false, length = 255)
     private String purpose;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "address", nullable = false, columnDefinition = "jsonb")
-    private String addressJson;
+    @Column(name = "bank_account_no")
+    private String bankAccountNo;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "documents", columnDefinition = "jsonb[]")
-    private String[] documents;
+    @Column(name = "bank_name")
+    private String bankName;
 
+    @Column(name = "bank_branch")
+    private String bankBranch;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "bank_info", nullable = false, columnDefinition = "jsonb")
-    private BankInfo bankInfoJson;
+    @Column(name = "union_name")
+    private String unionName;
 
+    @Column(name = "upazila")
+    private String upazila;
+
+    @Column(name = "district")
+    private String district;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "nid")
+    private String nid;
+
+    @Column(name = "nationality_proof")
+    private String nationalityProof;
+
+    @Column(name = "other_document")
+    private String otherDocument;
 
     @Column(name = "submission_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime submissionDate = ZonedDateTime.now();
@@ -63,27 +76,38 @@ public class FundApplication {
     @Column(name = "disbursement_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime disbursementDate;
 
+    public FundApplication() {}
 
-    public FundApplication() {
+    // Getters and setters for all fields...
 
-    }
-
-    public FundApplication(UUID externalUserId, String fullName, String phoneNumber, String nationalId, BigDecimal amount, String purpose, String addressJson, String[] documents, BankInfo bankInfoJson, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
+    public FundApplication(UUID applicationId, UUID externalUserId, String fullName, String phoneNumber, String nationalId, BigDecimal amount, String purpose, String bankAccountNo, String bankName, String bankBranch, String unionName, String upazila, String district, String postalCode, String nid, String nationalityProof, String otherDocument, ZonedDateTime submissionDate, String status, String feedback, BigDecimal disbursedAmount, ZonedDateTime disbursementDate) {
+        this.applicationId = applicationId;
         this.externalUserId = externalUserId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.nationalId = nationalId;
         this.amount = amount;
         this.purpose = purpose;
-        this.addressJson = addressJson;
-        this.documents = documents;
-        this.bankInfoJson = bankInfoJson;
+        this.bankAccountNo = bankAccountNo;
+        this.bankName = bankName;
+        this.bankBranch = bankBranch;
+        this.unionName = unionName;
+        this.upazila = upazila;
+        this.district = district;
+        this.postalCode = postalCode;
+        this.nid = nid;
+        this.nationalityProof = nationalityProof;
+        this.otherDocument = otherDocument;
         this.submissionDate = submissionDate;
         this.status = status;
         this.feedback = feedback;
         this.disbursedAmount = disbursedAmount;
         this.disbursementDate = disbursementDate;
     }
+
+
+    // (Omitted for brevity, but they should be generated or included as needed)
+
 
     public UUID getApplicationId() {
         return applicationId;
@@ -141,30 +165,85 @@ public class FundApplication {
         this.purpose = purpose;
     }
 
-    public String getAddressJson() {
-        return addressJson;
+    public String getBankAccountNo() {
+        return bankAccountNo;
     }
 
-    public void setAddressJson(String addressJson) {
-        this.addressJson = addressJson;
+    public void setBankAccountNo(String bankAccountNo) {
+        this.bankAccountNo = bankAccountNo;
     }
 
-    public String[] getDocuments() {
-        return documents;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setDocuments(String[] documents) {
-        this.documents = documents;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
-    public BankInfo getBankInfoJson() {
-        return bankInfoJson;
+    public String getBankBranch() {
+        return bankBranch;
     }
 
-    public void setBankInfoJson(BankInfo bankInfoJson) {
-        this.bankInfoJson = bankInfoJson;
+    public void setBankBranch(String bankBranch) {
+        this.bankBranch = bankBranch;
     }
 
+    public String getUnionName() {
+        return unionName;
+    }
+
+    public void setUnionName(String unionName) {
+        this.unionName = unionName;
+    }
+
+    public String getUpazila() {
+        return upazila;
+    }
+
+    public void setUpazila(String upazila) {
+        this.upazila = upazila;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public String getNationalityProof() {
+        return nationalityProof;
+    }
+
+    public void setNationalityProof(String nationalityProof) {
+        this.nationalityProof = nationalityProof;
+    }
+
+    public String getOtherDocument() {
+        return otherDocument;
+    }
+
+    public void setOtherDocument(String otherDocument) {
+        this.otherDocument = otherDocument;
+    }
 
     public ZonedDateTime getSubmissionDate() {
         return submissionDate;
@@ -216,9 +295,16 @@ public class FundApplication {
                 ", nationalId='" + nationalId + '\'' +
                 ", amount=" + amount +
                 ", purpose='" + purpose + '\'' +
-                ", addressJson='" + addressJson + '\'' +
-                ", documents=" + documents +
-                ", bankInfoJson='" + bankInfoJson + '\'' +
+                ", bankAccountNo='" + bankAccountNo + '\'' +
+                ", bankName='" + bankName + '\'' +
+                ", bankBranch='" + bankBranch + '\'' +
+                ", unionName='" + unionName + '\'' +
+                ", upazila='" + upazila + '\'' +
+                ", district='" + district + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", nid='" + nid + '\'' +
+                ", nationalityProof='" + nationalityProof + '\'' +
+                ", otherDocument='" + otherDocument + '\'' +
                 ", submissionDate=" + submissionDate +
                 ", status='" + status + '\'' +
                 ", feedback='" + feedback + '\'' +

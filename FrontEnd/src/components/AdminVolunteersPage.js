@@ -3,47 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { volunteerService } from '../services/volunteerService';
 import { authService } from '../services/authService';
 
-const styles = {
-  pageCard: {
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    transition: 'transform 0.2s'
-  },
-  volunteerCard: {
-    borderRadius: '0.5rem',
-    border: '1px solid #e0e0e0',
-    transition: 'transform 0.2s, box-shadow 0.2s'
-  },
-  volunteerCardHover: {
-    transform: 'translateY(-2px)',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-  },
-  statusBadge: {
-    borderRadius: '15px',
-    fontSize: '0.75rem',
-    fontWeight: '600'
-  },
-  avatarPlaceholder: {
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    backgroundColor: '#f8f9fa',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '1.5rem',
-    color: '#6c757d'
-  }
-};
-
 const AdminVolunteersPage = () => {
   const navigate = useNavigate();
   const [volunteers, setVolunteers] = useState([]);
-  const [enrichedVolunteers, setEnrichedVolunteers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState('all');
   const [sortBy, setSortBy] = useState('name');
 
   useEffect(() => {
@@ -58,9 +23,8 @@ const AdminVolunteersPage = () => {
       const volunteersResponse = await volunteerService.getAllVolunteersAdmin();
       const volunteersData = volunteersResponse.data || volunteersResponse || [];
       console.log('Volunteers fetched:', volunteersData);
-      setVolunteers(volunteersData);
 
-      // Then, enrich each volunteer with user details
+      // Then, enrich each volunteer with only first and last name from user details
       const enrichedData = await Promise.allSettled(
         volunteersData.map(async (volunteer) => {
           try {
@@ -69,18 +33,17 @@ const AdminVolunteersPage = () => {
             
             return {
               ...volunteer,
-              userDetails: userData,
-              fullName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'N/A',
-              location: userData.addressCity ? 
-                `${userData.addressCity}, ${userData.addressCountry || ''}`.trim() : 'N/A'
+              firstName: userData.firstName || 'N/A',
+              lastName: userData.lastName || 'N/A',
+              fullName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'N/A'
             };
           } catch (error) {
             console.error(`Error fetching user details for volunteer ${volunteer.volunteerId}:`, error);
             return {
               ...volunteer,
-              userDetails: null,
-              fullName: 'N/A',
-              location: 'N/A'
+              firstName: 'N/A',
+              lastName: 'N/A',
+              fullName: 'N/A'
             };
           }
         })
@@ -91,7 +54,7 @@ const AdminVolunteersPage = () => {
         .map(result => result.value);
 
       console.log('Enriched volunteers:', enrichedVolunteers);
-      setEnrichedVolunteers(enrichedVolunteers);
+      setVolunteers(enrichedVolunteers);
 
     } catch (error) {
       console.error('Error fetching volunteers:', error);
@@ -111,49 +74,20 @@ const AdminVolunteersPage = () => {
       .slice(0, 2);
   };
 
-  const getEmailVerificationBadge = (emailVerified) => {
-    return emailVerified ? (
-      <span className="badge bg-success ms-2">
-        <i className="fas fa-check-circle me-1"></i>
-        Verified
-      </span>
-    ) : (
-      <span className="badge bg-warning text-dark ms-2">
-        <i className="fas fa-exclamation-circle me-1"></i>
-        Unverified
-      </span>
-    );
-  };
-
-  const getRoleBadgeClass = (role) => {
-    switch (role?.toLowerCase()) {
-      case 'admin':
-        return 'badge bg-danger';
-      case 'volunteer':
-        return 'badge bg-success';
-      case 'user':
-        return 'badge bg-primary';
-      default:
-        return 'badge bg-secondary';
-    }
-  };
-
-  const handleViewDetails = (volunteerId) => {
+  const handleVolunteerClick = (volunteerId) => {
     navigate(`/admin/volunteers/${volunteerId}`);
   };
 
-  const filteredAndSortedVolunteers = enrichedVolunteers
+  const filteredAndSortedVolunteers = volunteers
     .filter(volunteer => {
       const matchesSearch = 
         volunteer.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         volunteer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         volunteer.phoneNumber?.includes(searchTerm) ||
-        volunteer.userDetails?.email?.toLowerCase().includes(searchTerm.toLowerCase());
+        volunteer.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        volunteer.lastName?.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesRole = filterRole === 'all' || 
-        volunteer.userDetails?.role?.toLowerCase() === filterRole.toLowerCase();
-      
-      return matchesSearch && matchesRole;
+      return matchesSearch;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -161,10 +95,8 @@ const AdminVolunteersPage = () => {
           return (a.fullName || '').localeCompare(b.fullName || '');
         case 'email':
           return (a.email || '').localeCompare(b.email || '');
-        case 'role':
-          return (a.userDetails?.role || '').localeCompare(b.userDetails?.role || '');
-        case 'verification':
-          return (b.userDetails?.emailVerified ? 1 : 0) - (a.userDetails?.emailVerified ? 1 : 0);
+        case 'phone':
+          return (a.phoneNumber || '').localeCompare(b.phoneNumber || '');
         default:
           return 0;
       }
@@ -174,10 +106,11 @@ const AdminVolunteersPage = () => {
     return (
       <div className="container py-5">
         <div className="text-center">
-          <div className="spinner-border text-danger" role="status">
+          <div className="spinner-border text-danger mb-3" style={{ width: '3rem', height: '3rem' }}>
             <span className="visually-hidden">Loading...</span>
           </div>
-          <p className="mt-3">Loading volunteers and user details...</p>
+          <h4 className="text-muted">Loading Volunteers...</h4>
+          <p className="text-muted">Please wait while we fetch volunteer information</p>
         </div>
       </div>
     );
@@ -186,252 +119,224 @@ const AdminVolunteersPage = () => {
   if (error) {
     return (
       <div className="container py-5">
-        <div className="alert alert-danger" role="alert">
-          {error}
-          <button 
-            className="btn btn-outline-danger ms-3" 
-            onClick={fetchVolunteers}
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container py-5">
-      {/* Header Section */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <div className="card" style={styles.pageCard}>
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h2 className="text-danger mb-1">
-                    <i className="fas fa-hands-helping me-2"></i>
-                    Admin - All Volunteers
-                  </h2>
-                  <p className="text-muted mb-0">
-                    Manage and view all volunteers across the platform
-                  </p>
-                </div>
-                <button 
-                  className="btn btn-outline-danger"
-                  onClick={() => navigate('/admin-dashboard')}
-                >
-                  <i className="fas fa-arrow-left me-2"></i>
-                  Back to Dashboard
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <div className="alert alert-danger text-center">
+              <i className="fas fa-exclamation-triangle fa-2x mb-3"></i>
+              <h4>Error Loading Volunteers</h4>
+              <p>{error}</p>
+              <div className="mt-4">
+                <button className="btn btn-danger me-2" onClick={fetchVolunteers}>
+                  <i className="fas fa-sync-alt me-2"></i>Try Again
+                </button>
+                <button className="btn btn-secondary" onClick={() => navigate('/admin-dashboard')}>
+                  <i className="fas fa-arrow-left me-2"></i>Back to Dashboard
                 </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+    );
+  }
 
-      {/* Statistics Summary */}
-      <div className="row mb-4">
-        <div className="col-md-3 mb-3">
-          <div className="card text-center border-primary">
-            <div className="card-body">
-              <h5 className="text-primary">{enrichedVolunteers.length}</h5>
-              <small className="text-muted">Total Volunteers</small>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3 mb-3">
-          <div className="card text-center border-success">
-            <div className="card-body">
-              <h5 className="text-success">
-                {enrichedVolunteers.filter(v => v.userDetails?.emailVerified).length}
-              </h5>
-              <small className="text-muted">Verified Emails</small>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3 mb-3">
-          <div className="card text-center border-info">
-            <div className="card-body">
-              <h5 className="text-info">
-                {enrichedVolunteers.filter(v => v.userDetails?.role?.toLowerCase() === 'volunteer').length}
-              </h5>
-              <small className="text-muted">Active Volunteers</small>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3 mb-3">
-          <div className="card text-center border-warning">
-            <div className="card-body">
-              <h5 className="text-warning">
-                {new Set(enrichedVolunteers.map(v => v.userDetails?.addressCity).filter(Boolean)).size}
-              </h5>
-              <small className="text-muted">Cities Covered</small>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters and Search */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <div className="card" style={styles.pageCard}>
-            <div className="card-body">
-              <div className="row align-items-center">
-                <div className="col-md-4 mb-3 mb-md-0">
-                  <div className="input-group">
-                    <span className="input-group-text">
-                      <i className="fas fa-search"></i>
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Search by name, email, phone..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+  return (
+    <div style={{ background: 'linear-gradient(135deg, #f8f9fa 0%, #ffe8e8 100%)', minHeight: '100vh' }}>
+      <div className="container py-5">
+        {/* Header Section */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card shadow-sm border-0" style={{ borderRadius: '15px' }}>
+              <div className="card-body" style={{ background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)', color: 'white', borderRadius: '15px' }}>
+                <div className="d-flex justify-content-between align-items-center flex-wrap">
+                  <div>
+                    <h1 className="h3 mb-2">
+                      <i className="fas fa-hands-helping me-2"></i>
+                      Admin - All Volunteers
+                    </h1>
+                    <p className="mb-0 opacity-75">Total Volunteers: {volunteers.length}</p>
                   </div>
-                </div>
-                <div className="col-md-3 mb-3 mb-md-0">
-                  <select
-                    className="form-select"
-                    value={filterRole}
-                    onChange={(e) => setFilterRole(e.target.value)}
-                  >
-                    <option value="all">All Roles</option>
-                    <option value="volunteer">Volunteer</option>
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                <div className="col-md-3 mb-3 mb-md-0">
-                  <select
-                    className="form-select"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
-                    <option value="name">Sort by Name</option>
-                    <option value="email">Sort by Email</option>
-                    <option value="role">Sort by Role</option>
-                    <option value="verification">Sort by Verification</option>
-                  </select>
-                </div>
-                <div className="col-md-2">
-                  <button 
-                    className="btn btn-outline-secondary w-100"
-                    onClick={fetchVolunteers}
-                  >
-                    <i className="fas fa-sync-alt me-1"></i>
-                    Refresh
-                  </button>
+                  <div className="text-end">
+                    <button 
+                      className="btn btn-light me-2"
+                      onClick={() => navigate('/admin-dashboard')}
+                    >
+                      <i className="fas fa-arrow-left me-2"></i>
+                      Dashboard
+                    </button>
+                    <button 
+                      className="btn btn-outline-light"
+                      onClick={fetchVolunteers}
+                    >
+                      <i className="fas fa-sync-alt me-2"></i>
+                      Refresh
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Volunteers List */}
-      <div className="row">
-        <div className="col-12">
-          <div className="card" style={styles.pageCard}>
-            <div className="card-header bg-white">
-              <h5 className="mb-0 text-danger">
-                <i className="fas fa-list me-2"></i>
-                Volunteers List ({filteredAndSortedVolunteers.length})
-              </h5>
-            </div>
-            <div className="card-body">
-              {filteredAndSortedVolunteers.length === 0 ? (
-                <div className="text-center py-5 text-muted">
-                  <i className="fas fa-hands-helping fa-3x mb-3"></i>
-                  <h5>No volunteers found</h5>
-                  <p>No volunteers match your current search and filter criteria.</p>
-                </div>
-              ) : (
-                <div className="row">
-                  {filteredAndSortedVolunteers.map((volunteer) => (
-                    <div key={volunteer.volunteerId} className="col-lg-6 col-md-12 mb-4">
-                      <div 
-                        className="card h-100" 
-                        style={styles.volunteerCard}
-                        onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.volunteerCardHover)}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-                        }}
-                      >
-                        <div className="card-body">
-                          <div className="d-flex align-items-start mb-3">
-                            <div style={styles.avatarPlaceholder} className="me-3">
-                              {getInitials(volunteer.fullName)}
-                            </div>
-                            <div className="flex-grow-1">
-                              <div className="d-flex justify-content-between align-items-start">
-                                <div>
-                                  <h6 className="mb-1 text-primary">{volunteer.fullName}</h6>
-                                  <div className="d-flex align-items-center">
-                                    <small className="text-muted">{volunteer.email}</small>
-                                    {volunteer.userDetails && getEmailVerificationBadge(volunteer.userDetails.emailVerified)}
-                                  </div>
-                                </div>
-                                <span className={getRoleBadgeClass(volunteer.userDetails?.role)}>
-                                  {volunteer.userDetails?.role || 'Unknown'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="row mb-3">
-                            <div className="col-6">
-                              <small className="text-muted d-block">Phone Number</small>
-                              <small className="fw-bold">
-                                {volunteer.phoneNumber || volunteer.userDetails?.phoneNumber || 'N/A'}
-                              </small>
-                            </div>
-                            <div className="col-6">
-                              <small className="text-muted d-block">Location</small>
-                              <small className="fw-bold">{volunteer.location}</small>
-                            </div>
-                          </div>
-
-                          {volunteer.userDetails?.addressPostalCode && (
-                            <div className="row mb-3">
-                              <div className="col-12">
-                                <small className="text-muted d-block">Postal Code</small>
-                                <small className="fw-bold">{volunteer.userDetails.addressPostalCode}</small>
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="row mb-3">
-                            <div className="col-6">
-                              <small className="text-muted d-block">Volunteer ID</small>
-                              <code className="small">{volunteer.volunteerId}</code>
-                            </div>
-                            <div className="col-6">
-                              <small className="text-muted d-block">User ID</small>
-                              <code className="small">{volunteer.externalUserId}</code>
-                            </div>
-                          </div>
-
-                          <div className="mt-auto">
-                            <button
-                              className="btn btn-outline-primary w-100"
-                              onClick={() => handleViewDetails(volunteer.volunteerId)}
-                            >
-                              <i className="fas fa-eye me-2"></i>
-                              View Details
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+        {/* Filters and Search */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card shadow-sm border-0" style={{ borderRadius: '15px' }}>
+              <div className="card-body">
+                <div className="row align-items-center">
+                  <div className="col-md-6 mb-3 mb-md-0">
+                    <div className="input-group">
+                      <span className="input-group-text">
+                        <i className="fas fa-search"></i>
+                      </span>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search by name, email, or phone..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
                     </div>
-                  ))}
+                  </div>
+                  <div className="col-md-3 mb-3 mb-md-0">
+                    <select
+                      className="form-select"
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                    >
+                      <option value="name">Sort by Name</option>
+                      <option value="email">Sort by Email</option>
+                      <option value="phone">Sort by Phone</option>
+                    </select>
+                  </div>
+                  <div className="col-md-3">
+                    <div className="text-muted">
+                      Showing {filteredAndSortedVolunteers.length} of {volunteers.length} volunteers
+                    </div>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Volunteers List */}
+        <div className="row">
+          <div className="col-12">
+            <div className="card shadow-sm border-0" style={{ borderRadius: '15px' }}>
+              <div className="card-header bg-white" style={{ borderRadius: '15px 15px 0 0' }}>
+                <h5 className="mb-0 text-danger">
+                  <i className="fas fa-list me-2"></i>
+                  Volunteers List
+                </h5>
+              </div>
+              <div className="card-body p-0">
+                {filteredAndSortedVolunteers.length === 0 ? (
+                  <div className="text-center py-5">
+                    <i className="fas fa-hands-helping fa-4x text-muted mb-4"></i>
+                    <h4 className="text-muted">No Volunteers Found</h4>
+                    <p className="text-muted mb-4">
+                      {searchTerm ? 'No volunteers match your search criteria.' : 'No volunteers are registered yet.'}
+                    </p>
+                    {searchTerm && (
+                      <button 
+                        className="btn btn-secondary"
+                        onClick={() => setSearchTerm('')}
+                      >
+                        <i className="fas fa-times me-2"></i>
+                        Clear Search
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="list-group list-group-flush">
+                    {filteredAndSortedVolunteers.map((volunteer, index) => (
+                      <button
+                        key={volunteer.volunteerId}
+                        type="button"
+                        className="list-group-item list-group-item-action p-4 border-0"
+                        style={{
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          borderRadius: index === 0 ? '0' : '0',
+                          borderBottom: index === filteredAndSortedVolunteers.length - 1 ? 'none' : '1px solid #eee'
+                        }}
+                        onClick={() => handleVolunteerClick(volunteer.volunteerId)}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#f8f9fa';
+                          e.currentTarget.style.transform = 'translateX(5px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '';
+                          e.currentTarget.style.transform = 'translateX(0)';
+                        }}
+                      >
+                        <div className="d-flex align-items-center">
+                          {/* Avatar */}
+                          <div 
+                            className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style={{
+                              width: '50px',
+                              height: '50px',
+                              backgroundColor: '#dc3545',
+                              color: 'white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            {getInitials(volunteer.fullName)}
+                          </div>
+
+                          {/* Main Info */}
+                          <div className="flex-grow-1">
+                            <div className="row align-items-center">
+                              <div className="col-md-4">
+                                <h6 className="mb-1 text-danger fw-bold">{volunteer.fullName}</h6>
+                                <small className="text-muted">
+                                  <i className="fas fa-id-badge me-1"></i>
+                                  ID: {volunteer.volunteerId.slice(0, 8)}...
+                                </small>
+                              </div>
+                              <div className="col-md-3">
+                                <small className="text-muted d-block">Email</small>
+                                <span className="fw-bold">{volunteer.email || 'N/A'}</span>
+                              </div>
+                              <div className="col-md-3">
+                                <small className="text-muted d-block">Phone</small>
+                                <span className="fw-bold">{volunteer.phoneNumber || 'N/A'}</span>
+                              </div>
+                              <div className="col-md-2 text-end">
+                                <span className="badge bg-success mb-2">Volunteer</span>
+                                <div>
+                                  <i className="fas fa-arrow-right text-muted"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pagination Note */}
+        {filteredAndSortedVolunteers.length > 0 && (
+          <div className="row mt-4">
+            <div className="col-12">
+              <div className="card shadow-sm border-0" style={{ borderRadius: '15px' }}>
+                <div className="card-body text-center">
+                  <small className="text-muted">
+                    <i className="fas fa-info-circle me-2"></i>
+                    Click on any volunteer to view their detailed information and manage their account.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

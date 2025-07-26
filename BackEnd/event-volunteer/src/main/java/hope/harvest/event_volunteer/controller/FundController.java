@@ -37,8 +37,8 @@ public class FundController {
     }
 
 
-    @GetMapping("/funds/me")
-    public ResponseEntity<ApiResponse<List<FundApplicationDetails>>> seeAllFundApplicationsByUser(@RequestParam UUID externalUserId){
+    @GetMapping("/funds/{externalUserId}")
+    public ResponseEntity<ApiResponse<List<FundApplicationDetails>>> seeAllFundApplicationsByUser(@PathVariable UUID externalUserId){
         try {
             List<FundApplicationDetails> fundList = fundService.seeAllFundApplicationsByUser(externalUserId);
             if(fundList.isEmpty()){
@@ -49,7 +49,7 @@ public class FundController {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             ApiResponse<List<FundApplicationDetails>> error = new ApiResponse<>("failed", e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
 

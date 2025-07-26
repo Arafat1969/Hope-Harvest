@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 public class TeamSummaryDTO {
     private Long teamId;
     private String name;
+    private long eventId;
     private String eventTitle;
     private ZonedDateTime eventStartDate;
     private String locationAddress;
@@ -16,15 +17,24 @@ public class TeamSummaryDTO {
 
     }
 
-    public TeamSummaryDTO(Long teamId, String name, String eventTitle, ZonedDateTime eventStartDate, String locationAddress, String locationCity, String locationDistrict, boolean isLeader) {
+    public TeamSummaryDTO(Long teamId, String name,long eventId, String eventTitle, ZonedDateTime eventStartDate, String locationAddress, String locationCity, String locationDistrict, boolean isLeader) {
         this.teamId = teamId;
         this.name = name;
+        this.eventId = eventId;
         this.eventTitle = eventTitle;
         this.eventStartDate = eventStartDate;
         this.locationAddress = locationAddress;
         this.locationCity = locationCity;
         this.locationDistrict = locationDistrict;
         this.isLeader = isLeader;
+    }
+
+    public long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
     public Long getTeamId() {

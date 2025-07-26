@@ -47,6 +47,19 @@ import AdminDetailedCampaign from "./components/AdminDetailedCampaign";
 import UserDonationDetails from "./components/UserDonationDetails";
 import UserCampaignRequestDetails from "./components/UserCampaignRequestDetails";
 import FundApplicationForm from "./components/FundApplicationForm";
+import UserFundApplicationDetails from "./components/UserFundApplicationDetails";
+import UserCampaignRequestsList from "./components/UserCampaignRequestsList";
+import UserDonationsList from "./components/UserDonationsList";
+import UserFundApplicationsList from "./components/UserFundApplicationsList";
+import AdminVolunteerDetails from "./components/AdminVolunteerDetails";
+import VolunteerDashboard from "./components/VolunteerDashboard";
+import AdminFundApplicationDetails from "./components/AdminFundApplicationDetails";
+import VolunteerVerificationDetails from "./components/VolunteerVerificationDetails";
+import AdminEventDetailsPage from "./components/AdminEventDetailsPage";
+import AdminCreateTeamPage from "./components/AdminCreateTeamPage";
+import VolunteerEventDetailsPage from "./components/VolunteerEventDetailsPage";
+import VolunteerRatingFormPage from "./components/VolunteerRatingFormPage";
+import VolunteerRatingDetails from "./components/VolunteerRatingDetails";
 
 function App() {
   // Authentication state
@@ -213,6 +226,170 @@ function App() {
               />
               <PaymentOTPPage />
             </>
+          }
+        />
+
+        <Route
+          path="/my-donations"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <UserDonationsList />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/my-campaign-requests"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <UserCampaignRequestsList />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/my-fund-applications"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <UserFundApplicationsList />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/volunteer-dashboard"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <VolunteerDashboard />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/volunteer/verifications/:verificationId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <VolunteerVerificationDetails />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/volunteer/events/:eventId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <VolunteerEventDetailsPage />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/volunteers/rate"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <VolunteerRatingFormPage />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/volunteer/ratings/:ratingId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <VolunteerRatingDetails />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/admin/events/:eventId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : user?.role !== "ADMIN" ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <AdminEventDetailsPage />
+              </>
+            )
           }
         />
         <Route
@@ -392,6 +569,24 @@ function App() {
             )
           }
         />
+
+        <Route
+          path="/my-fund-applications/:applicationId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <UserFundApplicationDetails />
+              </>
+            )
+          }
+        />
         <Route
           path="/admin-dashboard"
           element={
@@ -487,6 +682,66 @@ function App() {
                   onLogout={handleLogout}
                 />
                 <AdminEventsPage />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/admin/volunteers/:volunteerId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : user?.role !== "ADMIN" ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <AdminVolunteerDetails />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/admin/fund-applications/:applicationId"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : user?.role !== "ADMIN" ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <AdminFundApplicationDetails />
+              </>
+            )
+          }
+        />
+
+        <Route
+          path="/admin/create/team"
+          element={
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : user?.role !== "ADMIN" ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <>
+                <Navbar
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  onLogout={handleLogout}
+                />
+                <AdminCreateTeamPage />
               </>
             )
           }

@@ -4,6 +4,7 @@ import { authService } from '../services/authService';
 import { campaignService } from '../services/campaignService';
 import { donationService } from '../services/donationService';
 import { fundApplicationService } from '../services/fundApplicationService';
+import { volunteerService } from '../services/volunteerService';
 
 const styles = {
   dashboardCard: {
@@ -106,6 +107,7 @@ const UserDashboard = () => {
 
           // Get fund applications with userId
           try {
+            console.log("hii");
             const fundResponse = await fundApplicationService.getUserFundApplications(userId);
             console.log('Fund applications response:', fundResponse); // Debug log
             
@@ -187,6 +189,38 @@ const UserDashboard = () => {
 
   const handleFundApplicationClick = (applicationId) => {
     navigate(`/my-fund-applications/${applicationId}`);
+  };
+
+  // Updated volunteer click handler with volunteer status check
+  const handleVolunteerClick = async () => {
+    try {
+      // Check if user is a registered volunteer
+      const userId = user?.userId || user?.id || user?.user_id;
+      if (userId) {
+        try {
+          const volunteerProfile = await volunteerService.getVolunteerProfile(userId);
+          if (volunteerProfile && (volunteerProfile.data || volunteerProfile)) {
+            // User is a registered volunteer, go to volunteer dashboard
+            console.log('User is a registered volunteer, redirecting to volunteer dashboard');
+            navigate('/volunteer-dashboard');
+          } else {
+            // Not a registered volunteer, go to volunteer activity
+            console.log('User is not a registered volunteer, redirecting to volunteer activity');
+            navigate('/volunteer-activity');
+          }
+        } catch (error) {
+          // If error (likely 404), user is not a registered volunteer
+          console.log('User is not a registered volunteer (API error):', error);
+          navigate('/volunteer-activity');
+        }
+      } else {
+        console.log('No user ID available, redirecting to volunteer activity');
+        navigate('/volunteer-activity');
+      }
+    } catch (error) {
+      console.error('Error checking volunteer status:', error);
+      navigate('/volunteer-activity');
+    }
   };
 
   // Hover effect handlers
@@ -550,7 +584,7 @@ const UserDashboard = () => {
                 <div className="col-lg-3 col-md-6 mb-2">
                   <button 
                     className="btn btn-outline-success w-100"
-                    onClick={() => navigate('/volunteer-activity')}
+                    onClick={handleVolunteerClick}
                   >
                     <i className="fas fa-hands-helping me-2"></i>
                     Volunteer

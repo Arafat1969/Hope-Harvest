@@ -11,7 +11,8 @@ export const fundApplicationService ={
 
 	// Get all fund applications by user (requires externalUserId as query parameter)
 	getUserFundApplications: async (externalUserId) => {
-		const response = await authAxios.get(`${API_BASE_URLs.EVENT_SERVICE}/funds/me?externalUserId=${externalUserId}`);
+		const response = await authAxios.get(`${API_BASE_URLs.EVENT_SERVICE}/funds/${externalUserId}`);
+		console.log("Message ",response.data.message);
 		return response.data;
 	},
 

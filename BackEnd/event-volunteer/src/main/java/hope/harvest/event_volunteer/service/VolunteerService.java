@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -88,7 +89,7 @@ public class VolunteerService {
     }
 
     public VolunteerResponseDTO seeMyVolunteerProfile(UUID volunteerId) {
-        Volunteer volunteer = volunteerRepo.findById(volunteerId)
+        Volunteer volunteer = volunteerRepo.findByExternalUserId(volunteerId)
                 .orElseThrow(() -> new RuntimeException("Volunteer not found"));
 
         return generateVolunteerResponseDTO(volunteer);
@@ -149,6 +150,7 @@ public class VolunteerService {
                     return new TeamSummaryDTO(
                             team.getTeamId(),
                             team.getName(),
+                            team.getEvent().getEventId(),
                             team.getEvent().getTitle(),
                             team.getEvent().getStartDate(),
                             team.getEvent().getLocationAddress(),
@@ -184,6 +186,8 @@ public class VolunteerService {
         FundVerification verification = fundVerificationRepo.findById(verificationId)
                 .orElseThrow(() -> new EntityNotFoundException("Verification not found with ID: " + verificationId));
 
+
+
         return new FundVerificationDetailsDTO(
                 verification.getVerificationId(),
                 verification.getApplication().getApplicationId(),
@@ -193,12 +197,20 @@ public class VolunteerService {
                 verification.getApplication().getNationalId(),
                 verification.getApplication().getPurpose(),
                 verification.getApplication().getAmount(),
-                verification.getApplication().getAddressJson(),
-                verification.getApplication().getDocuments(),
-                verification.getApplication().getBankInfoJson().getAccountNumber(),
-                verification.getApplication().getBankInfoJson().getAccountType(),
-                verification.getApplication().getBankInfoJson().getAccountBranch(),
+                verification.getApplication().getUnionName(),
+                verification.getApplication().getUpazila(),
+                verification.getApplication().getDistrict(),
+                verification.getApplication().getPostalCode(),
+                verification.getApplication().getNid(),
+                verification.getApplication().getNationalityProof(),
+                verification.getApplication().getOtherDocument(),
+                verification.getApplication().getBankAccountNo(),
+                verification.getApplication().getBankName(),
+                verification.getApplication().getBankBranch(),
                 verification.getVerificationDueDate(),
+                verification.getRecommendation(),
+                verification.getRecommendedAmount(),
+                verification.getReport(),
                 verification.getApplication().getStatus()
         );
     }
@@ -212,6 +224,7 @@ public class VolunteerService {
         fundVerification.setRecommendedAmount(reportDTO.getRecommendedAmount());
         fundVerification.setReport(reportDTO.getReport());
 
+
         fundVerificationRepo.save(fundVerification);
 
         return new FundVerificationReportResponseDTO(
@@ -223,11 +236,16 @@ public class VolunteerService {
                 fundVerification.getApplication().getNationalId(),
                 fundVerification.getApplication().getPurpose(),
                 fundVerification.getApplication().getAmount(),
-                fundVerification.getApplication().getAddressJson(),
-                fundVerification.getApplication().getDocuments(),
-                fundVerification.getApplication().getBankInfoJson().getAccountNumber(),
-                fundVerification.getApplication().getBankInfoJson().getAccountType(),
-                fundVerification.getApplication().getBankInfoJson().getAccountBranch(),
+                fundVerification.getApplication().getUnionName(),
+                fundVerification.getApplication().getUpazila(),
+                fundVerification.getApplication().getDistrict(),
+                fundVerification.getApplication().getPostalCode(),
+                fundVerification.getApplication().getNid(),
+                fundVerification.getApplication().getNationalityProof(),
+                fundVerification.getApplication().getOtherDocument(),
+                fundVerification.getApplication().getBankAccountNo(),
+                fundVerification.getApplication().getBankName(),
+                fundVerification.getApplication().getBankBranch(),
                 fundVerification.getVerificationDueDate(),
                 fundVerification.getRecommendation(),
                 fundVerification.getRecommendedAmount(),

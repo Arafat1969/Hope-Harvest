@@ -2,10 +2,7 @@ package hope.harvest.event_volunteer.service;
 
 import hope.harvest.event_volunteer.dto.fund.*;
 import hope.harvest.event_volunteer.dto.volunteer.AssignVolunteerRequestDTO;
-import hope.harvest.event_volunteer.model.BankInfo;
-import hope.harvest.event_volunteer.model.FundApplication;
-import hope.harvest.event_volunteer.model.FundVerification;
-import hope.harvest.event_volunteer.model.Volunteer;
+import hope.harvest.event_volunteer.model.*;
 import hope.harvest.event_volunteer.repo.FundApplicationRepo;
 import hope.harvest.event_volunteer.repo.FundVerificationRepo;
 import hope.harvest.event_volunteer.repo.VolunteerRepo;
@@ -14,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,19 +30,24 @@ public class FundService {
 
     public FundApplicationDetails applyForFundsByUser(FundApplicationRequestDTO requestDTO) {
         FundApplication fundApp = new FundApplication();
-        fundApp.setExternalUserId(requestDTO.getExternalUserId());
         fundApp.setFullName(requestDTO.getFullName());
-        fundApp.setPhoneNumber(requestDTO.getPhoneNumber());
+        fundApp.setExternalUserId(requestDTO.getExternalUserId());
         fundApp.setNationalId(requestDTO.getNationalId());
+        fundApp.setPhoneNumber(requestDTO.getPhoneNumber());
         fundApp.setPurpose(requestDTO.getPurpose());
         fundApp.setAmount(requestDTO.getAmount());
-        fundApp.setAddressJson(requestDTO.getAddressJson());
-        fundApp.setDocuments(requestDTO.getDocuments());
+        fundApp.setUnionName(requestDTO.getUnion());
+        fundApp.setUpazila(requestDTO.getUpazilla());
+        fundApp.setDistrict(requestDTO.getDistrict());
+        fundApp.setPostalCode(requestDTO.getPostalCode());
+        fundApp.setNid(requestDTO.getNid());
+        fundApp.setNationalityProof(requestDTO.getNationalityProof());
+        fundApp.setOtherDocument(requestDTO.getOtherDocuments());
+        fundApp.setBankAccountNo(requestDTO.getBankAccountNumber());
+        fundApp.setBankName(requestDTO.getBankName());
+        fundApp.setBankBranch(requestDTO.getBankAccountBranch());
         fundApp.setSubmissionDate(ZonedDateTime.now());
         fundApp.setStatus("PENDING");
-
-        BankInfo bankInfo = new BankInfo(requestDTO.getBankAccountNumber(), requestDTO.getBankAccountType(), requestDTO.getBankAccountBranch());
-        fundApp.setBankInfoJson(bankInfo);
 
         FundApplication saved = fundApplicationRepo.save(fundApp);
 
@@ -51,6 +55,9 @@ public class FundService {
     }
 
     public List<FundApplicationDetails> seeAllFundApplicationsByUser(UUID externalUserId) {
+        List<FundApplication> fundApplications = fundApplicationRepo.findByExternalUserId(externalUserId);
+
+
         return fundApplicationRepo.findByExternalUserId(externalUserId)
                 .stream()
                 .map(this::mapToUserDetails)
@@ -99,14 +106,6 @@ public class FundService {
         Volunteer volunteer = volunteerRepo.findById(requestDTO.getVolunteerId())
                 .orElseThrow(() -> new EntityNotFoundException("Volunteer not found"));
 
-//        this.application = application;
-//        this.assignedVolunteer = assignedVolunteer;
-//        this.assignedDate = assignedDate;
-//        this.verificationDueDate = verificationDueDate;
-//        this.recommendation = recommendation;
-//        this.recommendedAmount = recommendedAmount;
-//        this.report = report;
-
         FundVerification verification = new FundVerification();
 
         verification.setApplication(fund);
@@ -119,11 +118,15 @@ public class FundService {
 
 
     private FundApplicationDetails mapToUserDetails(FundApplication f) {
+
         return new FundApplicationDetails(
                 f.getApplicationId(),
                 f.getPurpose(),
                 f.getAmount(),
-                f.getAddressJson(),
+                f.getUnionName(),
+                f.getUpazila(),
+                f.getDistrict(),
+                f.getPostalCode(),
                 f.getSubmissionDate(),
                 f.getStatus(),
                 f.getFeedback(),
@@ -138,6 +141,9 @@ public class FundService {
                 ? fv.getAssignedVolunteer().getVolunteerId()
                 : null;
 
+        List<String> urls = new ArrayList<>();
+
+
         return new FundDetailsAdminDTO(
                 f.getApplicationId(),
                 f.getExternalUserId(),
@@ -146,20 +152,25 @@ public class FundService {
                 f.getNationalId(),
                 f.getPurpose(),
                 f.getAmount(),
-                f.getAddressJson(),
-                f.getDocuments(),
-                f.getBankInfoJson().getAccountNumber(),
-                f.getBankInfoJson().getAccountType(),
-                f.getBankInfoJson().getAccountBranch(),
+                f.getUnionName(),
+                f.getUpazila(),
+                f.getDistrict(),
+                f.getPostalCode(),
+                f.getNid(),
+                f.getNationalityProof(),
+                f.getOtherDocument(),
+                f.getBankAccountNo(),
+                f.getBankName(),
+                f.getBankBranch(),
+                assignedVolunteerId,
+                (fv != null ? fv.getRecommendation() : null),
+                (fv != null ? fv.getRecommendedAmount() : null),
+                (fv != null ? fv.getReport() : null),
                 f.getSubmissionDate(),
                 f.getStatus(),
                 f.getFeedback(),
                 f.getDisbursedAmount(),
-                f.getDisbursementDate(),
-                assignedVolunteerId,
-                (fv != null ? fv.getRecommendation() : null),
-                (fv != null ? fv.getRecommendedAmount() : null),
-                (fv != null ? fv.getReport() : null)
+                f.getDisbursementDate()
         );
     }
 

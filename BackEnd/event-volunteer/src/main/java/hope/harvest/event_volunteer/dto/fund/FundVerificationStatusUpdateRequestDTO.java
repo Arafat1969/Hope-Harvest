@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 
 public class FundVerificationStatusUpdateRequestDTO {
 
-    private String status; // APPROVED or REJECTED
+    private String status;
     private String feedback;
     private BigDecimal disbursedAmount;
     private ZonedDateTime disbursementDate;
