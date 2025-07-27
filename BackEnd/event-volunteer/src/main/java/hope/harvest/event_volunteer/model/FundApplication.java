@@ -58,7 +58,7 @@ public class FundApplication {
     @Column(name = "nationality_proof" , columnDefinition = "TEXT")
     private String nationalityProof;
 
-    @Column(name = "other_document")
+    @Column(name = "other_document" , columnDefinition = "TEXT")
     private String otherDocument;
 
     @Column(name = "submission_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
