@@ -52,10 +52,10 @@ public class FundApplication {
     @Column(name = "postal_code")
     private String postalCode;
 
-    @Column(name = "nid")
+    @Column(name = "nid" , columnDefinition = "TEXT")
     private String nid;
 
-    @Column(name = "nationality_proof")
+    @Column(name = "nationality_proof" , columnDefinition = "TEXT")
     private String nationalityProof;
 
     @Column(name = "other_document")

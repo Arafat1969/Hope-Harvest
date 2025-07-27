@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const API_key = 'fb30e28eaa1aa590e4676b9284b04709';
 
-//hgyugjghjhhj
+// hgyugjghjhhj
 
 const API_BASE_URLs = {
   USER_SERVICE: 'http://74.225.246.127:8085/api/v1/user-service',
